@@ -9,7 +9,7 @@ const app = express();
 
 // Middleware
 app.use(cors({
-  origin: '*', // or specify your frontend URL: 'https://your-frontend.com'
+  origin: 'https://sisurat-gmit-yegar-sahaduta-bello.vercel.app/', // or specify your frontend URL: 'https://your-frontend.com'
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
 }));
