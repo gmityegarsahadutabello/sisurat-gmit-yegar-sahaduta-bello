@@ -1,0 +1,42 @@
+const express = require('express');
+const dotenv = require('dotenv');
+const cors = require('cors');
+
+// Load env vars
+dotenv.config();
+
+const app = express();
+
+// Middleware
+app.use(cors());
+app.use(express.json({ limit: '50mb' })); // Increased limit for file uploads (base64)
+
+// Basic error handler for JSON parsing
+app.use((err, req, res, next) => {
+  if (err instanceof SyntaxError && err.status === 400 && 'body' in err) {
+    return res.status(400).json({ message: 'Invalid JSON' });
+  }
+  next();
+});
+
+// Routes (Placeholder)
+app.get('/', (req, res) => {
+  res.json({ message: 'GMIT Yegar API is running' });
+});
+
+// Define Routes here
+app.use('/api/users', require('./routes/userRoutes'));
+app.use('/api/pengajuan', require('./routes/pengajuanRoutes'));
+app.use('/api/notifications', require('./routes/notificationRoutes'));
+app.use('/api/auth', require('./routes/googleAuthRoutes'));
+
+// Global error handler
+app.use((err, req, res, next) => {
+  console.error('Error:', err);
+  res.status(500).json({
+    message: err.message || 'Internal server error',
+    error: process.env.NODE_ENV === 'development' ? err.stack : undefined
+  });
+});
+
+module.exports = app;
