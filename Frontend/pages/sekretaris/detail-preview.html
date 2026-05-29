@@ -1,0 +1,757 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Preview Surat - Sekretaris</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+  <link rel="stylesheet" href="../../assets/css/global.css">
+  <link rel="stylesheet" href="../../assets/css/navbar.css">
+  <link rel="stylesheet" href="../../assets/css/table.css">
+  <link rel="stylesheet" href="../../assets/css/confirmation-modal.css">
+  <link rel="stylesheet" href="../../assets/css/sekretaris/detail-preview.css">
+  <link rel="stylesheet" href="../../assets/css/sekretaris/responsive-sekretaris.css">
+  <style>
+    /* Welcome Section */
+    .welcome-section .page-header {
+      background: linear-gradient(135deg, #0b5ed7 0%, #0d6efd 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      font-weight: 700;
+      font-size: 2rem;
+    }
+    
+    /* Section Cards */
+    .section-card {
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+      overflow: hidden;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      border: 1px solid rgba(13, 110, 253, 0.1);
+    }
+    
+    .section-card:hover {
+      box-shadow: 0 6px 24px rgba(0,0,0,0.15);
+      transform: translateY(-3px);
+      border-color: rgba(13, 110, 253, 0.2);
+    }
+    
+    .section-header {
+      background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+      padding: 1.2rem 1.5rem;
+      border-bottom: 2px solid #dee2e6;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    
+    .section-header i {
+      font-size: 1.5rem;
+      transition: transform 0.3s ease;
+    }
+    
+    .section-card:hover .section-header i {
+      transform: scale(1.1) rotate(5deg);
+    }
+    
+    .section-header h5 {
+      margin: 0;
+      font-weight: 700;
+      color: #2d3748;
+      font-size: 1.1rem;
+    }
+    
+    .section-content {
+      padding: 1.5rem;
+    }
+    
+    /* Preview Area */
+    .preview-container {
+      min-height: 500px;
+      max-height: 650px;
+      overflow: auto;
+      background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+      border-radius: 12px;
+      padding: 1.5rem;
+    }
+    
+    .preview-area {
+      width: 100%;
+      min-height: 500px;
+      background: white;
+      border-radius: 12px;
+      padding: 1rem;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+      transition: all 0.3s ease;
+    }
+    
+    .preview-area:hover {
+      box-shadow: 0 4px 20px rgba(0,0,0,0.12);
+    }
+    
+    .preview-area iframe {
+      width: 100%;
+      height: 550px;
+      border: 0;
+      border-radius: 12px;
+      background: white;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
+    
+    .preview-area img {
+      max-width: 100%;
+      height: auto;
+      display: block;
+      margin: 0 auto;
+      border-radius: 12px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+      transition: all 0.3s ease;
+    }
+    
+    .preview-area img:hover {
+      box-shadow: 0 6px 24px rgba(0,0,0,0.15);
+      transform: scale(1.01);
+    }
+    
+    .loading-state {
+      text-align: center;
+      padding: 6rem 1rem;
+      animation: pulse 1.5s ease-in-out infinite;
+    }
+    
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.6; }
+    }
+    
+    .loading-state .spinner-border {
+      width: 3rem;
+      height: 3rem;
+      border-width: 0.3rem;
+    }
+    
+    /* Info Details */
+    .info-details {
+      color: #495057;
+      font-size: 0.95rem;
+      line-height: 1.8;
+    }
+    
+    .info-row {
+      display: flex;
+      gap: 12px;
+      padding: 12px 16px;
+      border-radius: 10px;
+      margin-bottom: 0.75rem;
+      background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+      border: 1px solid #e9ecef;
+      transition: all 0.3s ease;
+    }
+    
+    .info-row:hover {
+      background: linear-gradient(135deg, #e9ecef 0%, #f8f9fa 100%);
+      border-color: #0d6efd;
+      transform: translateX(6px);
+      box-shadow: 0 2px 12px rgba(13,110,253,0.08);
+    }
+    
+    .info-row:last-child {
+      margin-bottom: 0;
+    }
+    
+    .info-row .label {
+      font-weight: 600;
+      color: #0d6efd;
+      min-width: 110px;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .info-row .label i {
+      font-size: 1rem;
+    }
+    
+    .info-row .value {
+      flex: 1;
+      color: #2d3748;
+      font-weight: 500;
+    }
+    
+    /* Action Buttons */
+    .action-buttons .btn {
+      border-radius: 12px;
+      padding: 1rem 1.5rem;
+      font-weight: 600;
+      font-size: 1rem;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+    }
+    
+    .action-buttons .btn::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 0;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.3);
+      transform: translate(-50%, -50%);
+      transition: width 0.6s, height 0.6s;
+    }
+    
+    .action-buttons .btn:hover::before {
+      width: 400px;
+      height: 400px;
+    }
+    
+    .action-buttons .btn i {
+      font-size: 1.2rem;
+      position: relative;
+      z-index: 1;
+      transition: transform 0.3s ease;
+    }
+    
+    .action-buttons .btn:hover i {
+      transform: scale(1.1) rotate(5deg);
+    }
+    
+    .action-buttons .btn span {
+      position: relative;
+      z-index: 1;
+    }
+    
+    .btn-outline-danger {
+      border: 2px solid #dc3545;
+      color: #dc3545;
+      background: linear-gradient(135deg, rgba(220, 53, 69, 0.05) 0%, rgba(220, 53, 69, 0.02) 100%);
+    }
+    
+    .btn-outline-danger:hover {
+      background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+      color: white;
+      border-color: #dc3545;
+      transform: translateY(-3px) scale(1.02);
+      box-shadow: 0 6px 20px rgba(220,53,69,0.4);
+    }
+    
+    .btn-outline-danger:active {
+      transform: translateY(-1px) scale(1);
+    }
+    
+    .btn-primary {
+      background: linear-gradient(135deg, #0d6efd 0%, #0b5ed7 100%);
+      border: none;
+      color: white;
+      box-shadow: 0 4px 16px rgba(13,110,253,0.3);
+    }
+    
+    .btn-primary:hover {
+      background: linear-gradient(135deg, #0b5ed7 0%, #084298 100%);
+      transform: translateY(-3px) scale(1.02);
+      box-shadow: 0 8px 24px rgba(13,110,253,0.5);
+    }
+    
+    .btn-primary:active {
+      transform: translateY(-1px) scale(1);
+    }
+    
+    /* Responsive */
+    @media (max-width: 991px) {
+      .welcome-section .page-header {
+        font-size: 1.6rem;
+      }
+      .preview-container {
+        max-height: 500px;
+      }
+      .btn-back-custom {
+        padding: 0.6rem 1.25rem;
+      }
+    }
+    
+    @media (max-width: 768px) {
+      main { padding: 80px 1rem 2rem !important; }
+      .welcome-section { margin-bottom: 1.5rem !important; }
+      .welcome-section .page-header { font-size: 1.4rem; }
+      .welcome-section p { font-size: 0.9rem; }
+      .welcome-section .d-flex { flex-direction: column; align-items: flex-start !important; gap: 1rem; }
+      .btn-back-custom { width: 100%; justify-content: center; }
+      
+      .section-card { margin-bottom: 1.25rem; }
+      .section-header { padding: 1rem 1.25rem; }
+      .section-header h5 { font-size: 1rem; }
+      .section-header i { font-size: 1.3rem; }
+      .section-content { padding: 1.25rem; }
+      
+      .preview-container { 
+        min-height: 350px; 
+        max-height: 450px; 
+        padding: 1rem;
+      }
+      .preview-area { 
+        min-height: 350px;
+        padding: 0.75rem;
+      }
+      .preview-area iframe { height: 400px; }
+      
+      .info-row { 
+        flex-direction: column; 
+        gap: 0.5rem; 
+        padding: 1rem;
+      }
+      .info-row .label { 
+        min-width: auto; 
+        font-size: 0.9rem;
+        font-weight: 700;
+      }
+      .info-row .value { font-size: 0.9rem; }
+      .info-row:hover { transform: translateX(0); }
+      
+      .btn-action-custom { 
+        padding: 1rem 1.25rem !important;
+        gap: 0.875rem;
+      }
+      .btn-icon-wrapper {
+        width: 36px;
+        height: 36px;
+      }
+      .btn-icon-wrapper i { font-size: 1.2rem !important; }
+      .btn-text-main { font-size: 0.95rem; }
+      .btn-text-sub { font-size: 0.75rem; }
+      
+      #timeline-container { max-height: 300px; }
+    }
+    
+    @media (max-width: 576px) {
+      .welcome-section { padding: 1rem !important; }
+      .welcome-section .page-header { font-size: 1.25rem; }
+      .welcome-section p { font-size: 0.85rem; }
+      
+      .section-card { border-radius: 12px; }
+      .section-header { padding: 0.9rem 1rem; }
+      .section-header h5 { font-size: 0.95rem; }
+      .section-header i { font-size: 1.2rem; }
+      .section-content { padding: 1rem; }
+      
+      .preview-container { 
+        min-height: 280px; 
+        max-height: 380px;
+        padding: 0.875rem;
+      }
+      .preview-area { 
+        min-height: 280px;
+        padding: 0.5rem;
+      }
+      .preview-area iframe { height: 320px; }
+      .loading-state i { font-size: 2.5rem !important; }
+      
+      .info-row { padding: 0.875rem; }
+      
+      .btn-action-custom { 
+        padding: 0.9rem 1rem !important;
+        gap: 0.75rem;
+      }
+      .btn-icon-wrapper {
+        width: 32px;
+        height: 32px;
+      }
+      .btn-icon-wrapper i { font-size: 1.1rem !important; }
+      .btn-text-main { font-size: 0.9rem; }
+      .btn-text-sub { font-size: 0.7rem; }
+      
+      #note { font-size: 0.875rem; padding: 0.875rem; }
+    }
+  </style>
+</head>
+<body>
+  <header class="navbar-container navbar">
+    <!-- Navbar component will be injected here -->
+  </header>
+
+  <main class="container my-5">
+    <!-- Welcome Section -->
+    <div class="welcome-section mb-4">
+      <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+        <div>
+          <h1 class="page-header mb-2 d-flex align-items-center gap-2">
+            <i class="bi bi-file-earmark-check-fill"></i>
+            Preview Surat
+          </h1>
+          <p class="text-muted mb-0 d-flex align-items-center gap-2">
+            <i class="bi bi-info-circle"></i>
+            Periksa surat dan lakukan disposisi
+          </p>
+        </div>
+        <button onclick="history.back()" class="btn btn-outline-secondary btn-back-custom">
+          <i class="bi bi-arrow-left-circle"></i> <span>Kembali</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="row g-4">
+      <!-- Left: Preview Surat -->
+      <div class="col-lg-8">
+        <div class="section-card">
+          <div class="section-header">
+            <i class="bi bi-file-earmark-pdf-fill text-primary"></i>
+            <h5>Dokumen Surat</h5>
+          </div>
+          <div class="section-content preview-container">
+            <div id="preview" class="preview-area">
+              <div class="loading-state">
+                <i class="bi bi-file-earmark-arrow-down text-primary" style="font-size: 3rem; opacity: 0.4;"></i>
+                <div class="spinner-border text-primary mt-3" role="status">
+                  <span class="visually-hidden">Memuat...</span>
+                </div>
+                <p class="mt-3 text-primary fw-semibold mb-1">Memuat preview surat...</p>
+                <p class="text-muted small mb-0">Mohon tunggu sebentar</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right: Info & Actions -->
+      <div class="col-lg-4">
+        <!-- Info Card -->
+        <div class="section-card mb-4">
+          <div class="section-header">
+            <i class="bi bi-info-circle-fill text-info"></i>
+            <h5>Informasi Surat</h5>
+          </div>
+          <div class="section-content">
+            <div id="meta" class="info-details">-</div>
+          </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="action-buttons">
+          <div class="d-grid gap-2 grid-cols-2">
+            <button id="btn-return" class="btn btn-outline-danger btn-lg w-100 btn-action-custom">
+              <i class="bi bi-arrow-return-left"></i>
+              <span>Kembalikan</span>
+            </button>
+            <button id="btn-forward" class="btn btn-primary btn-lg w-100 btn-action-custom">
+              <i class="bi bi-arrow-right-circle-fill"></i>
+              <span>Teruskan</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Timeline Card -->
+        <div class="section-card mt-4">
+          <div class="section-header">
+            <i class="bi bi-clock-history text-success"></i>
+            <h5>Riwayat / Timeline</h5>
+          </div>
+          <div class="section-content">
+            <div id="timeline-container" style="max-height:400px;overflow-y:auto;padding-right:0.5rem;">
+              <div class="text-muted small text-center py-3">
+                <div class="spinner-border spinner-border-sm text-primary mb-2" role="status">
+                  <span class="visually-hidden">Memuat...</span>
+                </div>
+                <p class="mb-0">Memuat riwayat...</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+  
+  <style>
+    /* Custom scrollbar for timeline */
+    #timeline-container::-webkit-scrollbar {
+      width: 6px;
+    }
+    
+    #timeline-container::-webkit-scrollbar-track {
+      background: #f1f3f5;
+      border-radius: 10px;
+    }
+    
+    #timeline-container::-webkit-scrollbar-thumb {
+      background: linear-gradient(135deg, #0d6efd 0%, #0b5ed7 100%);
+      border-radius: 10px;
+    }
+    
+    #timeline-container::-webkit-scrollbar-thumb:hover {
+      background: linear-gradient(135deg, #0b5ed7 0%, #084298 100%);
+    }
+    
+    /* Textarea focus enhancement */
+    #note:focus {
+      border-color: #0d6efd !important;
+      box-shadow: 0 0 0 0.3rem rgba(13,110,253,0.15) !important;
+      transform: translateY(-2px);
+    }
+    
+    #note:hover {
+      border-color: #0d6efd !important;
+    }
+  </style>
+
+  <script src="../../assets/js/api.js"></script>
+  <script src="../../assets/js/navbar.js"></script>
+  <script src="../../assets/js/confirmation-modal.js"></script>
+  <script src="../../assets/js/sekretaris/navbar-sekretaris.js"></script>
+  <script src="../../assets/js/sekretaris/preview-helper.js"></script>
+  <script src="../../assets/js/components/timeline.js"></script>
+  <script>
+    // Inline page logic: load id and render
+    (async function(){
+      function qs(id){ return document.getElementById(id); }
+      const id = (new URLSearchParams(window.location.search)).get('id');
+      const previewEl = qs('preview');
+      const metaEl = qs('meta');
+      const btnReturn = qs('btn-return');
+      const btnForward = qs('btn-forward');
+
+      if (!id){ previewEl.innerText = 'ID tidak ditemukan'; }
+
+      function renderTimeline(item){
+        const container = qs('timeline-container');
+        if (!container) return;
+        const timeline = item.timeline || item.history || [];
+        if (!timeline || !timeline.length){ 
+          container.innerHTML = '<div class="text-muted small text-center py-3">Belum ada riwayat.</div>'; 
+          return; 
+        }
+        const sorted = timeline.slice().sort((a,b) => {
+          const tA = new Date(a.at || a.time || a.tanggal || 0).getTime();
+          const tB = new Date(b.at || b.time || b.tanggal || 0).getTime();
+          return tB - tA;
+        });
+        const actionLabels = {
+          'proses': '📝 Pengajuan dibuat',
+          'diterima': '✅ Diverifikasi oleh Koordinator',
+          'ditolak': '❌ Ditolak oleh Koordinator',
+          'nomor_assigned': '🔢 Nomor surat diterbitkan',
+          'file_uploaded': '📎 File surat diunggah',
+          'disposisi_to_sekretaris': '📤 Diteruskan ke Sekretaris',
+          'disposisi_to_pendeta': '📤 Diteruskan ke Pendeta',
+          'disposisi_to_tatausaha': '📥 Dikembalikan ke Tata Usaha',
+          'validated_by_sekretaris': '✅ Divalidasi oleh Sekretaris',
+          'validated_by_pendeta': '✅ Divalidasi oleh Pendeta'
+        };
+        const roleNames = {'jemaat':'Jemaat','koordinator':'Koordinator','tatausaha':'Tata Usaha','sekretaris':'Sekretaris','pendeta':'Pendeta'};
+        const html = sorted.map(h => {
+          const action = h.action || h.status || 'update';
+          const label = actionLabels[action] || action;
+          const time = h.at || h.time || h.tanggal;
+          const by = h.by ? roleNames[h.by.toLowerCase()] || h.by : '';
+          const note = h.note || h.keterangan || '';
+          const isRej = action === 'ditolak' || action === 'disposisi_to_tatausaha';
+          return `<div style="border-left:3px solid ${isRej?'#dc3545':'#0d6efd'};padding-left:12px;margin-bottom:16px;position:relative;">
+            <div style="position:absolute;left:-7px;top:4px;width:12px;height:12px;border-radius:50%;background:${isRej?'#dc3545':'#0d6efd'};"></div>
+            <div class="d-flex justify-content-between align-items-start mb-1">
+              <div class="fw-semibold small" style="color:${isRej?'#dc3545':'#2d3748'};">${label}</div>
+              ${by?`<span class="badge bg-${isRej?'danger':'primary'}" style="font-size:0.65rem;">${by}</span>`:''}
+            </div>
+            <div class="small text-muted"><i class="bi bi-clock"></i> ${time||'-'}</div>
+            ${note?`<div class="small mt-2" style="background:${isRej?'#fff5f5':'#f8f9fa'};padding:6px 8px;border-radius:4px;"><strong>💬 Catatan:</strong><div style="margin-top:2px;white-space:pre-wrap;">${note}</div></div>`:''}
+          </div>`;
+        }).join('');
+        container.innerHTML = html;
+      }
+
+      async function refresh(){
+        // Try to fetch full detail from backend (this generates pre-signed URL on the server)
+        let item = null;
+        try {
+          item = await API.pengajuan.getById(id);
+          console.log('✅ Sekretaris detail loaded from API.getById', { id: id, has_file_url: !!(item && (item.file_url || item.final_file_url)) });
+        } catch (e) {
+          console.warn('⚠️ API.getById failed for sekretaris detail, falling back to local find:', e && e.message);
+        }
+
+        if (!item) {
+          try { item = await LS.find('local_pengajuan', i=>i && String(i.id)===String(id)); } catch(err){ item = null; }
+        }
+
+        if (!item){ 
+          previewEl.innerHTML = '<div class="alert alert-danger m-4"><i class="bi bi-x-circle-fill"></i> Data tidak ditemukan</div>'; 
+          return; 
+        }
+
+        previewEl.innerHTML = '';
+        window.SekPreview && window.SekPreview.renderPreview(previewEl, item);
+        renderTimeline(item);
+        
+        // Check status: jika sudah didisposisi atau validated, sembunyikan tombol aksi
+        const status = String(item.status || '').toLowerCase();
+        const isAlreadyDisposed = (
+          status === 'disposisi_to_pendeta' || 
+          status === 'validated_by_pendeta' || 
+          status === 'validated' || 
+          status === 'archived' ||
+          item.validated === true
+        );
+        
+        // Show/hide action buttons based on status
+        if (isAlreadyDisposed) {
+          // Surat sudah didisposisi/selesai - sembunyikan tombol
+          btnReturn.style.display = 'none';
+          btnForward.style.display = 'none';
+          
+          // Show info message
+          const actionContainer = document.querySelector('.action-buttons');
+          if (actionContainer) {
+            actionContainer.innerHTML = `
+              <div class="alert alert-info mb-0" style="border-radius:12px;">
+                <i class="bi bi-info-circle-fill"></i>
+                <strong>Surat Sudah Diproses</strong>
+                <div class="small mt-2">Surat ini telah diteruskan ke Pendeta atau sudah selesai divalidasi. Tidak ada aksi disposisi yang tersedia.</div>
+              </div>
+            `;
+          }
+        } else {
+          // Surat masih di Daftar Masuk - tampilkan tombol disposisi
+          btnReturn.style.display = 'block';
+          btnForward.style.display = 'block';
+        }
+        
+        // Format info dengan struktur yang lebih rapih
+        const statusBadge = isAlreadyDisposed 
+          ? '<span class="badge bg-success">Sudah Diproses</span>'
+          : '<span class="badge bg-warning text-dark">Menunggu Disposisi</span>';
+        
+        metaEl.innerHTML = `
+          <div class="info-row">
+            <div class="label"><i class="bi bi-hash"></i> Nomor</div>
+            <div class="value">${item.nomor||item.nomor_surat||item.number||'-'}</div>
+          </div>
+          <div class="info-row">
+            <div class="label"><i class="bi bi-file-text"></i> Jenis</div>
+            <div class="value">${item.jenis||item.tipe||item.type||'-'}</div>
+          </div>
+          <div class="info-row">
+            <div class="label"><i class="bi bi-person"></i> Pengaju</div>
+            <div class="value">${item.user_nama||item.pemohon_nama||item.nama||item.name||item.pengaju||'-'}</div>
+          </div>
+          <div class="info-row">
+            <div class="label"><i class="bi bi-calendar"></i> Tanggal</div>
+            <div class="value">${item.created_at||item.createdAt||'-'}</div>
+          </div>
+          <div class="info-row">
+            <div class="label"><i class="bi bi-tag"></i> Status</div>
+            <div class="value">${statusBadge}</div>
+          </div>
+        `;
+      }
+
+      btnReturn.addEventListener('click', async ()=>{
+        ConfirmModal.show({
+          type: 'danger',
+          title: 'Konfirmasi Pengembalian Surat',
+          message: 'Kembalikan surat ke Tata Usaha?',
+          subMessage: 'Alasan penolakan wajib diisi.',
+          showInput: true,
+          inputLabel: 'Catatan Penolakan',
+          inputRequired: true,
+          inputMinLength: 10,
+          inputPlaceholder: 'Masukkan alasan pengembalian...',
+          showWarning: true,
+          warningText: 'Tindakan ini tidak dapat dibatalkan.',
+          confirmText: 'Kembalikan Surat',
+          cancelText: 'Batal',
+          onConfirm: async (note) => {
+            try {
+              await API.pengajuan.updateStatus(id, {
+                status: 'disposisi_to_tatausaha',
+                by: 'Sekretaris',
+                note: note,
+                to_role: 'tatausaha'
+              });
+              await refresh();
+              ConfirmModal.show({
+                type: 'success',
+                title: 'Surat Dikembalikan',
+                message: 'Surat berhasil dikembalikan ke Tata Usaha dengan catatan penolakan.',
+                confirmText: 'OK',
+                showWarning: false,
+                onConfirm: () => {
+                  window.location.href = 'daftar-masuk.html';
+                }
+              });
+            } catch(e) {
+              ConfirmModal.show({
+                type: 'danger',
+                title: 'Gagal Mengembalikan Surat',
+                message: 'Gagal mengembalikan surat: ' + (e.message || e),
+                confirmText: 'Tutup',
+                showWarning: false
+              });
+              console.error('Error returning to TU:', e);
+            }
+          }
+        });
+      });
+
+      btnForward.addEventListener('click', async ()=>{
+        ConfirmModal.show({
+          type: 'primary',
+          title: 'Konfirmasi Teruskan Surat',
+          message: 'Teruskan surat ke Pendeta?',
+          subMessage: 'Surat akan diteruskan untuk diproses lebih lanjut oleh Pendeta.',
+          showInput: true,
+          inputLabel: 'Catatan Disposisi (Opsional)',
+          inputRequired: false,
+          inputPlaceholder: 'Tambahkan catatan jika diperlukan...',
+          showWarning: false,
+          confirmText: 'Teruskan ke Pendeta',
+          cancelText: 'Batal',
+          onConfirm: async (note) => {
+            try {
+              await API.pengajuan.updateStatus(id, {
+                status: 'disposisi_to_pendeta',
+                by: 'Sekretaris',
+                note: note || '',
+                to_role: 'pendeta'
+              });
+              
+              // Re-render timeline before leaving to reflect Sekretaris validation + forwarding
+              await refresh();
+              
+              ConfirmModal.show({
+                type: 'success',
+                title: 'Surat Diteruskan',
+                message: 'Surat berhasil diteruskan ke Pendeta.',
+                confirmText: 'OK',
+                showWarning: false,
+                onConfirm: () => {
+                  window.location.href = 'daftar-masuk.html';
+                }
+              });
+            } catch(e) {
+              ConfirmModal.show({
+                type: 'danger',
+                title: 'Gagal Meneruskan Surat',
+                message: 'Gagal meneruskan surat: ' + (e.message || e),
+                confirmText: 'Tutup',
+                showWarning: false
+              });
+              console.error('Error forwarding to Pendeta:', e);
+            }
+          }
+        });
+      });
+
+      // Initial render immediately and also on storage changes (realtime)
+      refresh();
+      window.addEventListener('storage', (ev) => {
+        if (ev.key === 'local_pengajuan') refresh();
+      });
+    })();
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

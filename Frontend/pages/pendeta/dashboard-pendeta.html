@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="id">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width,initial-scale=1" />
+	<title>Dashboard - Pendeta</title>
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+	<link rel="stylesheet" href="../../assets/css/global.css">
+	<link rel="stylesheet" href="../../assets/css/navbar.css">
+	<link rel="stylesheet" href="../../assets/css/koordinator/daftar-surat-masuk.css">
+	<link rel="stylesheet" href="../../assets/css/koordinator/dashboard-koordinator.css">
+	<link rel="stylesheet" href="../../assets/css/confirmation-modal.css">
+	<link rel="stylesheet" href="../../assets/css/pendeta/dashboard-pendeta.css">
+	<link rel="stylesheet" href="../../assets/css/pendeta/responsive-pendeta.css">
+	<style>
+		.stat-card { border-radius:12px; padding:18px; }
+		.stat-count { font-size:1.6rem; font-weight:700 }
+		.stat-label { color:var(--text-muted); }
+		.quick-links a { margin-right:10px; }
+	</style>
+</head>
+<body>
+
+	<header class="navbar-container navbar">
+	  <!-- Navbar component will be injected here -->
+	</header>
+
+	<main class="container my-5">
+		<div class="welcome-section">
+			<div class="welcome-content">
+				<div class="welcome-greeting">Selamat Datang,</div>
+				<h2 id="welcome-name" class="welcome-name">Pendeta</h2>
+				<p class="welcome-subtitle">Pendeta GMIT Yegar Sahaduta Bello</p>
+			</div>
+			<div class="welcome-decoration">
+				<div class="decoration-circle circle-1"></div>
+				<div class="decoration-circle circle-2"></div>
+				<div class="decoration-circle circle-3"></div>
+			</div>
+		</div>
+
+		<div class="row g-3 stats-row justify-content-center">
+			<div class="col-md-6 col-lg-5 col-xl-4">
+				<div class="card stat-card" data-card="masuk">
+					<div class="stat-card-ripple"></div>
+					<div class="stat-body">
+						<div class="stat-icon bg-blue">
+							<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+								<path d="M3 13L8 6H16L21 13" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+								<path d="M21 13V19C21 19.552 20.552 20 20 20H4C3.448 20 3 19.552 3 19V13" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+							</svg>
+						</div>
+						<div class="stat-info">
+							<div class="stat-label">Surat Masuk</div>
+							<div id="count-masuk" class="stat-count">0</div>
+							<div class="stat-description">Menunggu Validasi Anda</div>
+						</div>
+					</div>
+					<div class="stat-card-footer">
+						<span>Lihat Detail</span>
+						<svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+							<path d="M9 18L15 12L9 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+						</svg>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-6 col-lg-5 col-xl-4">
+				<div class="card stat-card" data-card="disposisi">
+					<div class="stat-card-ripple"></div>
+					<div class="stat-body">
+						<div class="stat-icon bg-green">
+							<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+								<path d="M8 12L11 15L16 9" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+								<circle cx="12" cy="12" r="9" stroke="white" stroke-width="2"/>
+							</svg>
+						</div>
+						<div class="stat-info">
+							<div class="stat-label">Surat Tervalidasi</div>
+							<div id="count-disposisi" class="stat-count">0</div>
+							<div class="stat-description">Sudah Disetujui</div>
+						</div>
+					</div>
+					<div class="stat-card-footer">
+						<span>Lihat Detail</span>
+						<svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+							<path d="M9 18L15 12L9 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+						</svg>
+					</div>
+				</div>
+			</div>
+		</div>
+	</main>
+
+	<script src="../../assets/js/api.js"></script>
+	<script src="../../assets/js/navbar.js"></script>
+	<script src="../../assets/js/confirmation-modal.js"></script>
+	<script src="../../assets/js/pendeta/navbar-pendeta.js"></script>
+	<script src="../../assets/js/pendeta/dashboard-pendeta.js"></script>
+	<script>
+		// Set welcome name from currentUser
+		(function(){
+			try {
+				const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+				const nama = currentUser.nama || 'Pendeta';
+				const elName = document.getElementById('welcome-name');
+				if (elName) elName.textContent = nama;
+			} catch(e) {
+				console.error('Error setting welcome name:', e);
+			}
+		})();
+	</script>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

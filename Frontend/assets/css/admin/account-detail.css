@@ -1,0 +1,119 @@
+/* Account Detail - Admin */
+
+.card {
+  border: 1px solid #e7f1ff;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(13,110,253,0.08);
+  overflow: hidden;
+}
+
+.card-header {
+  background: linear-gradient(180deg, #f8f9fa 0%, #e9ecef 100%);
+  border-bottom: 2px solid #dee2e6;
+  padding: 20px 24px;
+}
+
+.card-header h4 {
+  color: #495057;
+  font-weight: 600;
+  font-size: 1.25rem;
+}
+
+.card-body {
+  padding: 24px;
+}
+
+.detail-label {
+  font-weight: 600;
+  color: #6b7280;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 8px;
+  display: block;
+}
+
+.detail-value {
+  color: #16202b;
+  font-size: 1rem;
+  font-weight: 500;
+  margin-bottom: 0;
+}
+
+/* Role badge */
+.badge {
+  padding: 0.4rem 0.85rem;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 0.85rem;
+  display: inline-block;
+}
+
+.badge.bg-primary { background: linear-gradient(135deg, #0b5ed7 0%, #0d6efd 100%) !important; color: #fff; }
+.badge.bg-info { background: linear-gradient(135deg, #0dcaf0 0%, #0aa2c0 100%) !important; color: #000; }
+.badge.bg-warning { background: linear-gradient(135deg, #ffc107 0%, #ffb300 100%) !important; color: #000; }
+.badge.bg-secondary { background: linear-gradient(135deg, #6c757d 0%, #5a6268 100%) !important; color: #fff; }
+.badge.bg-success { background: linear-gradient(135deg, #198754 0%, #157347 100%) !important; color: #fff; }
+.badge.bg-danger { background: linear-gradient(135deg, #dc3545 0%, #c82333 100%) !important; color: #fff; }
+.badge.text-dark { color: #000 !important; }
+
+/* Button styling */
+.btn {
+  padding: 0.5rem 1.25rem;
+  border-radius: 8px;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.btn-outline-secondary {
+  border: 1px solid #6c757d;
+  color: #6c757d;
+}
+
+.btn-outline-secondary:hover {
+  background: #6c757d;
+  color: #fff;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(108,117,125,0.3);
+}
+
+.btn-warning {
+  background: linear-gradient(135deg, #ffc107 0%, #ffb300 100%);
+  border: none;
+  color: #000;
+}
+
+.btn-warning:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(255,193,7,0.3);
+}
+
+.btn-danger {
+  background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+  border: none;
+}
+
+.btn-danger:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(220,53,69,0.3);
+}
+
+hr {
+  border-color: #e9ecef;
+  opacity: 1;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .card-body {
+    padding: 16px;
+  }
+  
+  .d-flex.gap-2 {
+    flex-direction: column;
+  }
+  
+  .btn {
+    width: 100%;
+  }
+}

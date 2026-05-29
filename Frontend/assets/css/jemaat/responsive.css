@@ -1,0 +1,700 @@
+/* ========================================
+   RESPONSIVE DESIGN - JEMAAT ROLE
+   Mobile First Approach
+   ======================================== */
+
+/* Base Styles - Mobile (320px+) */
+body {
+  font-size: 14px;
+  overflow-x: hidden;
+}
+
+.container {
+  padding-left: 15px;
+  padding-right: 15px;
+}
+
+/* Filter Form - Mobile Friendly */
+.filter-form,
+#filter-form {
+  row-gap: 0.75rem;
+}
+
+.filter-form .col-md-3,
+.filter-form .col-md-4,
+#filter-form .col-md-3,
+#filter-form .col-md-4 {
+  width: 100%;
+  margin-bottom: 0.5rem;
+}
+
+.search-wrap {
+  position: relative;
+}
+
+.search-wrap i {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #6c757d;
+  z-index: 1;
+}
+
+.search-wrap input {
+  padding-left: 38px;
+}
+
+/* Navbar - Mobile */
+.navbar {
+  padding: 0.75rem 1rem;
+}
+
+.navbar-brand {
+  font-size: 1rem;
+}
+
+.dropdown-menu {
+  font-size: 0.9rem;
+  min-width: 200px;
+}
+
+/* Dashboard Layout */
+.dashboard-wrapper {
+  padding: 1rem;
+  margin-top: 70px;
+}
+
+.rekap-section {
+  margin-bottom: 2rem;
+}
+
+.page-title {
+  font-size: 1.5rem;
+  margin-bottom: 1.5rem;
+  font-weight: 700;
+}
+
+/* Rekap Grid - Mobile */
+.rekap-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+
+.rekap-card {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.25rem;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  transition: all 0.3s ease;
+}
+
+.rekap-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+}
+
+.rekap-icon-box {
+  width: 48px;
+  height: 48px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  flex-shrink: 0;
+}
+
+.rekap-body {
+  flex: 1;
+}
+
+.rekap-title {
+  font-size: 0.875rem;
+  color: #6c757d;
+  margin-bottom: 0.25rem;
+}
+
+.rekap-count {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #212529;
+}
+
+/* Dashboard Cards */
+.dashboard-cards {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.dashboard-card {
+  padding: 1.25rem;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.dashboard-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+}
+
+/* Tables - Mobile Responsive */
+.table-responsive {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  margin-bottom: 1rem;
+}
+
+table {
+  font-size: 0.875rem;
+  width: 100%;
+  min-width: 600px;
+}
+
+table th {
+  white-space: nowrap;
+  font-size: 0.8rem;
+  padding: 0.75rem 0.5rem;
+}
+
+table td {
+  padding: 0.75rem 0.5rem;
+}
+
+/* Action Buttons - Stack on Mobile */
+.table-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  min-width: 140px;
+}
+
+.table-actions .btn {
+  width: 100%;
+  font-size: 0.8rem;
+  padding: 0.4rem 0.75rem;
+}
+
+/* Form Sections */
+.form-section {
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+  background: #f8f9fa;
+  border-radius: 10px;
+}
+
+.form-section h5 {
+  font-size: 1rem;
+  margin-bottom: 1rem;
+}
+
+/* Detail Header - Mobile */
+.detail-header {
+  padding: 1.5rem 1rem;
+  border-radius: 12px 12px 0 0;
+}
+
+.detail-header h3 {
+  font-size: 1.25rem;
+  margin-bottom: 0.5rem;
+}
+
+.detail-header p {
+  font-size: 0.875rem;
+}
+
+/* Status Card */
+.status-card {
+  padding: 1rem;
+  margin-top: -20px;
+}
+
+/* Info Sections - Mobile */
+.info-section {
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+
+.info-section h5 {
+  font-size: 0.95rem;
+  margin-bottom: 0.75rem;
+}
+
+.info-row {
+  grid-template-columns: 1fr;
+  gap: 0.25rem;
+  padding: 0.75rem 0;
+  margin-bottom: 0.5rem;
+}
+
+.info-label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #667eea;
+}
+
+.info-value {
+  font-size: 0.9rem;
+  margin-top: 0.25rem;
+}
+
+/* Progress Steps - Mobile */
+.progress-step {
+  padding: 0.75rem 0.5rem;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.5rem;
+}
+
+.progress-step > div:first-child {
+  width: 28px !important;
+  height: 28px !important;
+}
+
+.progress-step i {
+  font-size: 16px !important;
+}
+
+/* Action Buttons - Mobile */
+.action-buttons {
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+}
+
+.btn-action {
+  width: 100%;
+  padding: 0.875rem 1.25rem;
+  font-size: 0.95rem;
+  min-width: auto;
+}
+
+/* Badge Status */
+.badge-status-modern {
+  padding: 0.4rem 1rem;
+  font-size: 0.8rem;
+}
+
+/* Breadcrumb - Mobile */
+.breadcrumb-modern {
+  font-size: 0.8rem;
+}
+
+.breadcrumb-modern .breadcrumb-item {
+  display: inline-flex;
+  align-items: center;
+}
+
+/* Modal - Mobile */
+.modal-dialog {
+  margin: 0.5rem;
+  max-width: calc(100% - 1rem);
+}
+
+.modal-body {
+  padding: 1rem;
+}
+
+/* Cards Grid */
+.cards-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+
+/* Pengajuan Form - Mobile */
+.pengajuan-form-container {
+  padding: 1rem;
+}
+
+.form-group {
+  margin-bottom: 1rem;
+}
+
+.form-control, .form-select {
+  font-size: 0.9rem;
+  padding: 0.6rem 0.75rem;
+}
+
+/* File Upload Preview */
+.file-preview {
+  max-width: 100%;
+  overflow: hidden;
+}
+
+/* Notification List - Mobile */
+.notification-item {
+  padding: 1rem;
+  margin-bottom: 0.75rem;
+  border-radius: 8px;
+}
+
+.notification-item .notification-icon {
+  width: 36px;
+  height: 36px;
+  font-size: 1rem;
+}
+
+/* ========================================
+   TABLET - Small (576px+)
+   ======================================== */
+@media (min-width: 576px) {
+  body {
+    font-size: 15px;
+  }
+
+  .rekap-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.25rem;
+  }
+
+  .dashboard-cards {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.25rem;
+  }
+
+  .table-actions {
+    flex-direction: row;
+    min-width: 180px;
+  }
+
+  .table-actions .btn {
+    width: auto;
+    flex: 1;
+  }
+
+  table {
+    font-size: 0.9rem;
+  }
+
+  .info-row {
+    grid-template-columns: 160px 1fr;
+    gap: 1rem;
+  }
+
+  .info-label {
+    font-size: 0.875rem;
+  }
+
+  .info-value {
+    font-size: 0.95rem;
+  }
+
+  .detail-header h3 {
+    font-size: 1.5rem;
+  }
+
+  .modal-dialog {
+    margin: 1.75rem auto;
+    max-width: 500px;
+  }
+
+  .notification-item .notification-icon {
+    width: 40px;
+    height: 40px;
+    font-size: 1.1rem;
+  }
+}
+
+/* ========================================
+   TABLET - Medium (768px+)
+   ======================================== */
+@media (min-width: 768px) {
+  .container {
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+
+  .dashboard-wrapper {
+    padding: 2rem;
+    margin-top: 80px;
+  }
+
+  .page-title {
+    font-size: 1.75rem;
+  }
+
+  .rekap-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+  }
+
+  .rekap-icon-box {
+    width: 56px;
+    height: 56px;
+    font-size: 1.75rem;
+  }
+
+  .rekap-count {
+    font-size: 2rem;
+  }
+
+  .dashboard-cards {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+  }
+
+  .cards-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+  }
+
+  table {
+    min-width: auto;
+    font-size: 0.95rem;
+  }
+
+  table th {
+    font-size: 0.875rem;
+    padding: 1rem 0.75rem;
+  }
+
+  table td {
+    padding: 1rem 0.75rem;
+  }
+
+  .table-actions {
+    min-width: 200px;
+  }
+
+  .detail-header {
+    padding: 2rem 1.5rem;
+  }
+
+  .detail-header h3 {
+    font-size: 1.65rem;
+  }
+
+  .status-card {
+    padding: 1.5rem;
+    margin-top: -30px;
+  }
+
+  .info-section {
+    padding: 1.5rem;
+  }
+
+  .info-section h5 {
+    font-size: 1.05rem;
+  }
+
+  .info-row {
+    grid-template-columns: 180px 1fr;
+  }
+
+  .progress-step {
+    flex-direction: row;
+    align-items: center;
+    padding: 0.75rem;
+  }
+
+  .progress-step > div:first-child {
+    width: 32px !important;
+    height: 32px !important;
+  }
+
+  .progress-step i {
+    font-size: 20px !important;
+  }
+
+  .action-buttons {
+    flex-direction: row;
+    gap: 1rem;
+  }
+
+  .btn-action {
+    min-width: 200px;
+  }
+}
+
+/* ========================================
+   DESKTOP - Large (992px+)
+   ======================================== */
+@media (min-width: 992px) {
+  body {
+    font-size: 16px;
+  }
+
+  .dashboard-wrapper {
+    padding: 2.5rem;
+  }
+
+  .page-title {
+    font-size: 2rem;
+  }
+
+  .rekap-grid {
+    grid-template-columns: repeat(5, 1fr);
+    gap: 1.5rem;
+  }
+
+  .dashboard-cards {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .breadcrumb-modern {
+    font-size: 0.9rem;
+  }
+
+  .pengajuan-form-container {
+    padding: 2rem;
+  }
+
+  .form-control, .form-select {
+    font-size: 1rem;
+    padding: 0.75rem 1rem;
+  }
+}
+
+/* ========================================
+   DESKTOP - Large (992px+)
+   ======================================== */
+@media (min-width: 992px) {
+  body {
+    font-size: 16px;
+  }
+
+  .dashboard-cards {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .cards-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  table {
+    font-size: 1rem;
+  }
+
+  .detail-header {
+    padding: 2.5rem 2rem;
+  }
+
+  .detail-header h3 {
+    font-size: 1.75rem;
+  }
+
+  .info-section h5 {
+    font-size: 1.1rem;
+  }
+
+  .modal-dialog {
+    max-width: 800px;
+  }
+
+  .modal-dialog.modal-lg {
+    max-width: 900px;
+  }
+
+  /* Better hover states on desktop */
+  .info-section:hover {
+    transform: translateX(5px);
+  }
+
+  .dashboard-card:hover {
+    transform: translateY(-5px);
+  }
+}
+
+/* ========================================
+   DESKTOP - Extra Large (1200px+)
+   ======================================== */
+@media (min-width: 1200px) {
+  .container {
+    max-width: 1200px;
+  }
+
+  .dashboard-cards {
+    gap: 2rem;
+  }
+
+  .detail-header h3 {
+    font-size: 2rem;
+  }
+
+  .modal-dialog.modal-lg {
+    max-width: 1000px;
+  }
+}
+
+/* ========================================
+   LANDSCAPE PHONE ORIENTATION
+   ======================================== */
+@media (max-height: 500px) and (orientation: landscape) {
+  .detail-header {
+    padding: 1rem;
+  }
+
+  .detail-header h3 {
+    font-size: 1.25rem;
+  }
+
+  .modal-dialog {
+    margin: 0.5rem auto;
+  }
+
+  .modal-body {
+    max-height: 70vh;
+    overflow-y: auto;
+  }
+}
+
+/* ========================================
+   PRINT STYLES
+   ======================================== */
+@media print {
+  .navbar,
+  .breadcrumb,
+  .action-buttons,
+  .btn,
+  button {
+    display: none !important;
+  }
+
+  .detail-header {
+    background: white !important;
+    color: black !important;
+    box-shadow: none !important;
+  }
+
+  .info-section {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  body {
+    font-size: 12pt;
+  }
+}
+
+/* ========================================
+   ACCESSIBILITY
+   ======================================== */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* High contrast mode */
+@media (prefers-contrast: high) {
+  .dashboard-card,
+  .info-section {
+    border: 2px solid currentColor;
+  }
+
+  .btn {
+    border: 2px solid currentColor;
+  }
+}

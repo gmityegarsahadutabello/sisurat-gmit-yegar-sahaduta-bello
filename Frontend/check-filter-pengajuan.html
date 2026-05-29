@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🔍 Check Filter Pengajuan - Debugging Tool</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+    .log-box {
+      background: #1e1e1e;
+      color: #d4d4d4;
+      padding: 20px;
+      border-radius: 8px;
+      font-family: 'Courier New', monospace;
+      font-size: 0.9rem;
+      max-height: 500px;
+      overflow-y: auto;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+    }
+    .log-success { color: #4ec9b0; }
+    .log-error { color: #f48771; }
+    .log-warning { color: #dcdcaa; }
+    .log-info { color: #9cdcfe; }
+    .btn-custom { border-radius: 8px; font-weight: 600; }
+    .stats-card {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
+<body class="bg-light">
+  <div class="container py-5">
+    <h1 class="mb-4">🔍 Check Filter Pengajuan</h1>
+    <p class="lead">Tool untuk debugging masalah filter pengajuan per jemaat</p>
+
+    <div class="stats-card mb-4" id="stats">
+      <h5>Statistik</h5>
+      <div id="stats-content">Belum ada data...</div>
+    </div>
+
+    <div class="row mb-4">
+      <div class="col-md-3">
+        <button class="btn btn-primary btn-custom w-100 mb-2" onclick="checkCurrentUser()">
+          1. Cek Current User
+        </button>
+      </div>
+      <div class="col-md-3">
+        <button class="btn btn-info btn-custom w-100 mb-2" onclick="checkAllPengajuan()">
+          2. Cek Semua Pengajuan
+        </button>
+      </div>
+      <div class="col-md-3">
+        <button class="btn btn-success btn-custom w-100 mb-2" onclick="testFilter()">
+          3. Test Filter
+        </button>
+      </div>
+      <div class="col-md-3">
+        <button class="btn btn-warning btn-custom w-100 mb-2" onclick="fixOldData()">
+          4. Fix Data Lama
+        </button>
+      </div>
+    </div>
+
+    <div class="row mb-4">
+      <div class="col-md-4">
+        <button class="btn btn-danger btn-custom w-100 mb-2" onclick="deleteOldData()">
+          ⚠️ Hapus Data Tanpa user_id
+        </button>
+      </div>
+      <div class="col-md-4">
+        <button class="btn btn-secondary btn-custom w-100 mb-2" onclick="clearLog()">
+          Clear Log
+        </button>
+      </div>
+      <div class="col-md-4">
+        <button class="btn btn-dark btn-custom w-100 mb-2" onclick="exportData()">
+          📥 Export Data
+        </button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header bg-dark text-white">
+        <h5 class="mb-0">Console Log</h5>
+      </div>
+      <div class="card-body p-0">
+        <div class="log-box" id="log"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const log = document.getElementById('log');
+    const stats = document.getElementById('stats-content');
+
+    function addLog(message, type = 'info') {
+      const timestamp = new Date().toLocaleTimeString('id-ID');
+      const className = `log-${type}`;
+      log.innerHTML += `<span class="${className}">[${timestamp}] ${message}</span>\n`;
+      log.scrollTop = log.scrollHeight;
+    }
+
+    function clearLog() {
+      log.innerHTML = '';
+      addLog('Log cleared', 'info');
+    }
+
+    function updateStats(data) {
+      stats.innerHTML = `
+        <div class="row">
+          <div class="col-md-6">
+            <strong>Total Pengajuan:</strong> ${data.total || 0}<br>
+            <strong>Dengan user_id:</strong> ${data.withUserId || 0}<br>
+            <strong>Tanpa user_id:</strong> ${data.withoutUserId || 0}
+          </div>
+          <div class="col-md-6">
+            <strong>Current User:</strong> ${data.userName || 'N/A'}<br>
+            <strong>Email:</strong> ${data.userEmail || 'N/A'}<br>
+            <strong>Pengajuan User:</strong> ${data.userPengajuan || 0}
+          </div>
+        </div>
+      `;
+    }
+
+    function checkCurrentUser() {
+      addLog('═══════════════════════════════════════', 'info');
+      addLog('🔍 CHECKING CURRENT USER', 'info');
+      addLog('═══════════════════════════════════════', 'info');
+
+      try {
+        const userStr = localStorage.getItem('currentUser');
+        if (!userStr) {
+          addLog('❌ ERROR: No currentUser in localStorage!', 'error');
+          addLog('⚠️ User belum login atau session expired', 'warning');
+          return;
+        }
+
+        const user = JSON.parse(userStr);
+        addLog('✅ Current User ditemukan:', 'success');
+        addLog(`   - ID: ${user.id || 'N/A'}`, 'info');
+        addLog(`   - Nama: ${user.nama || 'N/A'}`, 'info');
+        addLog(`   - Email: ${user.email || 'N/A'}`, 'info');
+        addLog(`   - NIK: ${user.nik || 'N/A'}`, 'info');
+        addLog(`   - Role: ${user.role || 'N/A'}`, 'info');
+        addLog(`   - Rayon: ${user.rayon || 'N/A'}`, 'info');
+
+        if (!user.id && !user.email) {
+          addLog('⚠️ WARNING: User tidak punya ID atau Email!', 'warning');
+        }
+
+      } catch (e) {
+        addLog(`❌ ERROR parsing currentUser: ${e.message}`, 'error');
+      }
+    }
+
+    function checkAllPengajuan() {
+      addLog('═══════════════════════════════════════', 'info');
+      addLog('📋 CHECKING ALL PENGAJUAN', 'info');
+      addLog('═══════════════════════════════════════', 'info');
+
+      try {
+        const pengajuanStr = localStorage.getItem('local_pengajuan');
+        if (!pengajuanStr) {
+          addLog('ℹ️ Tidak ada pengajuan di localStorage', 'info');
+          updateStats({ total: 0, withUserId: 0, withoutUserId: 0 });
+          return;
+        }
+
+        const pengajuan = JSON.parse(pengajuanStr);
+        addLog(`✅ Total pengajuan: ${pengajuan.length}`, 'success');
+
+        let withUserId = 0;
+        let withoutUserId = 0;
+
+        pengajuan.forEach((p, idx) => {
+          const hasUserId = p.user_id || p.user_email || p.email;
+          if (hasUserId) withUserId++;
+          else withoutUserId++;
+
+          addLog(`\n[${idx + 1}] ${p.jenis || p.type || 'Unknown'}`, 'info');
+          addLog(`    ID: ${p.id || 'N/A'}`, 'info');
+          addLog(`    user_id: ${p.user_id || '❌ TIDAK ADA'}`, p.user_id ? 'success' : 'error');
+          addLog(`    user_email: ${p.user_email || '❌ TIDAK ADA'}`, p.user_email ? 'success' : 'error');
+          addLog(`    email: ${p.email || '❌ TIDAK ADA'}`, p.email ? 'success' : 'error');
+          addLog(`    Status: ${p.status || 'N/A'}`, 'info');
+        });
+
+        addLog(`\n📊 SUMMARY:`, 'info');
+        addLog(`   ✅ Dengan user_id/email: ${withUserId}`, 'success');
+        addLog(`   ❌ Tanpa user_id/email: ${withoutUserId}`, withoutUserId > 0 ? 'error' : 'success');
+
+        if (withoutUserId > 0) {
+          addLog(`\n⚠️ WARNING: Ada ${withoutUserId} pengajuan tanpa identitas user!`, 'warning');
+          addLog('   Pengajuan ini akan tampil di SEMUA akun jemaat!', 'warning');
+          addLog('   Gunakan tombol "Fix Data Lama" untuk memperbaiki', 'warning');
+        }
+
+        updateStats({ 
+          total: pengajuan.length, 
+          withUserId, 
+          withoutUserId 
+        });
+
+      } catch (e) {
+        addLog(`❌ ERROR parsing pengajuan: ${e.message}`, 'error');
+      }
+    }
+
+    function testFilter() {
+      addLog('═══════════════════════════════════════', 'info');
+      addLog('🧪 TESTING FILTER', 'info');
+      addLog('═══════════════════════════════════════', 'info');
+
+      try {
+        const userStr = localStorage.getItem('currentUser');
+        const pengajuanStr = localStorage.getItem('local_pengajuan');
+
+        if (!userStr) {
+          addLog('❌ ERROR: No currentUser', 'error');
+          return;
+        }
+
+        if (!pengajuanStr) {
+          addLog('ℹ️ Tidak ada pengajuan', 'info');
+          return;
+        }
+
+        const user = JSON.parse(userStr);
+        const pengajuan = JSON.parse(pengajuanStr);
+
+        addLog(`🔍 Filtering untuk:`, 'info');
+        addLog(`   User ID: ${user.id}`, 'info');
+        addLog(`   User Email: ${user.email}`, 'info');
+
+        const filtered = pengajuan.filter(item => {
+          return item.user_id === user.id || 
+                 item.user_email === user.email ||
+                 item.email === user.email;
+        });
+
+        addLog(`\n✅ Hasil Filter:`, 'success');
+        addLog(`   Total sebelum filter: ${pengajuan.length}`, 'info');
+        addLog(`   Total setelah filter: ${filtered.length}`, 'success');
+
+        if (filtered.length > 0) {
+          addLog(`\n📋 Pengajuan yang tampil:`, 'info');
+          filtered.forEach((p, idx) => {
+            addLog(`   ${idx + 1}. ${p.jenis || p.type} - ${p.status}`, 'success');
+          });
+        } else {
+          addLog(`\n⚠️ Tidak ada pengajuan untuk user ini`, 'warning');
+        }
+
+        if (filtered.length < pengajuan.length) {
+          const hidden = pengajuan.length - filtered.length;
+          addLog(`\n🔒 ${hidden} pengajuan DISEMBUNYIKAN (milik user lain)`, 'info');
+        }
+
+        updateStats({
+          total: pengajuan.length,
+          withUserId: pengajuan.filter(p => p.user_id).length,
+          withoutUserId: pengajuan.filter(p => !p.user_id).length,
+          userName: user.nama,
+          userEmail: user.email,
+          userPengajuan: filtered.length
+        });
+
+      } catch (e) {
+        addLog(`❌ ERROR: ${e.message}`, 'error');
+      }
+    }
+
+    function fixOldData() {
+      addLog('═══════════════════════════════════════', 'info');
+      addLog('🔧 FIXING OLD DATA', 'info');
+      addLog('═══════════════════════════════════════', 'info');
+
+      try {
+        const pengajuanStr = localStorage.getItem('local_pengajuan');
+        if (!pengajuanStr) {
+          addLog('ℹ️ Tidak ada pengajuan', 'info');
+          return;
+        }
+
+        const pengajuan = JSON.parse(pengajuanStr);
+        const usersStr = localStorage.getItem('users');
+        
+        if (!usersStr) {
+          addLog('❌ ERROR: Tidak ada data users', 'error');
+          return;
+        }
+
+        const users = JSON.parse(usersStr);
+        let fixed = 0;
+        let notFound = 0;
+
+        pengajuan.forEach(p => {
+          if (!p.user_id) {
+            // Try to match by email or NIK
+            const matchedUser = users.find(u => 
+              u.email === p.email || 
+              u.email === p.pemohon_email ||
+              u.nik === p.pemohon_nik
+            );
+
+            if (matchedUser) {
+              p.user_id = matchedUser.id;
+              p.user_email = matchedUser.email;
+              p.user_nama = matchedUser.nama;
+              p.user_nik = matchedUser.nik;
+              addLog(`✅ Fixed: ${p.jenis} → User: ${matchedUser.nama}`, 'success');
+              fixed++;
+            } else {
+              addLog(`❌ Not found: ${p.jenis} (email: ${p.email || 'N/A'})`, 'error');
+              notFound++;
+            }
+          }
+        });
+
+        if (fixed > 0) {
+          localStorage.setItem('local_pengajuan', JSON.stringify(pengajuan));
+          addLog(`\n✅ BERHASIL memperbaiki ${fixed} pengajuan`, 'success');
+        }
+
+        if (notFound > 0) {
+          addLog(`⚠️ ${notFound} pengajuan tidak bisa dicocokkan`, 'warning');
+        }
+
+        if (fixed === 0 && notFound === 0) {
+          addLog('ℹ️ Semua data sudah memiliki user_id', 'info');
+        }
+
+      } catch (e) {
+        addLog(`❌ ERROR: ${e.message}`, 'error');
+      }
+    }
+
+    function deleteOldData() {
+      if (!confirm('⚠️ PERINGATAN!\n\nIni akan MENGHAPUS semua pengajuan yang tidak memiliki user_id.\n\nData yang dihapus TIDAK BISA dikembalikan!\n\nLanjutkan?')) {
+        addLog('❌ Pembatalan oleh user', 'warning');
+        return;
+      }
+
+      addLog('═══════════════════════════════════════', 'info');
+      addLog('🗑️ DELETING OLD DATA', 'info');
+      addLog('═══════════════════════════════════════', 'info');
+
+      try {
+        const pengajuanStr = localStorage.getItem('local_pengajuan');
+        if (!pengajuanStr) {
+          addLog('ℹ️ Tidak ada pengajuan', 'info');
+          return;
+        }
+
+        const pengajuan = JSON.parse(pengajuanStr);
+        const before = pengajuan.length;
+        
+        const cleaned = pengajuan.filter(p => p.user_id || p.user_email || p.email);
+        const deleted = before - cleaned.length;
+
+        if (deleted > 0) {
+          localStorage.setItem('local_pengajuan', JSON.stringify(cleaned));
+          addLog(`✅ BERHASIL menghapus ${deleted} pengajuan tanpa user_id`, 'success');
+          addLog(`📊 Sisa: ${cleaned.length} pengajuan`, 'info');
+        } else {
+          addLog('ℹ️ Tidak ada pengajuan yang perlu dihapus', 'info');
+        }
+
+      } catch (e) {
+        addLog(`❌ ERROR: ${e.message}`, 'error');
+      }
+    }
+
+    function exportData() {
+      try {
+        const data = {
+          currentUser: JSON.parse(localStorage.getItem('currentUser') || 'null'),
+          pengajuan: JSON.parse(localStorage.getItem('local_pengajuan') || '[]'),
+          users: JSON.parse(localStorage.getItem('users') || '[]'),
+          timestamp: new Date().toISOString()
+        };
+
+        const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `pengajuan-data-${Date.now()}.json`;
+        a.click();
+        URL.revokeObjectURL(url);
+
+        addLog('✅ Data exported successfully', 'success');
+      } catch (e) {
+        addLog(`❌ ERROR exporting: ${e.message}`, 'error');
+      }
+    }
+
+    // Auto-run on load
+    window.addEventListener('load', () => {
+      addLog('🚀 Tool siap digunakan', 'success');
+      addLog('Klik tombol di atas untuk debugging', 'info');
+    });
+  </script>
+</body>
+</html>

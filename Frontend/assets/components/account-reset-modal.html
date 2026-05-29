@@ -1,0 +1,71 @@
+<!-- Modal: Reset Password -->
+<div class="modal fade" id="resetPasswordModal" tabindex="-1" role="dialog" aria-labelledby="resetPasswordModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content modal-modern">
+      <div class="modal-header modal-header-warning">
+        <div>
+          <h5 class="modal-title text-dark fw-bold mb-1">
+            <i class="bi bi-key me-2"></i>Reset Password
+          </h5>
+          <p class="modal-subtitle text-dark-50 mb-0">Generate password sementara untuk user</p>
+        </div>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="alert alert-warning d-flex align-items-center mb-3">
+          <i class="bi bi-exclamation-circle-fill me-2 fs-5"></i>
+          <div>Anda akan mereset password untuk user berikut:</div>
+        </div>
+
+        <div class="card user-reset-info mb-3">
+          <div class="card-body">
+            <div class="d-flex align-items-center">
+              <div class="reset-user-avatar">
+                <i class="bi bi-person-fill"></i>
+              </div>
+              <div>
+                <h6 class="mb-1 fw-bold" id="reset-user-name">-</h6>
+                <small class="text-muted" id="reset-user-email">-</small><br>
+                <small class="text-muted">
+                  <i class="bi bi-card-text me-1"></i>NIK: <span id="reset-user-nik">-</span>
+                </small><br>
+                <small>
+                  <i class="bi bi-award me-1"></i>Role: <span id="reset-user-role-badge">-</span>
+                </small>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-divider"></div>
+
+        <div class="mb-3">
+          <label for="reset-reason" class="form-label fw-bold">
+            <i class="bi bi-chat-left-text me-1"></i>Alasan Reset Password
+          </label>
+          <textarea class="form-control form-control-modern" id="reset-reason" rows="3" required 
+                    placeholder="Wajib diisi. Contoh: Lupa password, permintaan user, dll."></textarea>
+          <div class="invalid-feedback">Alasan reset wajib diisi.</div>
+        </div>
+
+        <div class="alert alert-info">
+          <strong><i class="bi bi-info-circle me-1"></i>Yang akan terjadi:</strong>
+          <ul class="mb-0 mt-2">
+            <li>Password lama akan diganti dengan password sementara</li>
+            <li>User akan menerima password sementara (8 karakter)</li>
+            <li>User harus mengganti password saat login pertama kali</li>
+            <li>Password sementara hanya ditampilkan sekali</li>
+          </ul>
+        </div>
+      </div>
+      <div class="modal-footer modal-footer-modern">
+        <button type="button" class="btn btn-secondary btn-modern" data-bs-dismiss="modal">
+          <i class="bi bi-x-lg me-1"></i>Batal
+        </button>
+        <button type="button" class="btn btn-warning btn-modern" id="btn-reset-confirm">
+          <i class="bi bi-key me-1"></i>Reset Password
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

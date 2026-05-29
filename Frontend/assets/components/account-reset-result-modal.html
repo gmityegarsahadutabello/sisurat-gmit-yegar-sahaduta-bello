@@ -1,0 +1,59 @@
+<!-- Modal: Reset Password Result -->
+<div class="modal fade" id="resetResultModal" tabindex="-1" role="dialog" aria-labelledby="resetResultModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content modal-modern">
+      <div class="modal-header modal-header-success">
+        <div>
+          <h5 class="modal-title text-white fw-bold mb-1">
+            <i class="bi bi-check-circle me-2"></i>Password Berhasil Direset
+          </h5>
+          <p class="modal-subtitle text-white mb-0">Password sementara telah dibuat</p>
+        </div>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="alert alert-success d-flex align-items-center mb-3">
+          <i class="bi bi-check-circle-fill me-2 fs-5"></i>
+          <div>Password telah berhasil direset untuk <strong id="reset-result-user">-</strong></div>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label fw-bold">
+            <i class="bi bi-key-fill me-1"></i>Password Sementara:
+          </label>
+          <div class="password-result-box">
+            <div class="password-display">
+              <i class="bi bi-lock-fill fs-4 text-success me-3"></i>
+              <span class="password-code" id="temp-password">********</span>
+            </div>
+            <button class="btn btn-outline-success btn-copy-modern" id="btn-copy-password" title="Salin Password">
+              <i class="bi bi-clipboard me-1"></i>Salin Password
+            </button>
+          </div>
+        </div>
+
+        <div class="modal-divider"></div>
+
+        <div class="alert alert-warning">
+          <strong><i class="bi bi-exclamation-triangle me-1"></i>Penting:</strong>
+          <ul class="mb-0 mt-2">
+            <li><strong>Catat</strong> password ini dengan baik</li>
+            <li><strong>Berikan</strong> kepada user yang bersangkutan</li>
+            <li>User <strong>harus mengganti</strong> password ini saat login pertama kali</li>
+            <li>Password ini <strong>hanya ditampilkan sekali</strong> untuk keamanan</li>
+          </ul>
+        </div>
+
+        <div class="alert alert-info">
+          <i class="bi bi-info-circle-fill me-1"></i>
+          Setelah menutup dialog ini, Anda tidak akan bisa melihat password sementara lagi.
+        </div>
+      </div>
+      <div class="modal-footer modal-footer-modern">
+        <button type="button" class="btn btn-success btn-modern" data-bs-dismiss="modal">
+          <i class="bi bi-check-lg me-1"></i>Selesai
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

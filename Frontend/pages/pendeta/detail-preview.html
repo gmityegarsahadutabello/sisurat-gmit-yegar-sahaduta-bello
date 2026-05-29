@@ -1,0 +1,573 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Detail Surat - Pendeta</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+  <link rel="stylesheet" href="../../assets/css/global.css">
+  <link rel="stylesheet" href="../../assets/css/navbar.css">
+  <link rel="stylesheet" href="../../assets/css/table.css">
+  <link rel="stylesheet" href="../../assets/css/pendeta/detail-preview.css">
+  <link rel="stylesheet" href="../../assets/css/confirmation-modal.css">
+  <link rel="stylesheet" href="../../assets/css/pendeta/responsive-pendeta.css">
+</head>
+<body>
+  <header class="navbar-container navbar">
+    <!-- Navbar component will be injected here -->
+  </header>
+
+  <main class="container my-5">
+    <!-- Page Header -->
+    <div class="page-header">
+      <div class="header-content">
+        <a href="daftar-masuk.html" class="btn-back">
+          <i class="bi bi-arrow-left"></i>
+        </a>
+        <div class="header-text">
+          <h1 id="title" class="page-title">
+            <i class="bi bi-file-earmark-text-fill"></i>
+            Detail Surat
+          </h1>
+          <p class="page-subtitle">Preview dan validasi surat yang masuk</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="detail-layout">
+      <!-- Left Column: Preview -->
+      <div class="preview-section">
+        <div class="preview-card">
+          <div class="preview-header">
+            <i class="bi bi-file-pdf"></i>
+            <span>Preview Dokumen</span>
+          </div>
+          <div id="preview" class="preview-content">
+            <div class="loading-preview">
+              <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Loading...</span>
+              </div>
+              <p class="mt-3">Memuat preview...</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Column: Info & Actions -->
+      <div class="sidebar-section">
+        <!-- Info Card -->
+        <div class="info-card">
+          <div class="info-header">
+            <i class="bi bi-info-circle-fill"></i>
+            <span>Informasi Surat</span>
+          </div>
+          <div id="meta" class="info-content">
+            <div class="info-skeleton">
+              <div class="skeleton-line"></div>
+              <div class="skeleton-line"></div>
+              <div class="skeleton-line"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Rejection Note Card -->
+        <div id="note-card" class="note-card">
+          <div class="note-header">
+            <i class="bi bi-chat-square-text-fill"></i>
+            <span>Alasan Penolakan</span>
+          </div>
+          <div class="note-content">
+            <p class="note-warning">
+              <i class="bi bi-exclamation-triangle-fill"></i>
+              Wajib diisi jika mengembalikan surat
+            </p>
+            <textarea id="note" rows="5" class="note-textarea" 
+              placeholder="Tuliskan alasan penolakan dengan jelas dan detail..."></textarea>
+            <small class="note-help">
+              <i class="bi bi-info-circle"></i> 
+              Catatan ini akan dikirim ke Tata Usaha untuk diperbaiki
+            </small>
+          </div>
+        </div>
+
+        <!-- Action Buttons Card -->
+        <div id="action-card" class="action-card">
+          <div class="action-header">
+            <i class="bi bi-gear-fill"></i>
+            <span>Aksi Validasi</span>
+          </div>
+          <div class="action-content">
+            <button id="btn-forward" class="btn-action btn-validate">
+              <div class="btn-icon">
+                <i class="bi bi-check-circle-fill"></i>
+              </div>
+              <div class="btn-text">
+                <div class="btn-title">Validasi Final</div>
+                <div class="btn-subtitle">Setujui dan selesaikan proses</div>
+              </div>
+            </button>
+            <button id="btn-return" class="btn-action btn-return">
+              <div class="btn-icon">
+                <i class="bi bi-arrow-left-circle-fill"></i>
+              </div>
+              <div class="btn-text">
+                <div class="btn-title">Kembalikan</div>
+                <div class="btn-subtitle">Kembalikan ke Tata Usaha</div>
+              </div>
+            </button>
+          </div>
+        </div>
+
+        <!-- Timeline Card -->
+        <div class="timeline-card">
+          <div class="timeline-header">
+            <i class="bi bi-clock-history"></i>
+            <span>Riwayat Proses</span>
+          </div>
+          <div id="timeline-container" class="timeline-content">
+            <div class="loading-timeline">
+              <div class="spinner-border spinner-border-sm text-primary" role="status">
+                <span class="visually-hidden">Loading...</span>
+              </div>
+              <span class="ms-2">Memuat riwayat...</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script src="../../assets/js/api.js"></script>
+  <script src="../../assets/js/confirmation-modal.js"></script>
+  <script src="../../assets/js/navbar.js"></script>
+  <script src="../../assets/js/pendeta/navbar-pendeta.js"></script>
+  <script src="../../assets/js/pendeta/preview-helper.js"></script>
+  <script>
+    // Enhanced page logic with modern UI interactions
+    (async function(){
+      function qs(id){ return document.getElementById(id); }
+      function esc(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+      
+      const id = (new URLSearchParams(window.location.search)).get('id');
+      const previewEl = qs('preview');
+      const metaEl = qs('meta');
+      const noteEl = qs('note');
+      const noteCard = qs('note-card');
+      const actionCard = qs('action-card');
+      const btnReturn = qs('btn-return');
+      const btnForward = qs('btn-forward');
+
+      if (!id){ 
+        previewEl.innerHTML = '<div class="empty-state"><i class="bi bi-exclamation-triangle"></i><p>ID tidak ditemukan</p></div>'; 
+        return;
+      }
+
+      function renderTimeline(item){
+        const container = qs('timeline-container');
+        if (!container) return;
+        
+        const timeline = item.timeline || item.history || [];
+        if (!timeline || !timeline.length){ 
+          container.innerHTML = '<div class="text-center text-muted py-4"><i class="bi bi-inbox"></i><p class="mt-2 mb-0">Belum ada riwayat</p></div>'; 
+          return; 
+        }
+        
+        const sorted = timeline.slice().sort((a,b) => {
+          const tA = new Date(a.at || a.time || a.tanggal || 0).getTime();
+          const tB = new Date(b.at || b.time || b.tanggal || 0).getTime();
+          return tB - tA;
+        });
+        
+        const actionLabels = {
+          'proses': '📝 Pengajuan dibuat',
+          'diterima': '✅ Diverifikasi oleh Koordinator',
+          'ditolak': '❌ Ditolak oleh Koordinator',
+          'nomor_assigned': '🔢 Nomor surat diterbitkan',
+          'file_uploaded': '📎 File surat diunggah',
+          'disposisi_to_sekretaris': '📤 Diteruskan ke Sekretaris',
+          'disposisi_to_pendeta': '📤 Diteruskan ke Pendeta',
+          'disposisi_to_tatausaha': '📥 Dikembalikan ke Tata Usaha',
+          'validated_by_sekretaris': '✅ Divalidasi oleh Sekretaris',
+          'validated_by_pendeta': '✅ Divalidasi oleh Pendeta'
+        };
+        
+        const roleNames = {
+          'jemaat':'Jemaat',
+          'koordinator':'Koordinator',
+          'tatausaha':'Tata Usaha',
+          'sekretaris':'Sekretaris',
+          'pendeta':'Pendeta'
+        };
+        
+        const html = sorted.map((h, idx) => {
+          const action = h.action || h.status || 'update';
+          const label = actionLabels[action] || action;
+          const time = h.at || h.time || h.tanggal;
+          const by = h.by ? roleNames[h.by.toLowerCase()] || h.by : '';
+          const note = h.note || h.keterangan || '';
+          const isRej = action === 'ditolak' || action === 'disposisi_to_tatausaha';
+          
+          return `<div class="timeline-item ${isRej ? 'rejected' : ''}" style="animation-delay: ${idx * 0.1}s;">
+            <div class="timeline-action">${label}</div>
+            <div class="timeline-meta">
+              <i class="bi bi-clock"></i>
+              <span>${time || '-'}</span>
+              ${by ? `<span class="timeline-badge ${isRej ? 'danger' : 'success'}">${by}</span>` : ''}
+            </div>
+            ${note ? `<div class="timeline-note"><strong>💬 Catatan:</strong><div class="timeline-note-text">${esc(note)}</div></div>` : ''}
+          </div>`;
+        }).join('');
+        
+        container.innerHTML = html;
+      }
+
+      async function refresh(){
+        try {
+          // Prefer fetching the latest detail from the server so backend can generate a pre-signed URL
+          var item = null;
+          try {
+            item = await API.pengajuan.getById(id);
+          } catch(e) {
+            console.warn('Failed to fetch pengajuan from API, falling back to local storage', e);
+            try { item = await LS.find('local_pengajuan', i => i && String(i.id) === String(id)); } catch(_) { item = null; }
+          }
+          if (!item){ 
+            previewEl.innerHTML = '<div class="empty-state"><i class="bi bi-file-earmark-x"></i><p>Data tidak ditemukan</p></div>'; 
+            return; 
+          }
+          
+          // Render preview
+          previewEl.innerHTML = '';
+          window.PenPreview && window.PenPreview.renderPreview(previewEl, item);
+          
+          // Render timeline
+          renderTimeline(item);
+          
+          // Check validation status
+          const status = String(item.status || '').toLowerCase();
+          const isValidated = (
+            status === 'validated' || 
+            status === 'archived' || 
+            status === 'validated_by_pendeta' ||
+            item.validated === true || 
+            item.validated_by_pendeta === true
+          );
+          
+          if (isValidated) {
+            // Hide action cards for validated letters
+            if (noteCard) noteCard.style.display = 'none';
+            if (actionCard) actionCard.style.display = 'none';
+            
+            // Update title
+            const titleEl = qs('title');
+            if (titleEl) {
+              titleEl.innerHTML = `<i class="bi bi-check-circle-fill" style="-webkit-text-fill-color: #28a745;"></i> Detail Surat Tervalidasi`;
+            }
+            
+            // Format validation date
+            const validatedDate = item.validated_at || item.updated_at || item.last_updated || '—';
+            
+            metaEl.innerHTML = `
+              <div class="alert-success-validated">
+                <i class="bi bi-check-circle-fill"></i>
+                <div>
+                  <strong>Surat Sudah Tervalidasi</strong>
+                  <div class="small">Surat ini telah Anda validasi dan selesai diproses</div>
+                </div>
+              </div>
+              <div class="info-row">
+                <span class="info-label">Nomor Surat</span>
+                <div class="info-value">${esc(item.nomor_surat || item.nomor || item.number || '—')}</div>
+              </div>
+              <div class="info-row">
+                <span class="info-label">Jenis Surat</span>
+                <div class="info-value">${esc(item.tipe || item.type || item.jenis || '—')}</div>
+              </div>
+              <div class="info-row">
+                <span class="info-label">Nama Pengaju</span>
+                <div class="info-value">${esc(item.user_nama || item.pemohon_nama || item.nama || item.name || item.pengaju || '—')}</div>
+              </div>
+              <div class="info-row">
+                <span class="info-label">Tanggal Validasi</span>
+                <div class="info-value">${validatedDate}</div>
+              </div>
+            `;
+          } else {
+            // Show action cards for pending letters
+            if (noteCard) noteCard.style.display = 'block';
+            if (actionCard) actionCard.style.display = 'block';
+            
+            // Get catatan from sekretaris
+            const timeline = item.timeline || item.history || [];
+            const sekretarisDisposisi = timeline.slice().reverse().find(t => 
+              t && t.action === 'disposisi_to_pendeta' && 
+              (String(t.by).toLowerCase() === 'sekretaris' || t.by === 'Sekretaris')
+            );
+            const catatanSekretaris = sekretarisDisposisi?.note || sekretarisDisposisi?.keterangan || '';
+            
+            const catatanHtml = catatanSekretaris 
+              ? `<div class="alert-info-note">
+                  <strong><i class="bi bi-chat-left-text-fill"></i> Catatan dari Sekretaris</strong>
+                  <div class="alert-info-note-text">${esc(catatanSekretaris)}</div>
+                </div>`
+              : '';
+            
+            metaEl.innerHTML = `
+              ${catatanHtml}
+              <div class="info-row">
+                <span class="info-label">Nomor Surat</span>
+                <div class="info-value">${esc(item.nomor_surat || item.nomor || item.number || '—')}</div>
+              </div>
+              <div class="info-row">
+                <span class="info-label">Jenis Surat</span>
+                <div class="info-value">${esc(item.tipe || item.type || item.jenis || '—')}</div>
+              </div>
+              <div class="info-row">
+                <span class="info-label">Nama Pengaju</span>
+                <div class="info-value">${esc(item.user_nama || item.pemohon_nama || item.nama || item.name || item.pengaju || '—')}</div>
+              </div>
+              <div class="info-row">
+                <span class="info-label">Tanggal Pengajuan</span>
+                <div class="info-value">${item.created_at || item.createdAt || '—'}</div>
+              </div>
+            `;
+          }
+        } catch(e) {
+          console.error('Error loading data:', e);
+          previewEl.innerHTML = '<div class="empty-state"><i class="bi bi-exclamation-triangle"></i><p>Gagal memuat data</p></div>';
+        }
+      }
+
+      // Return button handler
+      btnReturn.addEventListener('click', async ()=>{
+        const note = (noteEl.value || '').trim();
+        if (!note || note === '') {
+          // Show error modal
+          if (typeof ConfirmModal !== 'undefined') {
+            ConfirmModal.show({
+              title: 'Alasan Penolakan Diperlukan',
+              message: 'Anda harus mengisi alasan penolakan sebelum mengembalikan surat ke Tata Usaha. Alasan ini akan membantu Tata Usaha untuk memperbaiki surat.',
+              type: 'warning',
+              confirmText: 'Mengerti',
+              showCancel: false,
+              onConfirm: () => {
+                noteEl.focus();
+              }
+            });
+          } else {
+            alert('⚠️ Alasan penolakan wajib diisi sebelum mengembalikan surat!');
+            noteEl.focus();
+          }
+          
+          noteEl.style.borderColor = '#dc3545';
+          noteEl.style.boxShadow = '0 0 0 4px rgba(220, 53, 69, 0.15)';
+          
+          setTimeout(() => {
+            noteEl.style.borderColor = '';
+            noteEl.style.boxShadow = '';
+          }, 3000);
+          return;
+        }
+        
+        // Get surat info for confirmation
+        const item = await LS.find('local_pengajuan', i => i && String(i.id) === String(id));
+        const nomorSurat = item?.nomor_surat || item?.nomor || 'N/A';
+        const jenisSurat = item?.jenis || item?.type || 'N/A';
+        
+        // Show confirmation modal
+        if (typeof ConfirmModal !== 'undefined') {
+          ConfirmModal.show({
+            title: 'Konfirmasi Pengembalian Surat',
+            message: `Apakah Anda yakin ingin mengembalikan surat ini ke Tata Usaha?
+            
+<strong>Detail Surat:</strong>
+• Nomor: ${esc(nomorSurat)}
+• Jenis: ${esc(jenisSurat)}
+
+<strong>Alasan Penolakan:</strong>
+${esc(note)}
+
+Surat akan dikembalikan ke Tata Usaha untuk diperbaiki sesuai catatan Anda.`,
+            type: 'warning',
+            confirmText: 'Ya, Kembalikan',
+            cancelText: 'Batal',
+            onConfirm: async () => {
+              try {
+                btnReturn.disabled = true;
+                btnReturn.innerHTML = '<div class="spinner-border spinner-border-sm me-2"></div>Memproses...';
+                
+                await API.pengajuan.updateStatus(id, {
+                  status: 'disposisi_to_tatausaha',
+                  by: 'Pendeta',
+                  note: note,
+                  to_role: 'tatausaha'
+                });
+                
+                // Show success modal
+                ConfirmModal.show({
+                  title: 'Berhasil Dikembalikan',
+                  message: `Surat berhasil dikembalikan ke Tata Usaha dengan catatan penolakan.
+                  
+Tata Usaha akan menerima notifikasi dan dapat melihat catatan Anda untuk memperbaiki surat.`,
+                  type: 'success',
+                  confirmText: 'Kembali ke Daftar',
+                  showCancel: false,
+                  onConfirm: () => {
+                    window.location.href = 'daftar-masuk.html';
+                  }
+                });
+              } catch(e) {
+                console.error('Error returning to TU:', e);
+                ConfirmModal.show({
+                  title: 'Gagal Mengembalikan Surat',
+                  message: `Terjadi kesalahan saat mengembalikan surat: ${e.message}
+                  
+Silakan coba lagi atau hubungi administrator jika masalah berlanjut.`,
+                  type: 'error',
+                  confirmText: 'Tutup',
+                  showCancel: false
+                });
+                btnReturn.disabled = false;
+                btnReturn.innerHTML = '<div class="btn-icon"><i class="bi bi-arrow-left-circle-fill"></i></div><div class="btn-text"><div class="btn-title">Kembalikan</div><div class="btn-subtitle">Kembalikan ke Tata Usaha</div></div>';
+              }
+            }
+          });
+        } else {
+          // Fallback to native confirm
+          if (!confirm('❓ Kembalikan surat ke Tata Usaha dengan alasan penolakan yang telah diisi?')) return;
+          
+          try {
+            btnReturn.disabled = true;
+            btnReturn.innerHTML = '<div class="spinner-border spinner-border-sm me-2"></div>Memproses...';
+            
+            await API.pengajuan.updateStatus(id, {
+              status: 'disposisi_to_tatausaha',
+              by: 'Pendeta',
+              note: note,
+              to_role: 'tatausaha'
+            });
+            
+            alert('✅ Surat berhasil dikembalikan ke Tata Usaha dengan catatan penolakan.');
+            setTimeout(() => {
+              window.location.href = 'daftar-masuk.html';
+            }, 500);
+          } catch(e) {
+            console.error('Error returning to TU:', e);
+            alert('❌ Gagal mengembalikan surat: ' + e.message);
+            btnReturn.disabled = false;
+            btnReturn.innerHTML = '<div class="btn-icon"><i class="bi bi-arrow-left-circle-fill"></i></div><div class="btn-text"><div class="btn-title">Kembalikan</div><div class="btn-subtitle">Kembalikan ke Tata Usaha</div></div>';
+          }
+        }
+      });
+
+      // Forward button handler
+      btnForward.addEventListener('click', async ()=>{
+        const note = noteEl.value || '';
+        
+        // Get surat info for confirmation
+        const item = await LS.find('local_pengajuan', i => i && String(i.id) === String(id));
+        const nomorSurat = item?.nomor_surat || item?.nomor || 'N/A';
+        const jenisSurat = item?.jenis || item?.type || 'N/A';
+        const namaPengaju = item?.user_nama || item?.pemohon_nama || item?.nama || 'N/A';
+        
+        // Show confirmation modal
+        if (typeof ConfirmModal !== 'undefined') {
+          ConfirmModal.show({
+            title: 'Konfirmasi Validasi Final',
+            message: `Apakah Anda yakin ingin memberikan validasi final untuk surat ini?
+            
+<strong>Detail Surat:</strong>
+• Nomor: ${esc(nomorSurat)}
+• Jenis: ${esc(jenisSurat)}
+• Pengaju: ${esc(namaPengaju)}
+
+<strong>Catatan:</strong>
+${note ? esc(note) : '<em>Tidak ada catatan tambahan</em>'}
+
+Setelah validasi, surat akan selesai diproses dan jemaat akan menerima notifikasi.`,
+            type: 'info',
+            confirmText: 'Ya, Validasi',
+            cancelText: 'Batal',
+            onConfirm: async () => {
+              try {
+                btnForward.disabled = true;
+                btnForward.innerHTML = '<div class="spinner-border spinner-border-sm me-2"></div>Memvalidasi...';
+                
+                await API.pengajuan.updateStatus(id, {
+                  status: 'validated_by_pendeta',
+                  by: 'Pendeta',
+                  note: note || 'Divalidasi oleh Pendeta',
+                  to_role: 'jemaat'
+                });
+                
+                // Show success modal
+                ConfirmModal.show({
+                  title: 'Validasi Berhasil',
+                  message: `Surat telah berhasil divalidasi final!
+                  
+Surat dengan nomor <strong>${esc(nomorSurat)}</strong> telah selesai diproses. Jemaat akan menerima notifikasi bahwa surat mereka telah divalidasi dan dapat diambil.`,
+                  type: 'success',
+                  confirmText: 'Lihat Detail',
+                  cancelText: 'Kembali ke Daftar',
+                  onConfirm: async () => {
+                    await refresh();
+                  },
+                  onCancel: () => {
+                    window.location.href = 'daftar-masuk.html';
+                  }
+                });
+              } catch(e) {
+                console.error('Error validating:', e);
+                ConfirmModal.show({
+                  title: 'Gagal Memvalidasi',
+                  message: `Terjadi kesalahan saat memvalidasi surat: ${e.message}
+                  
+Silakan coba lagi atau hubungi administrator jika masalah berlanjut.`,
+                  type: 'error',
+                  confirmText: 'Tutup',
+                  showCancel: false
+                });
+                btnForward.disabled = false;
+                btnForward.innerHTML = '<div class="btn-icon"><i class="bi bi-check-circle-fill"></i></div><div class="btn-text"><div class="btn-title">Validasi Final</div><div class="btn-subtitle">Setujui dan selesaikan proses</div></div>';
+              }
+            }
+          });
+        } else {
+          // Fallback to native confirm
+          if (!confirm('❓ Validasi final untuk surat ini?')) return;
+          
+          try {
+            btnForward.disabled = true;
+            btnForward.innerHTML = '<div class="spinner-border spinner-border-sm me-2"></div>Memvalidasi...';
+            
+            await API.pengajuan.updateStatus(id, {
+              status: 'validated_by_pendeta',
+              by: 'Pendeta',
+              note: note || 'Divalidasi oleh Pendeta',
+              to_role: 'jemaat'
+            });
+            
+            alert('✅ Surat telah divalidasi final.');
+            await refresh();
+          } catch(e) {
+            console.error('Error validating:', e);
+            alert('❌ Gagal memvalidasi surat: ' + e.message);
+            btnForward.disabled = false;
+            btnForward.innerHTML = '<div class="btn-icon"><i class="bi bi-check-circle-fill"></i></div><div class="btn-text"><div class="btn-title">Validasi Final</div><div class="btn-subtitle">Setujui dan selesaikan proses</div></div>';
+          }
+        }
+      });
+
+      // Clear border color on input
+      noteEl.addEventListener('input', () => {
+        noteEl.style.borderColor = '';
+        noteEl.style.boxShadow = '';
+      });
+
+      // Initialize
+      document.addEventListener('DOMContentLoaded', refresh);
+    })();
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

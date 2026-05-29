@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Detail Akun - Administrator</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+  <link rel="stylesheet" href="../../assets/css/global.css">
+  <link rel="stylesheet" href="../../assets/css/confirmation-modal.css">
+  <link rel="stylesheet" href="../../assets/css/navbar.css">
+  <link rel="stylesheet" href="../../assets/css/admin/account-detail.css">
+</head>
+<body>
+
+  <header class="navbar-container navbar">
+    <!-- Navbar component will be injected here -->
+  </header>
+
+  <main class="container my-5">
+    <div class="mb-4">
+      <a href="accounts.html" class="btn btn-outline-secondary">
+        <i class="bi bi-arrow-left"></i> Kembali
+      </a>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <h4 class="mb-0"><i class="bi bi-person-circle"></i> Detail Akun</h4>
+      </div>
+      <div class="card-body">
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <label class="detail-label">Nama Lengkap</label>
+            <p id="detail-nama" class="detail-value">-</p>
+          </div>
+          <div class="col-md-6 mb-3">
+            <label class="detail-label">Email</label>
+            <p id="detail-email" class="detail-value">-</p>
+          </div>
+          <div class="col-md-6 mb-3">
+            <label class="detail-label">NIK</label>
+            <p id="detail-nik" class="detail-value">-</p>
+          </div>
+          <div class="col-md-6 mb-3">
+            <label class="detail-label">Role</label>
+            <p id="detail-role" class="detail-value">-</p>
+          </div>
+          <div class="col-md-6 mb-3" id="rayon-field" style="display:none;">
+            <label class="detail-label">Rayon</label>
+            <p id="detail-rayon" class="detail-value">-</p>
+          </div>
+          <div class="col-md-6 mb-3">
+            <label class="detail-label">Tanggal Dibuat</label>
+            <p id="detail-created" class="detail-value">-</p>
+          </div>
+          <div class="col-md-6 mb-3">
+            <label class="detail-label">Terakhir Diperbarui</label>
+            <p id="detail-updated" class="detail-value">-</p>
+          </div>
+        </div>
+
+        <hr class="my-4" />
+
+        <div class="d-flex gap-2">
+          <button id="btn-edit" class="btn btn-warning">
+            <i class="bi bi-pencil"></i> Edit Akun
+          </button>
+          <button id="btn-delete" class="btn btn-danger">
+            <i class="bi bi-trash"></i> Hapus Akun
+          </button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script src="../../assets/js/api.js"></script>
+  <script src="../../assets/js/navbar.js"></script>
+  <script src="../../assets/js/admin/navbar-admin.js"></script>
+  <script src="../../assets/js/admin/account-detail.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  
+  <!-- Logout Confirmation Modal -->
+  <div class="confirm-modal" id="logoutConfirmModal">
+    <div class="confirm-modal-overlay"></div>
+    <div class="confirm-modal-content">
+      <div class="confirm-modal-header warning">
+        <div class="confirm-modal-icon">
+          <i class="bi bi-box-arrow-right"></i>
+        </div>
+        <h3 class="confirm-modal-title">Konfirmasi Logout</h3>
+        <button class="confirm-modal-close" id="closeLogoutModal">
+          <i class="bi bi-x-lg"></i>
+        </button>
+      </div>
+      
+      <div class="confirm-modal-body">
+        <p class="confirm-message-primary">
+          <strong>Anda yakin ingin keluar dari sistem?</strong>
+        </p>
+        <p class="confirm-message-secondary">
+          Anda perlu login kembali untuk mengakses halaman admin. Pastikan semua pekerjaan sudah tersimpan.
+        </p>
+        
+        <div class="confirm-warning warning">
+          <i class="bi bi-info-circle-fill"></i>
+          <span>Sesi Anda akan berakhir dan Anda akan diarahkan ke halaman login.</span>
+        </div>
+      </div>
+      
+      <div class="confirm-modal-footer">
+        <button class="confirm-btn-cancel" id="cancelLogoutBtn">
+          <i class="bi bi-x-circle"></i>
+          <span>Batal</span>
+        </button>
+        <button class="confirm-btn-confirm warning" id="confirmLogoutBtn">
+          <i class="bi bi-box-arrow-right"></i>
+          <span>Ya, Logout</span>
+        </button>
+      </div>
+    </div>
+  </div>
+  
+  <script>
+    // Initialize logout modal
+    (function() {
+      const modalElement = document.getElementById('logoutConfirmModal');
+      if (!modalElement) return;
+      
+      const overlay = modalElement.querySelector('.confirm-modal-overlay');
+      const closeBtn = document.getElementById('closeLogoutModal');
+      const cancelBtn = document.getElementById('cancelLogoutBtn');
+      const confirmBtn = document.getElementById('confirmLogoutBtn');
+      
+      const hideModal = () => {
+        modalElement.classList.remove('show');
+        document.body.style.overflow = '';
+      };
+      
+      closeBtn?.addEventListener('click', hideModal);
+      cancelBtn?.addEventListener('click', hideModal);
+      overlay?.addEventListener('click', hideModal);
+      
+      modalElement.querySelector('.confirm-modal-content')?.addEventListener('click', (e) => {
+        e.stopPropagation();
+      });
+      
+      confirmBtn?.addEventListener('click', () => {
+        hideModal();
+        if (typeof window.performAdminLogout === 'function') {
+          window.performAdminLogout();
+        } else {
+          localStorage.removeItem('currentUser');
+          window.location.href = '../../index.html';
+        }
+      });
+      
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && modalElement.classList.contains('show')) {
+          hideModal();
+        }
+      });
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Daftar Surat Tervalidasi - Pendeta</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+  <link rel="stylesheet" href="../../assets/css/global.css">
+  <link rel="stylesheet" href="../../assets/css/navbar.css">
+  <link rel="stylesheet" href="../../assets/css/table.css">
+  <link rel="stylesheet" href="../../assets/css/filter.css">
+  <link rel="stylesheet" href="../../assets/css/confirmation-modal.css">
+  <link rel="stylesheet" href="../../assets/css/pendeta/daftar-disposisi.css">
+  <link rel="stylesheet" href="../../assets/css/pendeta/responsive-pendeta.css">
+</head>
+<body>
+
+  <header class="navbar-container navbar">
+    <!-- Navbar component will be injected here -->
+  </header>
+
+  <main class="container my-5">
+    <div class="page-header">
+      <div class="header-content">
+        <div class="title-section">
+          <h1 class="page-title">
+            <i class="bi bi-check-circle-fill"></i>
+            Daftar Surat Tervalidasi
+          </h1>
+          <p class="page-subtitle">Daftar surat yang telah Anda validasi dan selesai diproses</p>
+        </div>
+        <a href="dashboard-pendeta.html" class="btn-back">
+          <i class="bi bi-house-door"></i> 
+          <span>Kembali ke Dashboard</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- Filter Card -->
+    <div class="filter-card">
+      <div class="filter-header">
+        <i class="bi bi-funnel"></i>
+        <span>Filter & Pencarian</span>
+      </div>
+      <div class="filter-body">
+        <div class="filter-group">
+          <label for="search">
+            <i class="bi bi-search"></i> Cari Surat
+          </label>
+          <input id="search" class="form-control" placeholder="Cari nomor surat, nama pemohon, atau jenis surat..." />
+        </div>
+        <div class="filter-group">
+          <label for="filter-month">
+            <i class="bi bi-calendar-range"></i> Periode
+          </label>
+          <select id="filter-month" class="form-select">
+            <option value="">Semua Periode</option>
+            <option value="this-month">Bulan Ini</option>
+            <option value="last-month">Bulan Lalu</option>
+            <option value="this-year">Tahun Ini</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label for="filter-jenis">
+            <i class="bi bi-file-earmark-text"></i> Jenis Surat
+          </label>
+          <select id="filter-jenis" class="form-select">
+            <option value="">Semua Jenis</option>
+          </select>
+        </div>
+        <div class="filter-actions">
+          <button id="btn-refresh" class="btn-refresh">
+            <i class="bi bi-arrow-clockwise"></i>
+            <span>Refresh</span>
+          </button>
+          <button id="btn-reset" class="btn-reset">
+            <i class="bi bi-x-circle"></i>
+            <span>Reset Filter</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Table Card -->
+    <div class="table-card">
+      <div class="table-header">
+        <div class="table-title">
+          <i class="bi bi-list-check"></i>
+          <span id="result-count">Menampilkan 0 surat</span>
+        </div>
+      </div>
+      <div class="table-container">
+        <table class="modern-table">
+          <thead>
+            <tr>
+              <th width="50">#</th>
+              <th width="180">
+                <i class="bi bi-calendar-check"></i> Tanggal Validasi
+              </th>
+              <th width="150">
+                <i class="bi bi-file-earmark"></i> Nomor Surat
+              </th>
+              <th width="180">
+                <i class="bi bi-tag"></i> Jenis Surat
+              </th>
+              <th>
+                <i class="bi bi-person"></i> Nama Pemohon
+              </th>
+              <th width="120" class="text-center">
+                <i class="bi bi-gear"></i> Aksi
+              </th>
+            </tr>
+          </thead>
+          <tbody id="list-body">
+            <tr>
+              <td colspan="6" class="loading-state">
+                <div class="spinner-border text-primary" role="status">
+                  <span class="visually-hidden">Loading...</span>
+                </div>
+                <div class="mt-2">Memuat data...</div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+
+  <script src="../../assets/js/api.js"></script>
+  <script src="../../assets/js/navbar.js"></script>
+  <script src="../../assets/js/confirmation-modal.js"></script>
+  <script src="../../assets/js/pendeta/navbar-pendeta.js"></script>
+  <script src="../../assets/js/pendeta/daftar-disposisi.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

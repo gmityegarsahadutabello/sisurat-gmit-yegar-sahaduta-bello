@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Daftar Masuk - Sekretaris</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+  <link rel="stylesheet" href="../../assets/css/global.css">
+  <link rel="stylesheet" href="../../assets/css/navbar.css">
+  <link rel="stylesheet" href="../../assets/css/table.css">
+  <link rel="stylesheet" href="../../assets/css/filter.css">
+  <link rel="stylesheet" href="../../assets/css/sekretaris/daftar-masuk.css">
+  <link rel="stylesheet" href="../../assets/css/confirmation-modal.css">
+  <link rel="stylesheet" href="../../assets/css/sekretaris/responsive-sekretaris.css">
+  <style>
+    @media (max-width: 768px) {
+      main { padding: 80px 1rem 2rem !important; }
+      h1 { font-size: 1.35rem; margin-bottom: 1.5rem !important; }
+      .card-body .row { flex-direction: column; }
+      .col-md-4, .col-md-3, .col-auto { width: 100%; margin-bottom: 0.75rem; }
+      #btn-refresh { width: 100%; }
+      .table-responsive { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+      .table th, .table td { font-size: 0.85rem; padding: 0.65rem 0.4rem; white-space: nowrap; }
+      .btn-sm { padding: 0.35rem 0.5rem; font-size: 0.8rem; }
+    }
+    @media (max-width: 480px) {
+      h1 { font-size: 1.2rem; }
+      .table th, .table td { font-size: 0.8rem; padding: 0.5rem 0.35rem; }
+      .btn-sm { padding: 0.25rem 0.4rem; font-size: 0.75rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="navbar-container navbar">
+    <!-- Navbar component will be injected here -->
+  </header>
+
+  <main class="container" style="padding-top: 100px; padding-bottom: 40px;">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h1 class="mb-0">Surat Masuk (Untuk Sekretaris)</h1>
+      <a href="dashboard-sekretaris.html" class="btn btn-outline-primary">
+        <i class="bi bi-house-door"></i> Kembali ke Dashboard
+      </a>
+    </div>
+
+    <div class="card mb-4">
+      <div class="card-body">
+        <div class="row g-2 align-items-center">
+          <div class="col-md-4">
+            <input id="search" class="form-control" placeholder="Cari nama / nomor / jenis" />
+          </div>
+          <div class="col-md-3">
+            <select id="filter-status" class="form-select">
+              <option value="">Semua Status</option>
+              <option value="disposisi_to_sekretaris">Menunggu Pemeriksaan</option>
+            </select>
+          </div>
+          <div class="col-auto">
+            <button id="btn-refresh" class="btn btn-outline-secondary">Refresh</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-body p-0">
+        <div class="table-responsive">
+          <table class="table mb-0">
+            <thead>
+              <tr>
+                <th>Waktu</th>
+                <th>Jenis</th>
+                <th>Pengaju</th>
+                <th>Status</th>
+                <th style="width:240px">Aksi</th>
+              </tr>
+            </thead>
+            <tbody id="list-body"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script src="../../assets/js/api.js"></script>
+  <script src="../../assets/js/confirmation-modal.js"></script>
+  <script src="../../assets/js/navbar.js"></script>
+  <script src="../../assets/js/sekretaris/navbar-sekretaris.js"></script>
+  <script src="../../assets/js/sekretaris/preview-helper.js"></script>
+  <script src="../../assets/js/sekretaris/daftar-masuk.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

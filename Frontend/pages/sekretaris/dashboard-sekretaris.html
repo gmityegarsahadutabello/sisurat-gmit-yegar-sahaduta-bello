@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="id">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width,initial-scale=1" />
+	<title>Dashboard - Sekretaris</title>
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+	<link rel="stylesheet" href="../../assets/css/global.css">
+	<link rel="stylesheet" href="../../assets/css/navbar.css">
+	<link rel="stylesheet" href="../../assets/css/koordinator/daftar-surat-masuk.css">
+	<link rel="stylesheet" href="../../assets/css/koordinator/dashboard-koordinator.css">
+	<link rel="stylesheet" href="../../assets/css/confirmation-modal.css">
+	<link rel="stylesheet" href="../../assets/css/sekretaris/dashboard-sekretaris.css">
+	<link rel="stylesheet" href="../../assets/css/sekretaris/responsive-sekretaris.css">
+	<style>
+		.stat-card { border-radius:12px; padding:18px; }
+		.stat-count { font-size:1.6rem; font-weight:700 }
+		.stat-label { color:var(--text-muted); }
+		.quick-links a { margin-right:10px; }
+		
+		@media (max-width: 768px) {
+			.welcome-section { padding: 1.5rem 1.25rem !important; margin-bottom: 1.5rem !important; }
+			.welcome-section h2 { font-size: 1.5rem !important; }
+			.welcome-section p { font-size: 0.875rem !important; }
+			.stat-card { padding: 1.25rem !important; margin-bottom: 1rem; }
+			.stat-body { flex-direction: column !important; align-items: flex-start !important; gap: 1rem !important; }
+			.stat-count { font-size: 1.4rem !important; }
+		}
+		
+		@media (max-width: 480px) {
+			.welcome-section { padding: 1.25rem 1rem !important; }
+			.welcome-section h2 { font-size: 1.35rem !important; }
+			.stat-card { padding: 1rem !important; }
+			.stat-count { font-size: 1.25rem !important; }
+		}
+	</style>
+</head>
+<body>
+
+	<header class="navbar-container navbar">
+	  <!-- Navbar component will be injected here -->
+	</header>
+
+	<main class="container my-5">
+		<div class="welcome-section" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); border-radius: 16px; padding: 24px 32px; margin-bottom: 28px; box-shadow: 0 4px 15px rgba(79, 172, 254, 0.2);">
+			<div style="color: white;">
+				<div style="font-size: 1.1rem; opacity: 0.95; margin-bottom: 6px;">Selamat Datang,</div>
+				<h2 id="welcome-name" style="font-size: 1.75rem; font-weight: 700; margin: 0; color: white;">Sekretaris</h2>
+				<p style="margin: 8px 0 0 0; opacity: 0.9; font-size: 0.95rem;">Sekretaris GMIT Yegar Sahaduta Bello</p>
+			</div>
+		</div>
+
+		<div class="row g-3 mb-4 stats-row">
+			<div class="col-md-6">
+				<div class="card stat-card">
+					<div class="stat-body d-flex align-items-center">
+						<div class="stat-icon bg-blue">
+							<!-- inbox icon -->
+							<svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3 13L8 6H16L21 13" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M21 13V19C21 19.552 20.552 20 20 20H4C3.448 20 3 19.552 3 19V13" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+						</div>
+						<div>
+							<div class="stat-label">Daftar Surat Masuk</div>
+							<div id="count-masuk" class="stat-count">0</div>
+							<div class="small text-muted">Surat disposisi yang masuk untuk divalidasi</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-6">
+				<div class="card stat-card">
+					<div class="stat-body d-flex align-items-center">
+						<div class="stat-icon bg-green">
+							<!-- check circle icon -->
+							<svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 12L11 15L16 9" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="12" r="9" stroke="white" stroke-width="1.5"/></svg>
+						</div>
+						<div>
+							<div class="stat-label">Daftar Disposisi (Selesai)</div>
+							<div id="count-disposisi" class="stat-count">0</div>
+							<div class="small text-muted">Surat yang telah divalidasi</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</main>
+
+	<script src="../../assets/js/api.js"></script>
+	<script src="../../assets/js/navbar.js"></script>
+	<script src="../../assets/js/confirmation-modal.js"></script>
+	<script src="../../assets/js/sekretaris/navbar-sekretaris.js"></script>
+	<script src="../../assets/js/sekretaris/dashboard-sekretaris.js"></script>
+	<script>
+		// Set welcome name from currentUser
+		(function(){
+			try {
+				const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+				const nama = currentUser.nama || 'Sekretaris';
+				const elName = document.getElementById('welcome-name');
+				if (elName) elName.textContent = nama;
+			} catch(e) {
+				console.error('Error setting welcome name:', e);
+			}
+		})();
+	</script>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

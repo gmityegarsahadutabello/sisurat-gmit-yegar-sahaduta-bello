@@ -1,0 +1,270 @@
+﻿<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Dashboard Koordinator - GMIT YEGAR</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+  <link rel="stylesheet" href="../../assets/css/global.css">
+  <link rel="stylesheet" href="../../assets/css/navbar.css">
+  <link rel="stylesheet" href="../../assets/css/koordinator/dashboard-koordinator.css">
+  <link rel="stylesheet" href="../../assets/css/confirmation-modal.css">
+  <style>
+    body {
+      padding-top: 80px;
+    }
+    .navbar-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+    }
+    body.modal-open .navbar-container {
+      z-index: 1;
+    }
+
+    /* Mobile Menu Styles */
+    .mobile-menu-toggle {
+      display: none;
+      background: none;
+      border: none;
+      color: white;
+      font-size: 1.8rem;
+      cursor: pointer;
+      padding: 8px;
+      margin-left: 12px;
+    }
+
+    .mobile-menu {
+      display: none;
+      position: fixed;
+      top: 70px;
+      left: 0;
+      right: 0;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease;
+      z-index: 99;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    .mobile-menu.active {
+      max-height: calc(100vh - 70px);
+      overflow-y: auto;
+    }
+
+    .mobile-user-info {
+      padding: 20px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+      background: rgba(0, 0, 0, 0.1);
+    }
+
+    .mobile-user-name {
+      color: white;
+      font-weight: 700;
+      font-size: 1.1rem;
+      margin-bottom: 4px;
+    }
+
+    .mobile-user-role {
+      color: rgba(255, 255, 255, 0.85);
+      font-size: 0.9rem;
+    }
+
+    .mobile-nav {
+      padding: 12px 0;
+    }
+
+    .mobile-nav-link {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 20px;
+      color: white;
+      text-decoration: none;
+      border: none;
+      background: none;
+      width: 100%;
+      text-align: left;
+      font-size: 1rem;
+      transition: background 0.2s ease;
+      cursor: pointer;
+    }
+
+    .mobile-nav-link:hover,
+    .mobile-nav-link.active {
+      background: rgba(255, 255, 255, 0.15);
+    }
+
+    .mobile-nav-link i {
+      font-size: 1.2rem;
+      width: 24px;
+    }
+
+    .mobile-nav-group {
+      margin: 8px 0;
+    }
+
+    .mobile-nav-group-title {
+      padding: 12px 20px 8px 20px;
+      color: rgba(255, 255, 255, 0.7);
+      font-size: 0.85rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .mobile-logout-btn {
+      margin-top: 12px;
+      border-top: 1px solid rgba(255, 255, 255, 0.2);
+      padding-top: 16px;
+      color: #ffebee;
+      font-weight: 600;
+    }
+
+    @media (max-width: 768px) {
+      .nav-center,
+      .header-actions {
+        display: none !important;
+      }
+
+      .mobile-menu-toggle {
+        display: block;
+      }
+
+      .mobile-menu {
+        display: block;
+      }
+
+      body {
+        padding-top: 70px;
+      }
+
+      main .container {
+        margin-top: 1.5rem !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="navbar-container navbar">
+    <!-- left / brand -->
+    <div class="nav-left" style="display:flex;align-items:center;gap:12px;">
+      <a class="navbar-brand" href="dashboard.html" aria-label="Ke Beranda - GMIT YEGAR">
+        <img class="logo-img" src="../../assets/img/logo-gmit.png" alt="GMIT YEGAR logo" />
+        <div>
+          <div class="brand-text">GMIT YEGAR</div>
+          <small class="brand-subtext">SAHADUTA BELLO</small>
+        </div>
+      </a>
+    </div>
+
+    <!-- center / main navigation -->
+    <nav class="nav-center" aria-label="Menu utama" style="flex:1;display:flex;justify-content:center;">
+      <ul class="nav-menu" style="display:flex;align-items:center;gap:8px;margin:0;padding:0;">
+        <li>
+          <a class="nav-link active" href="dashboard.html" title="Beranda">
+            <i class="bi bi-grid-fill"></i> Beranda
+          </a>
+        </li>
+
+        <li class="dropdown">
+          <button class="nav-link dropdown-btn" aria-haspopup="true" aria-expanded="false">
+            <i class="bi bi-envelope-paper-fill"></i> Daftar Surat Masuk <i class="bi bi-chevron-down ms-1" style="font-size:0.8em;"></i>
+          </button>
+          <ul class="dropdown-menu" role="menu">
+            <li><a class="dropdown-item" href="daftar-surat-masuk.html">Belum Diverifikasi</a></li>
+            <li><a class="dropdown-item" href="daftar-diverifikasi.html">Telah Diverifikasi</a></li>
+          </ul>
+        </li>
+      </ul>
+    </nav>
+
+    <!-- right / coordinator info -->
+    <div class="header-actions" style="display:flex;align-items:center;gap:12px;">
+      <div style="color:white;font-weight:600;text-align:right;">
+        <div id="coordinator-name" style="font-size:0.9rem;opacity:0.95;margin-bottom:2px;">Koordinator</div>
+        <div id="coordinator-rayon" style="font-size:0.85rem;opacity:0.85;">Koordinator Rayon</div>
+      </div>
+      <div>
+        <button id="logout-btn" class="btn btn-sm btn-outline-light" style="margin-left:10px;">
+          <i class="bi bi-box-arrow-right"></i> Keluar
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile Hamburger Menu -->
+    <button class="mobile-menu-toggle" id="mobile-menu-toggle" aria-label="Toggle menu">
+      <i class="bi bi-list"></i>
+    </button>
+  </header>
+
+  <!-- Mobile Menu Dropdown -->
+  <div class="mobile-menu" id="mobile-menu">
+    <div class="mobile-user-info">
+      <div class="mobile-user-name" id="mobile-coordinator-name">Koordinator</div>
+      <div class="mobile-user-role" id="mobile-coordinator-rayon">Koordinator Rayon</div>
+    </div>
+    <nav class="mobile-nav">
+      <a class="mobile-nav-link active" href="dashboard.html">
+        <i class="bi bi-grid-fill"></i> Beranda
+      </a>
+      <div class="mobile-nav-group">
+        <div class="mobile-nav-group-title">Daftar Surat Masuk</div>
+        <a class="mobile-nav-link" href="daftar-surat-masuk.html">
+          <i class="bi bi-envelope"></i> Belum Diverifikasi
+        </a>
+        <a class="mobile-nav-link" href="daftar-diverifikasi.html">
+          <i class="bi bi-envelope-check"></i> Telah Diverifikasi
+        </a>
+      </div>
+      <button class="mobile-nav-link mobile-logout-btn" id="mobile-logout-btn">
+        <i class="bi bi-box-arrow-right"></i> Keluar
+      </button>
+    </nav>
+  </div>
+
+  <main>
+    <div class="container py-4" style="margin-top: 2rem;">
+      <!-- Welcome Section -->
+      <div class="welcome-section">
+        <div class="welcome-title">Selamat Datang, <span id="welcome-name">Koordinator</span></div>
+        <div class="welcome-subtitle" id="welcome-role">Koordinator Rayon</div>
+      </div>
+
+      <!-- Stats Grid -->
+      <div class="stat-grid">
+        <a href="daftar-surat-masuk.html" class="stat-card text-decoration-none">
+          <div class="stat-icon inbox">
+            <i class="bi bi-inbox-fill"></i>
+          </div>
+          <div class="stat-info">
+            <h3>Surat Masuk (Perlu Verifikasi)</h3>
+            <div id="total-unverified" class="stat-value">0</div>
+          </div>
+        </a>
+
+        <a href="daftar-diverifikasi.html" class="stat-card text-decoration-none">
+          <div class="stat-icon verified">
+            <i class="bi bi-check-circle-fill"></i>
+          </div>
+          <div class="stat-info">
+            <h3>Surat Telah Diverifikasi</h3>
+            <div id="total-verified" class="stat-value">0</div>
+          </div>
+        </a>
+      </div>
+
+      <!-- (Removed) Recent Activity - kept page focussed on stats and links to lists -->
+
+    </div>
+  </main>
+
+  <script src="../../assets/js/api.js"></script>
+  <script src="../../assets/js/confirmation-modal.js"></script>
+  <script src="../../assets/js/koordinator/dashboard.js"></script>
+  <script src="../../assets/js/koordinator/navbar-init.js"></script>
+</body>
+</html>

@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="id">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width,initial-scale=1" />
+	<title>Dashboard - Administrator</title>
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+	<link rel="stylesheet" href="../../assets/css/global.css">
+	<link rel="stylesheet" href="../../assets/css/confirmation-modal.css">
+	<link rel="stylesheet" href="../../assets/css/navbar.css">
+	<link rel="stylesheet" href="../../assets/css/admin/dashboard-admin.css">
+	<link rel="stylesheet" href="../../assets/css/admin/responsive-admin.css">
+</head>
+<body>
+
+	<div id="navbar-container">
+	  <!-- Navbar component will be injected here -->
+	</div>
+
+	<main class="container my-5">
+		<div class="welcome-section" style="background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%); border-radius: 16px; padding: 24px 32px; margin-bottom: 28px; box-shadow: 0 4px 15px rgba(168, 237, 234, 0.2);">
+			<div style="color: #2d3748;">
+				<div style="font-size: 1.1rem; opacity: 0.85; margin-bottom: 6px; font-weight: 600;">Selamat Datang,</div>
+				<h2 id="welcome-name" style="font-size: 1.75rem; font-weight: 700; margin: 0; color: #1a202c;">Administrator</h2>
+				<p style="margin: 8px 0 0 0; opacity: 0.75; font-size: 0.95rem; font-weight: 500;">Administrator GMIT Yegar Sahaduta Bello</p>
+			</div>
+		</div>
+
+		<h3 style="font-size: 1.4rem; margin-bottom: 20px; color: var(--primary-color);">Statistik Akun</h3>
+
+		<div class="stats-grid mb-4">
+			<div class="stat-card">
+				<div class="stat-icon bg-blue">
+					<i class="bi bi-people-fill"></i>
+				</div>
+				<div class="stat-info">
+					<div class="stat-label">Total Akun Jemaat</div>
+					<div id="count-jemaat" class="stat-count">0</div>
+				</div>
+			</div>
+
+			<div class="stat-card">
+				<div class="stat-icon bg-purple">
+					<i class="bi bi-person-badge-fill"></i>
+				</div>
+				<div class="stat-info">
+					<div class="stat-label">Total Koordinator</div>
+					<div id="count-koordinator" class="stat-count">0</div>
+				</div>
+			</div>
+
+			<div class="stat-card">
+				<div class="stat-icon bg-orange">
+					<i class="bi bi-file-earmark-text-fill"></i>
+				</div>
+				<div class="stat-info">
+					<div class="stat-label">Total Tata Usaha</div>
+					<div id="count-tatausaha" class="stat-count">0</div>
+				</div>
+			</div>
+
+			<div class="stat-card">
+				<div class="stat-icon bg-teal">
+					<i class="bi bi-person-check-fill"></i>
+				</div>
+				<div class="stat-info">
+					<div class="stat-label">Total Sekretaris</div>
+					<div id="count-sekretaris" class="stat-count">0</div>
+				</div>
+			</div>
+
+			<div class="stat-card">
+				<div class="stat-icon bg-green">
+					<i class="bi bi-award-fill"></i>
+				</div>
+				<div class="stat-info">
+					<div class="stat-label">Total Pendeta</div>
+					<div id="count-pendeta" class="stat-count">0</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Quick Actions -->
+		<div class="row mb-4">
+			<div class="col-12">
+				<h5 class="mb-3">
+					<i class="bi bi-lightning-charge-fill text-warning me-2"></i>Aksi Cepat
+				</h5>
+				<div class="d-flex gap-3 flex-wrap">
+					<a href="accounts.html" class="btn btn-primary">
+						<i class="bi bi-people-fill me-2"></i>Kelola Akun
+					</a>
+					<a href="kelola-arsip.html" class="btn btn-danger">
+						<i class="bi bi-archive-fill me-2"></i>Kelola Arsip Surat
+					</a>
+				</div>
+			</div>
+		</div>
+
+		<div class="card">
+			<div class="card-header d-flex justify-content-between align-items-center">
+				<h5 class="mb-0">Akun Terbaru</h5>
+				<a href="accounts.html" class="btn btn-sm btn-primary">
+					<i class="bi bi-plus-circle"></i> Kelola Akun
+				</a>
+			</div>
+			<div class="card-body p-0">
+				<div class="table-responsive">
+					<table class="table table-hover mb-0">
+						<thead>
+							<tr>
+								<th>#</th>
+								<th>Email</th>
+								<th>Role</th>
+								<th>Tanggal Dibuat</th>
+								<th>Aksi</th>
+							</tr>
+						</thead>
+						<tbody id="recent-tbody"></tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</main>
+
+	<script src="../../assets/js/api.js"></script>
+	<script src="../../assets/js/navbar.js"></script>
+	<script src="../../assets/js/admin/navbar-admin.js"></script>
+	<script src="../../assets/js/admin/dashboard-admin.js"></script>
+	<script>
+		// Set welcome name from currentUser
+		(function(){
+			try {
+				const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+				const nama = currentUser.nama || 'Administrator';
+				const elName = document.getElementById('welcome-name');
+				if (elName) elName.textContent = nama;
+			} catch(e) {
+				console.error('Error setting welcome name:', e);
+			}
+		})();
+	</script>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+	
+	<!-- Logout Confirmation Modal -->
+	<div class="confirm-modal" id="logoutConfirmModal">
+		<div class="confirm-modal-overlay"></div>
+		<div class="confirm-modal-content">
+			<div class="confirm-modal-header warning">
+				<div class="confirm-modal-icon">
+					<i class="bi bi-box-arrow-right"></i>
+				</div>
+				<h3 class="confirm-modal-title">Konfirmasi Logout</h3>
+				<button class="confirm-modal-close" id="closeLogoutModal">
+					<i class="bi bi-x-lg"></i>
+				</button>
+			</div>
+			
+			<div class="confirm-modal-body">
+				<p class="confirm-message-primary">
+					<strong>Anda yakin ingin keluar dari sistem?</strong>
+				</p>
+				<p class="confirm-message-secondary">
+					Anda perlu login kembali untuk mengakses halaman admin. Pastikan semua pekerjaan sudah tersimpan.
+				</p>
+				
+				<div class="confirm-warning warning">
+					<i class="bi bi-info-circle-fill"></i>
+					<span>Sesi Anda akan berakhir dan Anda akan diarahkan ke halaman login.</span>
+				</div>
+			</div>
+			
+			<div class="confirm-modal-footer">
+				<button class="confirm-btn-cancel" id="cancelLogoutBtn">
+					<i class="bi bi-x-circle"></i>
+					<span>Batal</span>
+				</button>
+				<button class="confirm-btn-confirm warning" id="confirmLogoutBtn">
+					<i class="bi bi-box-arrow-right"></i>
+					<span>Ya, Logout</span>
+				</button>
+			</div>
+		</div>
+	</div>
+	
+	<script>
+		// Initialize logout modal
+		(function() {
+			const modalElement = document.getElementById('logoutConfirmModal');
+			if (!modalElement) return;
+			
+			const overlay = modalElement.querySelector('.confirm-modal-overlay');
+			const closeBtn = document.getElementById('closeLogoutModal');
+			const cancelBtn = document.getElementById('cancelLogoutBtn');
+			const confirmBtn = document.getElementById('confirmLogoutBtn');
+			
+			const hideModal = () => {
+				modalElement.classList.remove('show');
+				document.body.style.overflow = '';
+			};
+			
+			closeBtn?.addEventListener('click', hideModal);
+			cancelBtn?.addEventListener('click', hideModal);
+			overlay?.addEventListener('click', hideModal);
+			
+			modalElement.querySelector('.confirm-modal-content')?.addEventListener('click', (e) => {
+				e.stopPropagation();
+			});
+			
+			confirmBtn?.addEventListener('click', () => {
+				hideModal();
+				if (typeof window.performAdminLogout === 'function') {
+					window.performAdminLogout();
+				} else {
+					localStorage.removeItem('currentUser');
+					window.location.href = '../../index.html';
+				}
+			});
+			
+			document.addEventListener('keydown', (e) => {
+				if (e.key === 'Escape' && modalElement.classList.contains('show')) {
+					hideModal();
+				}
+			});
+		})();
+	</script>
+</body>
+</html>

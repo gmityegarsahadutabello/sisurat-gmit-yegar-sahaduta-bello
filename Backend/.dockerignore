@@ -1,0 +1,30 @@
+# Node.js
+node_modules
+npm-debug.log
+*.log
+
+# Environment files
+.env
+
+# Docker files
+Dockerfile
+.dockerignore
+
+# Development and test files
+README.md
+FIX_FAILED_TO_FETCH_ERROR.md
+FIX_REGISTRASI_ERROR.md
+MAPPING_ALUR_KERJA_MONGODB.md
+MIGRATION_TO_MONGODB.md
+MONGODB_COMPLETE_GUIDE.md
+MONGODB_SCHEMA_ALUR_KERJA.md
+RINGKASAN_PERUBAHAN.md
+setup.ps1
+WORKFLOW_DIAGRAM.md
+*.js
+config/
+controllers/
+models/
+routes/
+utils/
+*.json

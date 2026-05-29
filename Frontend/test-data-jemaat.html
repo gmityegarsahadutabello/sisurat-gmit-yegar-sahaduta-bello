@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Test Data Jemaat</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+  <div class="container py-5">
+    <h1 class="mb-4">🔍 Debugging Data Jemaat</h1>
+    
+    <div class="card mb-4">
+      <div class="card-body">
+        <h5 class="card-title">Data di localStorage 'users'</h5>
+        <button class="btn btn-primary" onclick="checkData()">Cek Data</button>
+        <button class="btn btn-success" onclick="addTestJemaat()">Tambah Jemaat Test</button>
+        <button class="btn btn-danger" onclick="clearUsers()">Hapus Semua</button>
+        <pre id="output" class="mt-3 p-3 bg-dark text-white rounded" style="max-height: 500px; overflow-y: auto;"></pre>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function checkData() {
+      const output = document.getElementById('output');
+      try {
+        const usersRaw = localStorage.getItem('users');
+        if (!usersRaw) {
+          output.textContent = '❌ Tidak ada data di localStorage key "users"';
+          return;
+        }
+        
+        const users = JSON.parse(usersRaw);
+        output.textContent = `✅ Total ${users.length} akun ditemukan:\n\n${JSON.stringify(users, null, 2)}`;
+        
+        // Tampilkan summary
+        const summary = users.map((u, i) => {
+          return `${i+1}. ${u.nama || 'NO NAME'} (${u.email}) - Role: ${u.role} - ID: ${u.id}`;
+        }).join('\n');
+        
+        output.textContent += '\n\n📋 SUMMARY:\n' + summary;
+        
+        // Cek jemaat
+        const jemaatList = users.filter(u => u.role === 'jemaat');
+        output.textContent += `\n\n👥 Jemaat: ${jemaatList.length} akun`;
+        
+        if (jemaatList.length > 0) {
+          output.textContent += '\n\nDetail Jemaat:';
+          jemaatList.forEach((j, i) => {
+            output.textContent += `\n${i+1}. Nama: ${j.nama || 'MISSING'}`;
+            output.textContent += `\n   Email: ${j.email || 'MISSING'}`;
+            output.textContent += `\n   NIK: ${j.nik || 'MISSING'}`;
+            output.textContent += `\n   Rayon: ${j.rayon || 'MISSING'}`;
+            output.textContent += `\n   ID: ${j.id}`;
+            output.textContent += `\n   Created: ${j.created_at || 'MISSING'}`;
+            output.textContent += `\n`;
+          });
+        }
+        
+      } catch (e) {
+        output.textContent = '❌ Error: ' + e.message;
+      }
+    }
+    
+    function addTestJemaat() {
+      try {
+        const usersRaw = localStorage.getItem('users') || '[]';
+        const users = JSON.parse(usersRaw);
+        
+        const _nik = String('123456' + Date.now()).slice(0, 16);
+        const newJemaat = {
+          // use NIK as id for Jemaat test data (match production behaviour)
+          id: _nik,
+          rayon: '1',
+          nik: _nik,
+          nama: 'Test Jemaat ' + new Date().toLocaleTimeString(),
+          email: 'testjemaat' + Date.now() + '@test.com',
+          password: 'test123',
+          role: 'jemaat',
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString()
+        };
+        
+        users.push(newJemaat);
+        localStorage.setItem('users', JSON.stringify(users));
+        
+        alert('✅ Jemaat test berhasil ditambahkan!');
+        checkData();
+      } catch (e) {
+        alert('❌ Error: ' + e.message);
+      }
+    }
+    
+    function clearUsers() {
+      if (confirm('Hapus SEMUA data users? (Termasuk Master Admin!)')) {
+        localStorage.removeItem('users');
+        alert('✅ Data users dihapus');
+        checkData();
+      }
+    }
+    
+    // Auto-check on load
+    window.addEventListener('DOMContentLoaded', checkData);
+  </script>
+</body>
+</html>

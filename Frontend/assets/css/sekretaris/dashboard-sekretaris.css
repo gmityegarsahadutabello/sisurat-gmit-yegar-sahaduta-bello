@@ -1,0 +1,53 @@
+/* Dashboard stat cards for Sekretaris - similar to Tata Usaha */
+.stat-card{
+  padding: 2rem 1.75rem;
+  border-radius: 16px;
+  box-shadow: 0 2px 12px rgba(22,28,45,0.08);
+  border: 1px solid rgba(22,28,45,0.06);
+  cursor: pointer;
+  transition: transform .2s ease, box-shadow .2s ease;
+}
+.stat-card:hover{ transform: translateY(-4px); box-shadow: 0 8px 24px rgba(22,28,45,0.12); }
+.stat-body{ gap:20px; display:flex; flex-direction:row; align-items:center; justify-content:flex-start; }
+.stat-icon{
+  width:64px; height:64px; border-radius:12px; display:flex; align-items:center; justify-content:center; flex-shrink:0;
+}
+.stat-card{ max-width:540px; margin:0 auto; }
+
+/* Force two cards side-by-side on medium and larger screens */
+@media (min-width: 768px) {
+  .stats-row{ display:flex; gap:24px; align-items:stretch; justify-content:center; max-width: 1140px; margin: 0 auto; }
+  .stats-row > .col-md-6{ flex: 1 1 0; max-width: 50%; }
+  .stat-card{ width:100%; max-width: 100%; }
+}
+
+/* Small screens: allow wrapping (stack) */
+@media (max-width: 767px) {
+  .stats-row{ display:block; }
+  .stat-card{ max-width:100%; }
+}
+.dashboard-welcome{
+  text-align:center;
+  font-size:1.45rem;
+  font-weight:600;
+  margin-top:22px;
+  margin-bottom:18px;
+  color: #16202b;
+}
+.stat-label{ color:#6b7280; font-size:0.95rem; margin-bottom:6px; font-weight:500; }
+.stat-count{ font-size:2rem; font-weight:700; color:#0b5ed7; margin-bottom:4px; }
+.stat-card .small.text-muted{ color:#94a3b8; font-size:0.85rem; }
+
+/* Color variants */
+.bg-blue{ background: linear-gradient(135deg, #0d6efd 0%, #0b5ed7 100%); }
+.bg-green{ background: linear-gradient(135deg, #20c997 0%, #12b886 100%); }
+
+/* Ensure svg icons inside stat-icon are white and sized nicely */
+.stat-icon svg{ display:block; width:24px; height:24px; }
+
+/* Responsive adjustments */
+@media (max-width:767px){
+  .stat-label{ font-size:0.85rem; }
+  .stat-count{ font-size:1.4rem; }
+  .stat-body{ gap:12px; }
+}

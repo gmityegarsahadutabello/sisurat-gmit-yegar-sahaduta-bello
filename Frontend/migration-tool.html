@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🔧 Migration Tool - System Cleanup</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    .log-box {
+      background: #1e1e1e;
+      color: #d4d4d4;
+      font-family: 'Consolas', 'Monaco', monospace;
+      font-size: 13px;
+      padding: 20px;
+      border-radius: 8px;
+      max-height: 500px;
+      overflow-y: auto;
+      white-space: pre-wrap;
+    }
+    .success { color: #4ec9b0; }
+    .error { color: #f48771; }
+    .warning { color: #dcdcaa; }
+    .info { color: #9cdcfe; }
+  </style>
+  <!-- Load new API -->
+  <script src="assets/js/api.js"></script>
+</head>
+<body class="bg-light">
+  <div class="container py-5">
+    <h1 class="mb-4">🔧 Migration Tool: System Cleanup & MongoDB Prep</h1>
+    
+    <div class="alert alert-info">
+      <strong>ℹ️ Info:</strong> Tool ini akan merapikan struktur data localStorage agar siap untuk migrasi ke MongoDB.
+      Ini akan menggabungkan <code>local_arsip</code> ke <code>local_pengajuan</code> dan menghapus key redundan.
+    </div>
+
+    <div class="card mb-4">
+      <div class="card-body">
+        <h5 class="card-title">System Migration</h5>
+        <p>Klik tombol di bawah untuk menjalankan migrasi sistem penuh.</p>
+        
+        <div class="mt-4">
+          <button class="btn btn-primary btn-lg" onclick="runSystemMigration()">🚀 Run System Migration</button>
+          <button class="btn btn-secondary" onclick="clearLog()">Clear Log</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title">Migration Log</h5>
+        <div id="log" class="log-box"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const log = document.getElementById('log');
+
+    function clearLog() {
+      log.textContent = '';
+    }
+
+    function addLog(msg, type = 'info') {
+      const timestamp = new Date().toLocaleTimeString('id-ID');
+      const className = type === 'success' ? 'success' : 
+                       type === 'error' ? 'error' : 
+                       type === 'warning' ? 'warning' : 'info';
+      log.innerHTML += `<span class="${className}">[${timestamp}] ${msg}</span>\n`;
+      log.scrollTop = log.scrollHeight;
+    }
+
+    async function runSystemMigration() {
+      clearLog();
+      addLog('=== STARTING SYSTEM MIGRATION ===', 'info');
+      
+      try {
+        if (typeof LS === 'undefined' || !LS.runMigration) {
+          addLog('❌ Error: LS helper not found or outdated. Please refresh page.', 'error');
+          return;
+        }
+        
+        // Capture console.log
+        const originalLog = console.log;
+        console.log = function(msg) {
+          addLog(`[System] ${msg}`, 'info');
+          originalLog.apply(console, arguments);
+        };
+        
+        await LS.runMigration();
+        
+        // Restore console.log
+        console.log = originalLog;
+        
+        addLog('✅ System Migration Completed Successfully!', 'success');
+        addLog('   - local_arsip merged into local_pengajuan', 'success');
+        addLog('   - Redundant keys (koor_pending, koor_verified) removed', 'success');
+        addLog('   - Data structure is now cleaner', 'success');
+        
+      } catch (e) {
+        addLog(`❌ Error: ${e.message}`, 'error');
+        console.error(e);
+      }
+    }
+
+    // Auto-check on load
+    window.addEventListener('DOMContentLoaded', () => {
+      addLog('🔧 Migration Tool siap digunakan', 'success');
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Test API Sekretaris</title>
+  <style>
+    body { font-family: monospace; padding: 20px; background: #1e1e1e; color: #d4d4d4; }
+    .log { margin: 10px 0; padding: 10px; background: #2d2d2d; border-radius: 4px; }
+    .success { border-left: 4px solid #4ec9b0; }
+    .error { border-left: 4px solid #f48771; }
+    .info { border-left: 4px solid #569cd6; }
+    pre { margin: 5px 0; white-space: pre-wrap; word-wrap: break-word; }
+  </style>
+</head>
+<body>
+  <h1>🧪 Test API Endpoint untuk Sekretaris</h1>
+  <div id="output"></div>
+
+  <script>
+    const output = document.getElementById('output');
+    
+    function log(message, type = 'info') {
+      const div = document.createElement('div');
+      div.className = `log ${type}`;
+      div.innerHTML = `<pre>${message}</pre>`;
+      output.appendChild(div);
+    }
+
+    async function testAPI() {
+      try {
+        log('🚀 Starting API test...', 'info');
+        log('Endpoint: http://localhost:5000/api/pengajuan?role=sekretaris&status=disposisi_to_sekretaris', 'info');
+        
+        const response = await fetch('http://localhost:5000/api/pengajuan?role=sekretaris&status=disposisi_to_sekretaris');
+        
+        log(`Status: ${response.status} ${response.statusText}`, response.ok ? 'success' : 'error');
+        
+        const data = await response.json();
+        
+        log(`\n📊 Results:\nCount: ${Array.isArray(data) ? data.length : 'Not an array'}`, 'info');
+        
+        if (Array.isArray(data) && data.length > 0) {
+          log('\n✅ Data found! Details:', 'success');
+          
+          data.forEach((item, idx) => {
+            const hasFile = !!(
+              item.final_file_data ||
+              item.final_file ||
+              (item.files && item.files.final && (item.files.final.data || item.files.final.name || item.files.final.url)) ||
+              item.final_file_url
+            );
+            
+            log(`\n--- Item ${idx + 1} ---
+ID: ${item._id || item.id}
+Status: ${item.status}
+User: ${item.user_nama}
+Type: ${item.type || item.tipe}
+Nomor: ${item.nomor || item.nomor_surat || '-'}
+
+File Check:
+  final_file_data: ${!!item.final_file_data} (${(item.final_file_data || '').length} chars)
+  final_file: ${!!item.final_file} (${(item.final_file || '').length} chars)
+  files.final exists: ${!!(item.files && item.files.final)}
+  ${item.files?.final ? `files.final.data: ${!!item.files.final.data} (${(item.files.final.data || '').length} chars)
+  files.final.name: ${item.files.final.name || '-'}
+  files.final.url: ${item.files.final.url || '-'}` : ''}
+  
+✅ hasFinalFile: ${hasFile ? 'YES - Will appear in list' : 'NO - Missing file!'}`, hasFile ? 'success' : 'error');
+          });
+          
+          // Now test what the frontend daftar-masuk.js would do
+          log('\n🎯 Testing Frontend Logic:', 'info');
+          log(`API.pengajuan.getAll({ role: 'sekretaris', status: 'disposisi_to_sekretaris' })`, 'info');
+          log(`Returned ${data.length} items`, 'success');
+          
+          const itemsWithFile = data.filter(i => {
+            return !!(
+              i.final_file_data ||
+              i.final_file ||
+              (i.files && i.files.final && (i.files.final.data || i.files.final.name || i.files.final.url)) ||
+              i.final_file_url
+            );
+          });
+          
+          log(`\nItems that SHOULD appear in list: ${itemsWithFile.length}`, itemsWithFile.length > 0 ? 'success' : 'error');
+          
+        } else {
+          log('\n❌ No data returned!', 'error');
+          log(`Response: ${JSON.stringify(data, null, 2)}`, 'error');
+        }
+        
+      } catch (error) {
+        log(`\n❌ Error: ${error.message}\n${error.stack}`, 'error');
+      }
+    }
+
+    // Run test on page load
+    testAPI();
+  </script>
+</body>
+</html>

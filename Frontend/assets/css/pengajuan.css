@@ -1,0 +1,24 @@
+/* Pengajuan page styles */
+.list-group-item.active {
+  background-color: #2f6fed;
+  border-color: #2f6fed;
+  color: #fff;
+}
+
+#form-title {
+  font-weight: 700;
+}
+
+.form-text {
+  font-size: 0.85rem;
+}
+
+.card .form-control[type="file"] {
+  padding: 0.35rem 0.5rem;
+}
+
+#alert-area .alert { margin-bottom: 12px; }
+
+@media (max-width: 768px) {
+  main.container { padding: 12px; }
+}

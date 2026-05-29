@@ -1,0 +1,9 @@
+/* Filter form small tweaks */
+#filter-form .form-label { font-size: 0.9rem; }
+#filter-form .form-control, #filter-form .form-select { background: #fff; }
+
+#filter-form .btn-link { color: #6c757d; }
+
+@media (max-width: 576px) {
+  #filter-form .col-md-3 { flex: 0 0 100%; max-width: 100%; }
+}

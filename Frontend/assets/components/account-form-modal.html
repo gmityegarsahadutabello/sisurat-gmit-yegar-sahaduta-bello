@@ -1,0 +1,115 @@
+<!-- Modal: Add/Edit Account -->
+<div class="modal fade" id="accountModal" tabindex="-1" role="dialog" aria-labelledby="accountModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+  <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+    <div class="modal-content modal-modern">
+      <div class="modal-header modal-header-gradient">
+        <div>
+          <h5 class="modal-title text-white fw-bold mb-1" id="accountModalLabel">
+            <i class="bi bi-pencil-square me-2"></i>Tambah Akun
+          </h5>
+          <p class="modal-subtitle text-white mb-0">Kelola informasi akun pengguna</p>
+        </div>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form id="account-form">
+          <!-- Personal Information Section -->
+          <div class="form-section mb-4">
+            <h6 class="form-section-title">
+              <i class="bi bi-person-circle me-2"></i>Personal Information
+            </h6>
+            <div class="row g-3">
+              <div class="col-md-6">
+                <label for="account-name" class="form-label">
+                  <i class="bi bi-person me-1"></i>Nama Lengkap
+                </label>
+                <input type="text" class="form-control form-control-modern" id="account-name" aria-describedby="nameHelp" required>
+                <small id="nameHelp" class="text-muted">Gunakan nama lengkap sesuai KTP.</small>
+              </div>
+              <div class="col-md-6">
+                <label for="account-nik" class="form-label">
+                  <i class="bi bi-card-text me-1"></i>NIK
+                </label>
+                <input type="text" class="form-control form-control-modern" id="account-nik" maxlength="16" pattern="\d{16}" aria-describedby="nikHelp" required>
+                <small id="nikHelp" class="text-muted">NIK terdiri dari 16 digit numerik.</small>
+              </div>
+            </div>
+          </div>
+
+          <!-- Account Information Section -->
+          <div class="form-section mb-4">
+            <h6 class="form-section-title">
+              <i class="bi bi-shield-lock me-2"></i>Account Information
+            </h6>
+            <div class="row g-3">
+              <div class="col-md-6">
+                <label for="account-email" class="form-label">
+                  <i class="bi bi-envelope me-1"></i>Email
+                </label>
+                <input type="email" class="form-control form-control-modern" id="account-email" aria-describedby="emailHelp" required>
+                <small id="emailHelp" class="text-muted">Hanya mendukung email Gmail yang valid (contoh: nama.lengkap@gmail.com).</small>
+              </div>
+              <div class="col-md-6">
+                <label for="account-password" class="form-label">
+                  <i class="bi bi-lock me-1"></i>Password
+                </label>
+                <div class="input-group">
+                  <input type="password" class="form-control form-control-modern" id="account-password" aria-describedby="passwordHelp" required>
+                  <button class="btn btn-outline-secondary" type="button" id="toggle-account-password" title="Tampilkan/Sembunyikan Password">
+                    <i class="bi bi-eye"></i>
+                  </button>
+                </div>
+                <small id="passwordHelp" class="text-muted">Kosongkan jika tidak ingin mengubah password (saat edit).</small>
+              </div>
+            </div>
+          </div>
+
+          <!-- Role & Permission Section -->
+          <div class="form-section mb-3">
+            <h6 class="form-section-title">
+              <i class="bi bi-award me-2"></i>Role & Permission
+            </h6>
+            <div class="row g-3">
+              <div class="col-md-6">
+                <label for="account-role" class="form-label">
+                  <i class="bi bi-award me-1"></i>Role
+                </label>
+                <select class="form-select form-control-modern" id="account-role" aria-describedby="roleHelp" required>
+                  <option value="">Pilih Role...</option>
+                  <option value="koordinator">Koordinator</option>
+                  <option value="tatausaha">Tata Usaha</option>
+                  <option value="sekretaris">Sekretaris</option>
+                  <option value="pendeta">Pendeta</option>
+                  <option value="admin">Administrator</option>
+                </select>
+                <small id="roleHelp" class="text-muted">Role menentukan akses fitur dalam sistem.</small>
+              </div>
+              <div class="col-md-6" id="koordinator-fields" style="display:none;">
+                <label for="account-rayon" class="form-label">
+                  <i class="bi bi-geo-alt me-1"></i>Rayon
+                </label>
+                <select class="form-select form-control-modern" id="account-rayon" aria-describedby="rayonHelp">
+                  <option value="">Pilih Rayon...</option>
+                  <option value="Rayon 1">Rayon 1</option>
+                  <option value="Rayon 2">Rayon 2</option>
+                  <option value="Rayon 3">Rayon 3</option>
+                  <option value="Rayon 4">Rayon 4</option>
+                  <option value="Rayon 5">Rayon 5</option>
+                </select>
+                <small id="rayonHelp" class="text-muted">Wajib diisi untuk role Jemaat/Koordinator.</small>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer modal-footer-modern">
+        <button type="button" class="btn btn-secondary btn-modern" data-bs-dismiss="modal">
+          <i class="bi bi-x-lg me-1"></i>Batal
+        </button>
+        <button type="button" class="btn btn-primary btn-modern" id="btn-save">
+          <i class="bi bi-check-lg me-1"></i>Simpan Akun
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

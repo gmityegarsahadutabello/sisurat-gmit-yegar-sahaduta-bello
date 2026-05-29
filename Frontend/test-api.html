@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Registration</title>
+</head>
+<body>
+    <h1>Test Registration API</h1>
+    <button id="testBtn">Test Register</button>
+    <pre id="output"></pre>
+
+    <script src="assets/js/api.js"></script>
+    <script>
+        document.getElementById('testBtn').addEventListener('click', async () => {
+            const output = document.getElementById('output');
+            output.textContent = 'Testing...';
+            
+            try {
+                const result = await API.users.register({
+                    nik: '9999999999999999',
+                    name: 'Test User Browser',
+                    email: 'browser.test@example.com',
+                    password: 'test123',
+                    role: 'jemaat',
+                    rayon: 'Rayon A'
+                });
+                output.textContent = 'SUCCESS:\n' + JSON.stringify(result, null, 2);
+            } catch (error) {
+                output.textContent = 'ERROR:\n' + error.message + '\n\nDetails: ' + error.stack;
+            }
+        });
+    </script>
+</body>
+</html>

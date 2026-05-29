@@ -1,0 +1,35 @@
+{
+  "name": "gmit-yegar-backend",
+  "version": "1.0.0",
+  "description": "Backend API for GMIT Yegar Sistem Surat with MongoDB",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js",
+    "seed": "node seeder.js -i",
+    "seed:delete": "node seeder.js -d"
+  },
+  "keywords": [
+    "mongodb",
+    "express",
+    "church",
+    "management"
+  ],
+  "author": "GMIT Yegar",
+  "license": "ISC",
+  "dependencies": {
+    "@aws-sdk/client-s3": "^3.946.0",
+    "@aws-sdk/s3-request-presigner": "^3.946.0",
+    "bcryptjs": "^3.0.3",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.3",
+    "express": "^4.18.2",
+    "google-auth-library": "^10.5.0",
+    "googleapis": "^168.0.0",
+    "mongoose": "^9.0.0",
+    "multer": "^2.0.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  }
+}

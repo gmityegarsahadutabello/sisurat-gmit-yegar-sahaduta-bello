@@ -1,0 +1,135 @@
+/* Daftar Pengajuan (Jemaat) - page-specific enhancements */
+
+/* Header actions */
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+.page-header .title {
+  margin: 0;
+  font-weight: 800;
+}
+
+/* Filter bar */
+.filter-bar .form-label { font-size: 0.9rem; color: var(--text-muted); }
+.filter-bar .form-control, .filter-bar .form-select { background: #fff; }
+.filter-bar .btn-link { color: #6c757d; }
+
+/* Inline search input with icon */
+.search-wrap { position: relative; }
+.search-wrap .bi { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: #9aa0a6; }
+.search-wrap input { padding-left: 36px; }
+
+/* Status badges */
+.badge-status-proses {
+  background: #e8f0fe;
+  color: #1a73e8;
+  border-radius: 20px;
+  font-weight: 700;
+  padding: 6px 10px;
+}
+.badge-status-diterima {
+  background: #e6f4ea;
+  color: #137333;
+  border-radius: 20px;
+  font-weight: 700;
+  padding: 6px 10px;
+}
+.badge-status-ditolak {
+  background: #fce8e6;
+  color: #c5221f;
+  border-radius: 20px;
+  font-weight: 700;
+  padding: 6px 10px;
+}
+
+/* Table hover and actions */
+.table tbody tr { transition: background 0.15s ease; }
+.table tbody tr:hover { background: #f8fafc; }
+.table-actions { display: flex; align-items: center; justify-content: flex-end; gap: .5rem; }
+.table-actions .btn { padding: .35rem .6rem; border-radius: 8px; display: inline-flex; align-items: center; gap: .45rem; min-height: 36px; }
+
+/* Ensure tables keep baseline vertical alignment */
+td.table-actions, th.table-actions { vertical-align: middle; }
+
+/* Sortable headers */
+th.sortable { cursor: pointer; user-select: none; position: relative; }
+th.sortable .sort-ind { margin-left: 6px; opacity: .6; font-size: .85em; }
+th.sortable.sorted-asc .sort-ind::after { content: "\25B2"; }
+th.sortable.sorted-desc .sort-ind::after { content: "\25BC"; }
+
+/* Result info */
+#result-info { color: var(--text-muted); font-size: 0.9rem; }
+
+/* Empty state */
+.no-data {
+  text-align: center;
+  padding: 24px;
+  color: var(--text-muted);
+}
+.no-data .big { font-size: 1rem; font-weight: 700; color: #2d3748; }
+
+/* Loading skeleton */
+.skeleton-row { position: relative; overflow: hidden; }
+.skeleton { display: inline-block; background: #eef2f7; border-radius: 6px; height: 12px; width: 100%; position: relative; overflow: hidden; }
+.skeleton::after { content: ""; position: absolute; inset: 0; transform: translateX(-100%); background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,.6) 50%, rgba(255,255,255,0) 100%); animation: shimmer 1.2s infinite; }
+@keyframes shimmer { 100% { transform: translateX(100%); } }
+
+/* Responsive tweaks */
+@media (max-width: 768px) {
+  .page-header { 
+    flex-direction: column; 
+    align-items: flex-start; 
+    gap: 8px; 
+  }
+  
+  .table-responsive {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  .table {
+    min-width: 700px;
+  }
+  
+  .filter-bar .row {
+    gap: 0.5rem;
+  }
+  
+  .filter-bar .col-md-3,
+  .filter-bar .col-md-4 {
+    width: 100%;
+    margin-bottom: 0.75rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .page-header { 
+    flex-direction: column; 
+    align-items: flex-start; 
+    gap: 8px; 
+  }
+  
+  .table-actions .btn span { 
+    display: none; 
+  }
+  
+  .table-actions {
+    gap: 0.35rem;
+  }
+  
+  .table-actions .btn {
+    padding: 0.4rem 0.5rem;
+    min-height: 32px;
+  }
+  
+  .badge-status-proses,
+  .badge-status-diterima,
+  .badge-status-ditolak {
+    font-size: 0.8rem;
+    padding: 4px 8px;
+  }
+}

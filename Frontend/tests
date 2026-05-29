@@ -1,0 +1,23 @@
+{
+  "devDependencies": {
+    "playwright": "^1.0.0"
+  },
+  "scripts": {
+    "test": "playwright test"
+  }
+}
+
+module.exports = {
+  testDir: 'tests',
+  use: {
+    headless: true
+  }
+};
+
+const { test, expect } = require('@playwright/test');
+
+test('hello world', async ({ page }) => {
+  await page.goto('http://localhost:3000');
+  const title = await page.title();
+  expect(title).toBe('Expected Title');
+});

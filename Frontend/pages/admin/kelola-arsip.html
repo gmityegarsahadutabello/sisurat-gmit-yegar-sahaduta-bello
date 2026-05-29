@@ -1,0 +1,852 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kelola Arsip Surat - Admin</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+  <link rel="stylesheet" href="../../assets/css/global.css">
+  <link rel="stylesheet" href="../../assets/css/navbar.css">
+  <link rel="stylesheet" href="../../assets/css/confirmation-modal.css">
+  <link rel="stylesheet" href="../../assets/css/admin/accounts.css">
+  <link rel="stylesheet" href="../../assets/css/admin/responsive-admin.css">
+  <style>
+    .storage-card {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+    }
+    
+    .storage-progress {
+      height: 30px;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 15px;
+      overflow: hidden;
+    }
+    
+    .storage-progress .progress-bar {
+      font-weight: bold;
+      background: linear-gradient(90deg, #10b981, #3b82f6);
+      transition: width 0.6s ease;
+    }
+    
+    .storage-progress .progress-bar.bg-warning {
+      background: linear-gradient(90deg, #f59e0b, #ef4444);
+    }
+    
+    .storage-progress .progress-bar.bg-danger {
+      background: linear-gradient(90deg, #ef4444, #dc2626);
+    }
+    
+    .archive-item {
+      transition: all 0.2s ease;
+      border-left: 4px solid transparent;
+    }
+    
+    .archive-item:hover {
+      background: #f8f9fa;
+      border-left-color: #667eea;
+      transform: translateX(4px);
+    }
+    
+    .archive-item.selected {
+      background: #e0e7ff;
+      border-left-color: #4f46e5;
+    }
+    
+    .btn-delete-all {
+      background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+      border: none;
+      box-shadow: 0 4px 10px rgba(239, 68, 68, 0.3);
+    }
+    
+    .btn-delete-all:hover {
+      background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+      box-shadow: 0 6px 15px rgba(239, 68, 68, 0.4);
+    }
+    
+    .btn-delete-selected {
+      background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+      border: none;
+    }
+    
+    .stats-badge {
+      font-size: 2rem;
+      font-weight: bold;
+    }
+    
+    /* Storage Stat Boxes */
+    .storage-stat-box {
+      background: rgba(255, 255, 255, 0.15);
+      padding: 12px;
+      border-radius: 10px;
+      border-left: 3px solid rgba(255, 255, 255, 0.5);
+      transition: all 0.3s ease;
+    }
+    
+    .storage-stat-box:hover {
+      background: rgba(255, 255, 255, 0.25);
+      transform: translateY(-2px);
+    }
+    
+    .storage-stat-box i {
+      font-size: 1.2rem;
+    }
+    
+    .storage-stat-box .stats-badge {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: white;
+      line-height: 1;
+    }
+    
+    /* Storage Info Box */
+    .storage-info-box {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 12px 16px;
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    
+    .storage-info-box .badge {
+      font-size: 0.9rem;
+      padding: 0.4em 0.6em;
+      font-weight: 700;
+    }
+    
+    .storage-info-box i {
+      font-size: 1.1rem;
+    }
+    
+    #storage-status-text {
+      padding: 4px 12px;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 6px;
+      font-weight: 600;
+    }
+    
+    #storage-percent {
+      font-size: 1.8rem !important;
+    }
+    
+    #last-updated {
+      font-style: italic;
+    }
+    
+    .empty-state {
+      padding: 4rem 2rem;
+      text-align: center;
+      color: #6b7280;
+    }
+    
+    .empty-state i {
+      font-size: 5rem;
+      opacity: 0.3;
+    }
+    
+    /* ===== RESPONSIVE STYLES FOR KELOLA ARSIP ===== */
+    
+    /* Tablet Landscape (768px - 991px) */
+    @media (max-width: 991px) {
+      .storage-card .card-body {
+        padding: 1.5rem !important;
+      }
+      
+      .storage-card i {
+        font-size: 3rem !important;
+      }
+      
+      .storage-progress {
+        height: 25px;
+      }
+      
+      .stats-badge {
+        font-size: 1.75rem;
+      }
+    }
+    
+    /* Tablet Portrait (576px - 767px) */
+    @media (max-width: 767px) {
+      .container-fluid {
+        padding-left: 1rem;
+        padding-right: 1rem;
+      }
+      
+      .py-4 {
+        padding-top: 1.5rem !important;
+        padding-bottom: 1.5rem !important;
+      }
+      
+      h2 {
+        font-size: 1.5rem;
+      }
+      
+      .storage-card .card-body {
+        padding: 1.25rem !important;
+      }
+      
+      .storage-card .col-md-2 i {
+        font-size: 2.5rem !important;
+      }
+      
+      .storage-card h6 {
+        font-size: 0.9rem;
+      }
+      
+      .storage-stat-box {
+        padding: 10px;
+      }
+      
+      .storage-stat-box .stats-badge {
+        font-size: 1.3rem !important;
+      }
+      
+      .storage-stat-box i {
+        font-size: 1rem;
+      }
+      
+      .storage-stat-box small {
+        font-size: 0.7rem;
+      }
+      
+      .storage-progress {
+        height: 22px;
+        font-size: 0.85rem;
+      }
+      
+      .storage-info-box {
+        padding: 10px 12px;
+      }
+      
+      .storage-info-box .d-flex {
+        font-size: 0.85rem;
+      }
+      
+      .storage-info-box .badge {
+        font-size: 0.8rem;
+        padding: 0.3em 0.5em;
+      }
+      
+      #storage-status-text {
+        font-size: 0.75rem;
+        padding: 3px 8px;
+      }
+      
+      #storage-percent {
+        font-size: 1.5rem !important;
+      }
+      
+      /* Action Buttons */
+      .btn-group {
+        flex-direction: column;
+        gap: 8px;
+      }
+      
+      .btn-group .btn {
+        width: 100%;
+        margin: 0;
+      }
+      
+      /* Table Responsive */
+      .table-responsive {
+        font-size: 0.85rem;
+      }
+      
+      .table thead th {
+        font-size: 0.75rem;
+        padding: 10px 8px;
+      }
+      
+      .table tbody td {
+        padding: 10px 8px;
+      }
+    }
+    
+    /* Mobile (< 576px) */
+    @media (max-width: 575px) {
+      .py-4 {
+        padding-top: 1rem !important;
+        padding-bottom: 1rem !important;
+      }
+      
+      .mb-4 {
+        margin-bottom: 1rem !important;
+      }
+      
+      h2 {
+        font-size: 1.3rem;
+      }
+      
+      h2 i {
+        font-size: 1.2rem;
+      }
+      
+      p.text-muted {
+        font-size: 0.85rem;
+      }
+      
+      /* Storage Card Mobile */
+      .storage-card .card-body {
+        padding: 1rem !important;
+      }
+      
+      .storage-card .row {
+        text-align: center;
+      }
+      
+      .storage-card .col-md-2 {
+        margin-bottom: 1rem;
+      }
+      
+      .storage-card .col-md-2 i {
+        font-size: 2rem !important;
+      }
+      
+      .storage-card h6 {
+        font-size: 0.85rem;
+        margin-top: 0.5rem !important;
+      }
+      
+      .storage-card small {
+        font-size: 0.7rem;
+      }
+      
+      /* Stats Grid - Stack vertically on mobile */
+      .storage-card .row.g-3 > div {
+        flex: 0 0 50%;
+        max-width: 50%;
+      }
+      
+      .storage-stat-box {
+        padding: 8px;
+      }
+      
+      .storage-stat-box .d-flex {
+        flex-direction: column;
+        align-items: center !important;
+        gap: 4px !important;
+      }
+      
+      .storage-stat-box i {
+        font-size: 1.2rem;
+      }
+      
+      .storage-stat-box small {
+        font-size: 0.65rem;
+        text-align: center;
+      }
+      
+      .storage-stat-box .stats-badge {
+        font-size: 1.2rem !important;
+      }
+      
+      .storage-progress {
+        height: 20px;
+        font-size: 0.75rem;
+      }
+      
+      #storage-status-text {
+        font-size: 0.7rem;
+        padding: 2px 6px;
+        display: inline-block;
+        margin-top: 4px;
+      }
+      
+      #storage-percent {
+        font-size: 1.3rem !important;
+      }
+      
+      /* Storage Info Box Mobile */
+      .storage-info-box {
+        padding: 8px 10px;
+      }
+      
+      .storage-info-box .d-flex.align-items-center {
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        gap: 8px !important;
+      }
+      
+      .storage-info-box .d-flex.align-items-center > div {
+        width: 100%;
+      }
+      
+      .storage-info-box .d-flex.gap-3 {
+        flex-direction: column;
+        gap: 6px !important;
+        width: 100%;
+      }
+      
+      .storage-info-box .d-flex.gap-2 {
+        font-size: 0.8rem;
+      }
+      
+      .storage-info-box i {
+        font-size: 0.9rem;
+      }
+      
+      .storage-info-box .badge {
+        font-size: 0.75rem;
+        padding: 0.25em 0.4em;
+      }
+      
+      #last-updated {
+        font-size: 0.7rem;
+        width: 100%;
+        text-align: center;
+        margin-top: 4px;
+      }
+      
+      /* Search and Buttons */
+      .input-group .form-control {
+        font-size: 0.9rem;
+      }
+      
+      .btn {
+        font-size: 0.85rem;
+        padding: 0.5rem 0.75rem;
+      }
+      
+      .btn i {
+        font-size: 1rem;
+      }
+      
+      /* Table - Card Style on Mobile */
+      .table thead {
+        display: none;
+      }
+      
+      .table tbody tr {
+        display: block;
+        margin-bottom: 1rem;
+        border: 1px solid #dee2e6;
+        border-radius: 8px;
+        padding: 1rem;
+        background: white;
+        position: relative;
+      }
+      
+      .table tbody tr:hover {
+        transform: none;
+      }
+      
+      .table tbody td {
+        display: block;
+        padding: 0.5rem 0;
+        border: none;
+        text-align: left;
+      }
+      
+      .table tbody td::before {
+        content: attr(data-label);
+        font-weight: 700;
+        color: #6c757d;
+        display: block;
+        margin-bottom: 0.25rem;
+        font-size: 0.75rem;
+        text-transform: uppercase;
+      }
+      
+      /* Checkbox in mobile card */
+      .table tbody td:first-child {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+      }
+      
+      .table tbody td:first-child::before {
+        display: none;
+      }
+      
+      /* Archive item adjustments */
+      .archive-item {
+        padding-left: 1rem;
+      }
+      
+      /* Empty State */
+      .empty-state {
+        padding: 2rem 1rem;
+      }
+      
+      .empty-state i {
+        font-size: 3rem;
+      }
+      
+      .empty-state h4 {
+        font-size: 1.1rem;
+      }
+    }
+    
+    /* Extra Small Mobile (< 400px) */
+    @media (max-width: 399px) {
+      h2 {
+        font-size: 1.2rem;
+      }
+      
+      .storage-card .col-md-3 i {
+        font-size: 1.75rem !important;
+      }
+      
+      .storage-card h5 {
+        font-size: 0.85rem;
+      }
+      
+      .storage-progress {
+        height: 18px;
+        font-size: 0.7rem;
+      }
+      
+      .stats-badge {
+        font-size: 1.2rem;
+      }
+      
+      .btn {
+        font-size: 0.8rem;
+        padding: 0.4rem 0.6rem;
+      }
+      
+      .table tbody tr {
+        padding: 0.75rem;
+      }
+    }
+    
+    /* Navbar Responsive */
+    @media (max-width: 991px) {
+      .navbar-collapse {
+        background: rgba(13, 110, 253, 0.95);
+        padding: 1rem;
+        border-radius: 8px;
+        margin-top: 0.5rem;
+      }
+      
+      .navbar-nav .nav-link {
+        padding: 0.75rem 1rem;
+        border-radius: 6px;
+        margin: 0.25rem 0;
+      }
+      
+      .navbar-nav .nav-link:hover,
+      .navbar-nav .nav-link.active {
+        background: rgba(255, 255, 255, 0.1);
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Navbar -->
+  <div id="navbar-container">
+    <!-- Navbar component will be injected here -->
+  </div>
+
+  <!-- Main Content -->
+  <div class="container-fluid py-4">
+    <!-- Page Header -->
+    <div class="row mb-4">
+      <div class="col">
+        <h2 class="fw-bold">
+          <i class="bi bi-archive-fill text-primary me-2"></i>
+          Kelola Arsip Surat
+        </h2>
+        <p class="text-muted">Hapus arsip surat yang sudah tidak diperlukan untuk menghemat ruang penyimpanan</p>
+      </div>
+    </div>
+
+    <!-- Storage Stats Card -->
+    <div class="row mb-4">
+      <div class="col-12">
+        <div class="card storage-card">
+          <div class="card-body p-4">
+            <div class="row align-items-center">
+              <!-- Icon & Title Section -->
+              <div class="col-md-2 col-lg-2 text-center mb-3 mb-md-0">
+                <i class="bi bi-database-fill" style="font-size: 3.5rem;"></i>
+                <h6 class="mt-2 mb-0 fw-bold">MongoDB Atlas</h6>
+                <small class="opacity-75">Database Storage</small>
+              </div>
+              
+              <!-- Stats Grid Section -->
+              <div class="col-md-10 col-lg-10">
+                <!-- Storage Metrics -->
+                <div class="row mb-3 g-3">
+                  <div class="col-6 col-md-3">
+                    <div class="storage-stat-box">
+                      <div class="d-flex align-items-center gap-2 mb-1">
+                        <i class="bi bi-pie-chart-fill text-warning"></i>
+                        <small class="text-uppercase fw-semibold opacity-75">Terpakai</small>
+                      </div>
+                      <div class="stats-badge fs-4" id="storage-used">-</div>
+                    </div>
+                  </div>
+                  <div class="col-6 col-md-3">
+                    <div class="storage-stat-box">
+                      <div class="d-flex align-items-center gap-2 mb-1">
+                        <i class="bi bi-check-circle-fill text-success"></i>
+                        <small class="text-uppercase fw-semibold opacity-75">Tersedia</small>
+                      </div>
+                      <div class="stats-badge fs-4" id="storage-available">-</div>
+                    </div>
+                  </div>
+                  <div class="col-6 col-md-3">
+                    <div class="storage-stat-box">
+                      <div class="d-flex align-items-center gap-2 mb-1">
+                        <i class="bi bi-hdd-fill text-info"></i>
+                        <small class="text-uppercase fw-semibold opacity-75">Kapasitas</small>
+                      </div>
+                      <div class="stats-badge fs-4" id="storage-limit">500 MB</div>
+                    </div>
+                  </div>
+                  <div class="col-6 col-md-3">
+                    <div class="storage-stat-box">
+                      <div class="d-flex align-items-center gap-2 mb-1">
+                        <i class="bi bi-percent text-primary"></i>
+                        <small class="text-uppercase fw-semibold opacity-75">Penggunaan</small>
+                      </div>
+                      <div class="stats-badge fs-4" id="storage-percent">0%</div>
+                    </div>
+                  </div>
+                </div>
+                
+                <!-- Progress Bar -->
+                <div class="mb-3">
+                  <div class="d-flex justify-content-between align-items-center mb-2">
+                    <small class="fw-semibold opacity-75">
+                      <i class="bi bi-bar-chart-fill me-1"></i>Storage Usage Progress
+                    </small>
+                    <small class="fw-semibold opacity-75" id="storage-status-text">
+                      <i class="bi bi-info-circle me-1"></i>Normal
+                    </small>
+                  </div>
+                  <div class="storage-progress">
+                    <div class="progress-bar" role="progressbar" id="storage-progress" 
+                         style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                      0%
+                    </div>
+                  </div>
+                </div>
+                
+                <!-- Document Statistics -->
+                <div class="row g-2">
+                  <div class="col-12">
+                    <div class="storage-info-box">
+                      <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
+                        <div class="d-flex align-items-center gap-3">
+                          <div class="d-flex align-items-center gap-2">
+                            <i class="bi bi-files text-primary"></i>
+                            <span class="fw-semibold">Total Surat:</span>
+                            <span class="badge bg-primary" id="archive-total">0</span>
+                          </div>
+                          <div class="d-flex align-items-center gap-2">
+                            <i class="bi bi-archive-fill text-secondary"></i>
+                            <span class="fw-semibold">Arsip:</span>
+                            <span class="badge bg-secondary" id="archive-count">0</span>
+                          </div>
+                          <div class="d-flex align-items-center gap-2">
+                            <i class="bi bi-clock-history text-success"></i>
+                            <span class="fw-semibold">Aktif:</span>
+                            <span class="badge bg-success" id="active-count">0</span>
+                          </div>
+                        </div>
+                        <div>
+                          <small class="text-muted" id="last-updated">
+                            <i class="bi bi-arrow-clockwise me-1"></i>Memuat...
+                          </small>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="row mb-3">
+      <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+          <div class="d-flex gap-2">
+            <button class="btn btn-primary" id="btn-select-all">
+              <i class="bi bi-check2-square"></i> Pilih Semua
+            </button>
+            <button class="btn btn-secondary" id="btn-deselect-all">
+              <i class="bi bi-square"></i> Batal Pilih
+            </button>
+            <button class="btn btn-delete-selected" id="btn-delete-selected" disabled>
+              <i class="bi bi-trash"></i> Hapus Terpilih (<span id="selected-count">0</span>)
+            </button>
+          </div>
+          <div>
+            <button class="btn btn-delete-all" id="btn-delete-all">
+              <i class="bi bi-trash3-fill"></i> Hapus Semua Arsip
+            </button>
+            <button class="btn btn-outline-secondary" id="btn-refresh">
+              <i class="bi bi-arrow-clockwise"></i> Refresh
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Archives List -->
+    <div class="row">
+      <div class="col-12">
+        <div class="card shadow-sm">
+          <div class="card-header bg-white py-3">
+            <div class="d-flex justify-content-between align-items-center">
+              <h5 class="mb-0 fw-bold">
+                <i class="bi bi-list-ul me-2"></i>Daftar Arsip Surat
+              </h5>
+              <div class="input-group" style="max-width: 300px;">
+                <span class="input-group-text"><i class="bi bi-search"></i></span>
+                <input type="text" class="form-control" id="search-archive" placeholder="Cari arsip...">
+              </div>
+            </div>
+          </div>
+          <div class="card-body p-0">
+            <div class="table-responsive">
+              <table class="table table-hover mb-0">
+                <thead class="table-light">
+                  <tr>
+                    <th width="50" class="text-center">
+                      <input type="checkbox" class="form-check-input" id="checkbox-header">
+                    </th>
+                    <th width="60">#</th>
+                    <th>Nama Jemaat</th>
+                    <th>Jenis Surat</th>
+                    <th>Nomor Surat</th>
+                    <th>Rayon</th>
+                    <th>Diarsipkan</th>
+                    <th width="100" class="text-center">Aksi</th>
+                  </tr>
+                </thead>
+                <tbody id="archives-tbody">
+                  <tr>
+                    <td colspan="8" class="text-center py-5">
+                      <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                      </div>
+                      <p class="mt-2 text-muted">Memuat data arsip...</p>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Password Confirmation Modal for Delete -->
+  <div class="modal fade" id="passwordConfirmModal" tabindex="-1" aria-labelledby="passwordConfirmModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header bg-danger text-white">
+          <h5 class="modal-title" id="passwordConfirmModalLabel">
+            <i class="bi bi-shield-lock-fill me-2"></i>Konfirmasi Penghapusan Arsip
+          </h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="alert alert-warning d-flex align-items-center" role="alert">
+            <i class="bi bi-exclamation-triangle-fill me-2 fs-4"></i>
+            <div>
+              <strong>Peringatan!</strong> Tindakan ini tidak dapat dibatalkan.
+            </div>
+          </div>
+          
+          <div class="mb-3" id="delete-info">
+            <!-- Will be filled dynamically -->
+          </div>
+          
+          <div class="mb-3">
+            <label for="admin-password-input" class="form-label fw-bold">
+              <i class="bi bi-key-fill me-1"></i>Masukkan Password Admin Anda
+            </label>
+            <input 
+              type="password" 
+              class="form-control form-control-lg" 
+              id="admin-password-input" 
+              placeholder="Password admin..."
+              autocomplete="current-password">
+            <small class="text-muted">
+              <i class="bi bi-info-circle me-1"></i>Password diperlukan untuk keamanan
+            </small>
+          </div>
+          
+          <div id="password-error" class="alert alert-danger d-none" role="alert">
+            <i class="bi bi-x-circle-fill me-2"></i>
+            <span id="password-error-text"></span>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+            <i class="bi bi-x-circle me-1"></i>Batal
+          </button>
+          <button type="button" class="btn btn-danger" id="confirm-delete-btn">
+            <i class="bi bi-trash-fill me-1"></i>Hapus Arsip
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Logout Confirmation Modal -->
+  <div class="confirm-modal" id="logoutConfirmModal">
+    <div class="confirm-modal-overlay"></div>
+    <div class="confirm-modal-content">
+      <div class="confirm-modal-header warning">
+        <div class="confirm-modal-icon">
+          <i class="bi bi-box-arrow-right"></i>
+        </div>
+        <h3 class="confirm-modal-title">Konfirmasi Logout</h3>
+        <button class="confirm-modal-close" id="closeLogoutModal">
+          <i class="bi bi-x-lg"></i>
+        </button>
+      </div>
+      
+      <div class="confirm-modal-body">
+        <p class="confirm-message-primary">
+          <strong>Anda yakin ingin keluar dari sistem?</strong>
+        </p>
+        <p class="confirm-message-secondary">
+          Anda perlu login kembali untuk mengakses halaman admin. Pastikan semua pekerjaan sudah tersimpan.
+        </p>
+        
+        <div class="confirm-warning warning">
+          <i class="bi bi-info-circle-fill"></i>
+          <span>Sesi Anda akan berakhir dan Anda akan diarahkan ke halaman login.</span>
+        </div>
+      </div>
+      
+      <div class="confirm-modal-footer">
+        <button class="confirm-btn-cancel" id="cancelLogoutBtn">
+          <i class="bi bi-x-circle"></i>
+          <span>Batal</span>
+        </button>
+        <button class="confirm-btn-confirm warning" id="confirmLogoutBtn">
+          <i class="bi bi-box-arrow-right"></i>
+          <span>Ya, Logout</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap Bundle JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  
+  <!-- API Script -->
+  <script src="../../assets/js/api.js"></script>
+  
+  <!-- Navbar Scripts -->
+  <script src="../../assets/js/navbar.js"></script>
+  <script src="../../assets/js/admin/navbar-admin.js"></script>
+  
+  <!-- Archive Management Script -->
+  <script src="../../assets/js/admin/kelola-arsip.js"></script>
+</body>
+</html>

@@ -1,0 +1,410 @@
+<!doctype html>
+<html lang="id">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width,initial-scale=1" />
+	<title>Dashboard - Tata Usaha</title>
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+	<link rel="stylesheet" href="../../assets/css/global.css">
+	<link rel="stylesheet" href="../../assets/css/navbar.css">
+  <link rel="stylesheet" href="../../assets/css/confirmation-modal.css">
+  <link rel="stylesheet" href="../../assets/css/tatausaha/dashboard-tatausaha.css">
+  <style>
+    body {
+      padding-top: 80px;
+    }
+    
+    main.container {
+      margin-top: 2rem;
+    }
+    
+    .navbar-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+    }
+    body.modal-open .navbar-container {
+      z-index: 1;
+    }
+    
+    /* Hamburger Menu */
+    .navbar-toggler {
+      display: none;
+      background: transparent;
+      border: none;
+      padding: 5px;
+      cursor: pointer;
+      color: white;
+      font-size: 1.5rem;
+    }
+    
+    .navbar-toggler:hover {
+      opacity: 0.8;
+    }
+    
+    /* Hide mobile elements on desktop */
+    .mobile-user-menu {
+      display: none;
+    }
+    
+    /* Responsive Navbar */
+    @media (max-width: 768px) {
+      body {
+        padding-top: 65px;
+      }
+      
+      main.container {
+        margin-top: 1.5rem;
+      }
+      
+      .navbar-container {
+        padding: 10px 15px;
+        flex-wrap: nowrap;
+        align-items: center;
+      }
+      
+      .navbar-toggler {
+        display: block;
+        order: 2;
+        margin-left: auto;
+      }
+      
+      .nav-left {
+        order: 1;
+        flex: 0 0 auto;
+      }
+      
+      .navbar-brand {
+        font-size: 0.85rem !important;
+        gap: 6px !important;
+      }
+      
+      .logo-img {
+        height: 32px !important;
+        width: 32px !important;
+      }
+      
+      .brand-text {
+        font-size: 0.85rem !important;
+      }
+      
+      .brand-subtext {
+        font-size: 0.65rem !important;
+      }
+      
+      .nav-center {
+        display: none;
+        position: fixed;
+        top: 65px;
+        left: 0;
+        right: 0;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        flex-direction: column;
+        padding: 15px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        z-index: 90;
+        max-height: calc(100vh - 65px);
+        overflow-y: auto;
+      }
+      
+      .nav-center.show {
+        display: flex !important;
+      }
+      
+      .nav-center .nav-link {
+        padding: 12px 15px !important;
+        border-bottom: 1px solid rgba(255,255,255,0.1);
+        border-radius: 5px;
+        margin-bottom: 5px;
+        transition: all 0.3s ease;
+      }
+      
+      .nav-center .nav-link:hover,
+      .nav-center .nav-link.active {
+        background: rgba(255,255,255,0.15);
+        transform: translateX(5px);
+      }
+      
+      .nav-center .nav-link i {
+        margin-right: 10px;
+        font-size: 1.1rem;
+      }
+      
+      .ms-auto {
+        display: none;
+      }
+      
+      .header-actions {
+        display: none;
+      }
+      
+      /* Mobile user menu in dropdown */
+      .mobile-user-menu {
+        display: block;
+        background: rgba(255,255,255,0.1);
+        padding: 15px;
+        margin-top: 10px;
+        border-radius: 8px;
+        border-top: 2px solid rgba(255,255,255,0.2);
+      }
+      
+      .mobile-user-info {
+        color: white;
+        margin-bottom: 12px;
+        padding-bottom: 12px;
+        border-bottom: 1px solid rgba(255,255,255,0.2);
+      }
+      
+      .mobile-user-info .role-label {
+        font-size: 0.7rem;
+        opacity: 0.8;
+        margin-bottom: 3px;
+      }
+      
+      .mobile-user-info .user-name {
+        font-size: 0.9rem;
+        font-weight: 600;
+      }
+      
+      .mobile-logout-btn {
+        width: 100%;
+        padding: 10px;
+        background: rgba(220, 53, 69, 0.9);
+        color: white;
+        border: none;
+        border-radius: 5px;
+        font-size: 0.85rem;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        transition: all 0.3s ease;
+      }
+      
+      .mobile-logout-btn:hover {
+        background: rgba(220, 53, 69, 1);
+        transform: translateY(-2px);
+      }
+      
+      .mobile-logout-btn i {
+        font-size: 1rem;
+      }
+    }
+    
+    @media (max-width: 480px) {
+      .navbar-brand {
+        font-size: 0.8rem !important;
+      }
+      
+      .logo-img {
+        height: 28px !important;
+        width: 28px !important;
+      }
+      
+      .brand-text {
+        font-size: 0.8rem !important;
+      }
+      
+      .brand-subtext {
+        font-size: 0.6rem !important;
+      }
+      
+      .navbar-toggler {
+        font-size: 1.3rem;
+      }
+    }
+  </style>
+  
+  <script>
+    // Hamburger menu toggle
+    document.addEventListener('DOMContentLoaded', function() {
+      const toggler = document.querySelector('.navbar-toggler');
+      const navCenter = document.querySelector('.nav-center');
+      
+      if (toggler && navCenter) {
+        toggler.addEventListener('click', function(e) {
+          e.stopPropagation();
+          navCenter.classList.toggle('show');
+          const icon = toggler.querySelector('i');
+          if (navCenter.classList.contains('show')) {
+            icon.classList.remove('bi-list');
+            icon.classList.add('bi-x-lg');
+          } else {
+            icon.classList.remove('bi-x-lg');
+            icon.classList.add('bi-list');
+          }
+        });
+        
+        // Close menu when clicking outside
+        document.addEventListener('click', function(event) {
+          if (!event.target.closest('.navbar-container')) {
+            navCenter.classList.remove('show');
+            const icon = toggler.querySelector('i');
+            icon.classList.remove('bi-x-lg');
+            icon.classList.add('bi-list');
+          }
+        });
+        
+        // Close menu when clicking a nav link
+        const navLinks = navCenter.querySelectorAll('.nav-link');
+        navLinks.forEach(link => {
+          link.addEventListener('click', function() {
+            navCenter.classList.remove('show');
+            const icon = toggler.querySelector('i');
+            icon.classList.remove('bi-x-lg');
+            icon.classList.add('bi-list');
+          });
+        });
+      }
+    });
+  </script>
+</head>
+<body>
+
+  <header class="navbar-container navbar">
+    <div class="nav-left" style="display:flex;align-items:center;gap:12px;">
+      <a class="navbar-brand d-flex align-items-center gap-3" href="dashboard-tatausaha.html" aria-label="Ke Beranda - GMIT YEGAR">
+				<img class="logo-img" src="../../assets/img/logo-gmit.png" alt="GMIT YEGAR logo" style="height:40px; width:40px; object-fit:contain;" />
+				<div class="brand-wrap">
+					<div class="brand-text">GMIT YEGAR</div>
+					<small class="brand-subtext">SAHADUTA BELLO</small>
+				</div>
+			</a>
+		</div>
+    
+    <button class="navbar-toggler" type="button">
+      <i class="bi bi-list"></i>
+    </button>
+
+		<nav class="nav-center" aria-label="Menu utama" style="flex:1;display:flex;justify-content:center;">
+			<a class="nav-link" href="dashboard-tatausaha.html">
+				<i class="bi bi-house-door-fill"></i> Beranda
+			</a>
+			<a class="nav-link" href="daftar-terverifikasi.html">
+				<i class="bi bi-inbox-fill"></i> Daftar Surat Masuk
+			</a>
+			<a class="nav-link" href="daftar-disposisi.html">
+				<i class="bi bi-arrow-repeat"></i> Daftar Disposisi
+			</a>
+			<a class="nav-link" href="arsip.html">
+				<i class="bi bi-archive-fill"></i> Arsip Surat
+			</a>
+      
+      <div class="mobile-user-menu">
+        <div class="mobile-user-info">
+          <div class="role-label">Staf Tata Usaha</div>
+          <div class="user-name" id="mobile-tatausaha-name">Loading...</div>
+        </div>
+        <button class="mobile-logout-btn" id="mobile-logout-btn">
+          <i class="bi bi-box-arrow-right"></i>
+          <span>Keluar</span>
+        </button>
+      </div>
+		</nav>
+
+		<div class="ms-auto d-flex align-items-center gap-3">
+			<div class="header-actions" style="display:flex;align-items:center;gap:12px;position:relative;">
+				<div id="tata-role-trigger" class="role-trigger" style="color:#fff;font-weight:700;text-align:right;cursor:pointer;" role="button" tabindex="0" aria-haspopup="true" aria-expanded="false" title="Klik untuk opsi akun">
+					<div style="font-size:0.85rem;opacity:0.9">Peran: Staf Tata Usaha</div>
+					<div id="tatausaha-name" style="font-size:0.95rem">Tata Usaha</div>
+				</div>
+
+				<!-- Quick visible logout button (helps when role-menu is not opened) -->
+				<button id="logout-btn-quick" class="btn btn-sm btn-outline-light" title="Keluar">
+					<i class="bi bi-box-arrow-right"></i> Keluar
+				</button>
+
+				<div class="role-menu" style="position:absolute;right:0;top:calc(100% + 8px);display:none;z-index:60;">
+					<div style="background:transparent;padding:6px;">
+						<a id="logout-btn" class="btn btn-sm btn-outline-light" href="#">Keluar</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</header>
+
+	<main class="container my-5">
+		<!-- Welcome Section -->
+		<div class="welcome-section">
+			<div class="welcome-title">Selamat Datang, <span id="welcome-name">Staf Tata Usaha</span></div>
+			<div class="welcome-subtitle">Staf Tata Usaha GMIT Yegar Sahaduta Bello</div>
+		</div>
+
+		<!-- Stats Grid -->
+		<div class="stat-grid">
+			<a href="daftar-terverifikasi.html" class="stat-card text-decoration-none">
+				<div class="stat-icon inbox">
+					<i class="bi bi-inbox-fill"></i>
+				</div>
+				<div class="stat-info">
+					<h3>Surat Masuk</h3>
+					<div id="count-masuk" class="stat-value">0</div>
+					<p class="stat-desc">Telah diverifikasi Koordinator</p>
+				</div>
+			</a>
+
+			<a href="daftar-disposisi.html" class="stat-card text-decoration-none">
+				<div class="stat-icon process">
+					<i class="bi bi-arrow-repeat"></i>
+				</div>
+				<div class="stat-info">
+					<h3>Daftar Disposisi</h3>
+					<div id="count-disposisi" class="stat-value">0</div>
+					<p class="stat-desc">Diteruskan ke Sekretaris/Pendeta</p>
+				</div>
+			</a>
+
+			<a href="arsip.html" class="stat-card text-decoration-none">
+				<div class="stat-icon archive">
+					<i class="bi bi-archive-fill"></i>
+				</div>
+				<div class="stat-info">
+					<h3>Arsip Surat</h3>
+					<div id="count-arsip" class="stat-value">0</div>
+					<p class="stat-desc">Surat selesai divalidasi</p>
+				</div>
+			</a>
+		</div>
+
+		<!-- (Removed) Recent Activity - dashboard focuses on stats and quick links -->
+	</main>
+
+	<script src="../../assets/js/api.js"></script>
+	<script src="../../assets/js/navbar.js"></script>
+	<script src="../../assets/js/confirmation-modal.js"></script>
+	<script src="../../assets/js/tatausaha/navbar-tatausaha.js"></script>
+	<script src="../../assets/js/tatausaha/dashboard-tatausaha.js"></script>
+	<script>
+		// Set welcome name from currentUser
+		(function(){
+			try {
+				const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+				const nama = currentUser.nama || 'Staf Tata Usaha';
+				const elName = document.getElementById('welcome-name');
+				if (elName) elName.textContent = nama;
+        
+        // Sync mobile menu name
+        const mobileNameEl = document.getElementById('mobile-tatausaha-name');
+        if (mobileNameEl) mobileNameEl.textContent = nama;
+			} catch(e) {
+				console.error('Error setting welcome name:', e);
+			}
+		})();
+    
+    // Mobile logout button handler
+    const mobileLogoutBtn = document.getElementById('mobile-logout-btn');
+    if (mobileLogoutBtn) {
+      mobileLogoutBtn.addEventListener('click', function() {
+        const logoutBtn = document.getElementById('logout-btn-quick');
+        if (logoutBtn) {
+          logoutBtn.click();
+        }
+      });
+    }
+	</script>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,202 @@
+/* Daftar Terverifikasi - Tata Usaha */
+
+/* Page header with gradient */
+.container h1 {
+  background: linear-gradient(135deg, #0b5ed7 0%, #0d6efd 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+}
+
+/* Search and filter card */
+.card.mb-4 {
+  border: 1px solid #e7f1ff;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(13,110,253,0.08);
+  transition: all 0.2s ease;
+  background: white;
+}
+
+.card.mb-4:hover {
+  box-shadow: 0 4px 16px rgba(13,110,253,0.15);
+  border-color: #cfe2ff;
+}
+
+/* Filter controls */
+#search {
+  min-width: 280px;
+  border-radius: 8px;
+  border: 1px solid #e0e0e0;
+  padding: 0.6rem 1rem;
+  transition: all 0.2s ease;
+}
+
+#search:focus {
+  border-color: #0d6efd;
+  box-shadow: 0 0 0 3px rgba(13,110,253,0.1);
+  outline: none;
+}
+
+#filter-type {
+  min-width: 180px;
+  border-radius: 8px;
+  border: 1px solid #e0e0e0;
+  transition: all 0.2s ease;
+}
+
+#filter-type:focus {
+  border-color: #0d6efd;
+  box-shadow: 0 0 0 3px rgba(13,110,253,0.1);
+  outline: none;
+}
+
+#btn-refresh {
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+
+#btn-refresh:hover {
+  background: #0d6efd;
+  color: white;
+  border-color: #0d6efd;
+  transform: translateY(-1px);
+}
+
+/* Table styling */
+.table thead th {
+  background: linear-gradient(180deg, #f8f9fa 0%, #e9ecef 100%);
+  border-bottom: 2px solid #dee2e6;
+  font-weight: 600;
+  color: #495057;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+  letter-spacing: 0.5px;
+  padding: 1rem 0.75rem;
+}
+
+.table tbody tr {
+  transition: all 0.2s ease;
+  border-bottom: 1px solid #f1f3f5;
+}
+
+.table tbody tr:hover {
+  background: linear-gradient(90deg, rgba(13,110,253,0.03) 0%, rgba(13,110,253,0.06) 100%);
+  transform: translateX(2px);
+  box-shadow: -3px 0 0 #0d6efd;
+}
+
+.table tbody td {
+  vertical-align: middle;
+  padding: 1rem 0.75rem;
+}
+
+/* Status badges */
+.badge {
+  padding: 0.4rem 0.8rem;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.badge-verified {
+  background: linear-gradient(135deg, #20c997 0%, #12b886 100%);
+  color: white;
+  box-shadow: 0 2px 6px rgba(32,201,151,0.3);
+}
+
+.badge-pending {
+  background: linear-gradient(135deg, #ffc107 0%, #ff9800 100%);
+  color: #fff;
+  box-shadow: 0 2px 6px rgba(255,193,7,0.3);
+}
+
+/* Action buttons */
+.actions {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.btn-sm {
+  padding: 0.4rem 0.8rem;
+  font-size: 0.85rem;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+  font-weight: 500;
+}
+
+.btn-outline-primary {
+  border-width: 1.5px;
+}
+
+.btn-outline-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(13,110,253,0.3);
+}
+
+.btn-outline-success:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(25,135,84,0.3);
+}
+
+.btn-outline-info:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(13,202,240,0.3);
+}
+
+/* Main table card */
+.card {
+  border: 1px solid #e7f1ff;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(13,110,253,0.08);
+  overflow: hidden;
+  background: white;
+}
+
+/* Empty state */
+.no-data {
+  text-align: center;
+  padding: 3rem 2rem;
+  color: #6c757d;
+  font-size: 1rem;
+  background: linear-gradient(180deg, rgba(207,226,255,0.1) 0%, transparent 100%);
+}
+
+.no-data::before {
+  content: "📭";
+  display: block;
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  opacity: 0.5;
+}
+
+/* Loading state */
+.table tbody.loading {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  #search {
+    min-width: 100%;
+    margin-bottom: 0.5rem;
+  }
+  
+  #filter-type {
+    min-width: 100%;
+    margin-bottom: 0.5rem;
+  }
+  
+  .actions {
+    flex-direction: column;
+  }
+  
+  .btn-sm {
+    width: 100%;
+  }
+}

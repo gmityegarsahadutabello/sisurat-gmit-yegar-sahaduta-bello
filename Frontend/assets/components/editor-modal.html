@@ -1,0 +1,30 @@
+<!-- Editor modal for Tata Usaha: type/edit draft and upload final file -->
+<div class="modal fade" id="editorModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Editor Surat</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form id="editor-form">
+          <div class="mb-3">
+            <label for="editor-text" class="form-label">Isi Surat (Draft)</label>
+            <textarea id="editor-text" class="form-control" rows="10" placeholder="Tulis atau tempel isi surat di sini..."></textarea>
+          </div>
+
+          <div class="mb-3">
+            <label for="editor-file" class="form-label">File Final (PDF / Image) — optional</label>
+            <input id="editor-file" type="file" class="form-control" accept="application/pdf,image/*">
+          </div>
+
+          <div class="d-flex gap-2">
+            <button id="save-draft" type="button" class="btn btn-outline-primary">Simpan Draft</button>
+            <button id="upload-final" type="button" class="btn btn-primary">Upload & Simpan Final</button>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

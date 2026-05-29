@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Test Pendeta to Jemaat Flow</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script src="assets/js/api.js"></script>
+</head>
+<body class="bg-light p-4">
+  <div class="container">
+    <h2>🧪 Test: Pendeta Validation → Jemaat Surat Masuk</h2>
+    
+    <div class="card mt-4">
+      <div class="card-body">
+        <h5>Step 1: Create Test Surat</h5>
+        <button class="btn btn-primary" onclick="createTestSurat()">Create Test Surat</button>
+        <div id="step1-result" class="mt-2"></div>
+      </div>
+    </div>
+
+    <div class="card mt-4">
+      <div class="card-body">
+        <h5>Step 2: Validate by Pendeta</h5>
+        <input type="text" id="surat-id" class="form-control mb-2" placeholder="Paste Surat ID here">
+        <button class="btn btn-success" onclick="validateByPendeta()">Validate Surat</button>
+        <div id="step2-result" class="mt-2"></div>
+      </div>
+    </div>
+
+    <div class="card mt-4">
+      <div class="card-body">
+        <h5>Step 3: Check Jemaat View</h5>
+        <input type="text" id="user-id" class="form-control mb-2" placeholder="User ID/NIK">
+        <button class="btn btn-info" onclick="checkJemaatView()">Check Jemaat Surat Masuk</button>
+        <div id="step3-result" class="mt-2"></div>
+      </div>
+    </div>
+
+    <div class="card mt-4 bg-dark text-light">
+      <div class="card-body">
+        <h5>Console Log</h5>
+        <pre id="console-log" style="max-height: 400px; overflow-y: auto;"></pre>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function log(msg, type = 'info') {
+      const consoleLog = document.getElementById('console-log');
+      const timestamp = new Date().toLocaleTimeString();
+      const color = type === 'error' ? 'text-danger' : type === 'success' ? 'text-success' : 'text-info';
+      consoleLog.innerHTML += `<span class="${color}">[${timestamp}] ${msg}</span>\n`;
+      consoleLog.scrollTop = consoleLog.scrollHeight;
+      console.log(msg);
+    }
+
+    async function createTestSurat() {
+      try {
+        log('Creating test surat...', 'info');
+        
+        const testData = {
+          user_id: 'TEST_JEMAAT_001',
+          user_nik: '1234567890',
+          user_nama: 'Test Jemaat',
+          user_email: 'test@jemaat.com',
+          user_rayon: 'Rayon 1',
+          rayon: 'Rayon 1',
+          type: 'Surat Baptis',
+          status: 'disposisi_to_pendeta', // Start from pendeta stage
+          form: {
+            nama: 'Test Jemaat',
+            tempat_lahir: 'Jakarta',
+            tanggal_lahir: '1990-01-01'
+          },
+          files: {
+            final: {
+              data: 'data:application/pdf;base64,JVBERi0xLjQKJeLjz9MNCjEgMCBvYmoKPDwvVHlwZS9DYXRhbG9nL1BhZ2VzIDIgMCBSPj4KZW5kb2JqCjIgMCBvYmoKPDwvVHlwZS9QYWdlcy9LaWRzWzMgMCBSXS9Db3VudCAxPj4KZW5kb2JqCjMgMCBvYmoKPDwvVHlwZS9QYWdlL1BhcmVudCAyIDAgUi9NZWRpYUJveFswIDAgNjEyIDc5Ml0vQ29udGVudHMgNCAwIFI+PgplbmRvYmoKNCAwIG9iago8PC9GaWx0ZXIvRmxhdGVEZWNvZGUvTGVuZ3RoIDQ0Pj4Kc3RyZWFtCnicMzI0UDAyNFAwNDZTMDI1UzA3MjJSMDU1UbAwVrAwMTVUMDQ0MzA1MDMyMjAEADqSCPQKZW5kc3RyZWFtCmVuZG9iago=',
+              name: 'test-surat.pdf',
+              mime: 'application/pdf',
+              size: 500
+            }
+          },
+          timeline: [
+            {
+              at: new Date(),
+              by: 'Koordinator',
+              action: 'verified_by_koordinator',
+              note: 'Test data'
+            },
+            {
+              at: new Date(),
+              by: 'Tata Usaha',
+              action: 'file_uploaded',
+              note: 'File uploaded'
+            },
+            {
+              at: new Date(),
+              by: 'Sekretaris',
+              action: 'disposisi_to_pendeta',
+              note: 'Forwarded to Pendeta'
+            }
+          ]
+        };
+
+        const response = await fetch('http://localhost:5000/api/pengajuan', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(testData)
+        });
+
+        const result = await response.json();
+        
+        if (response.ok) {
+          log(`✅ Surat created successfully!`, 'success');
+          log(`   ID: ${result._id || result.id}`, 'success');
+          log(`   Status: ${result.status}`, 'success');
+          
+          document.getElementById('step1-result').innerHTML = `
+            <div class="alert alert-success">
+              <strong>Created!</strong><br>
+              <strong>Surat ID:</strong> ${result._id || result.id}<br>
+              <strong>Status:</strong> ${result.status}<br>
+              <strong>User ID:</strong> ${result.user_id}
+            </div>
+          `;
+          
+          // Auto-fill the ID fields
+          document.getElementById('surat-id').value = result._id || result.id;
+          document.getElementById('user-id').value = result.user_id;
+        } else {
+          throw new Error(result.message || 'Failed to create surat');
+        }
+      } catch (error) {
+        log(`❌ Error: ${error.message}`, 'error');
+        document.getElementById('step1-result').innerHTML = `
+          <div class="alert alert-danger">Error: ${error.message}</div>
+        `;
+      }
+    }
+
+    async function validateByPendeta() {
+      try {
+        const suratId = document.getElementById('surat-id').value.trim();
+        if (!suratId) {
+          alert('Please enter Surat ID');
+          return;
+        }
+
+        log(`Validating surat ${suratId}...`, 'info');
+
+        const response = await fetch(`http://localhost:5000/api/pengajuan/${suratId}/status`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            status: 'validated_by_pendeta',
+            by: 'Pendeta',
+            note: 'Test validation by Pendeta',
+            to_role: 'jemaat'
+          })
+        });
+
+        const result = await response.json();
+
+        if (response.ok) {
+          log(`✅ Surat validated successfully!`, 'success');
+          log(`   New Status: ${result.status}`, 'success');
+          
+          document.getElementById('step2-result').innerHTML = `
+            <div class="alert alert-success">
+              <strong>Validated!</strong><br>
+              <strong>Status:</strong> ${result.status}<br>
+              <strong>Timeline entries:</strong> ${result.timeline ? result.timeline.length : 0}
+            </div>
+          `;
+        } else {
+          throw new Error(result.message || 'Failed to validate');
+        }
+      } catch (error) {
+        log(`❌ Error: ${error.message}`, 'error');
+        document.getElementById('step2-result').innerHTML = `
+          <div class="alert alert-danger">Error: ${error.message}</div>
+        `;
+      }
+    }
+
+    async function checkJemaatView() {
+      try {
+        const userId = document.getElementById('user-id').value.trim();
+        if (!userId) {
+          alert('Please enter User ID');
+          return;
+        }
+
+        log(`Checking jemaat view for user ${userId}...`, 'info');
+
+        // Use the same API call that surat-masuk.js uses
+        const response = await fetch(`http://localhost:5000/api/pengajuan?user_id=${encodeURIComponent(userId)}`);
+        const allSurat = await response.json();
+
+        log(`📊 Total surat for user: ${allSurat.length}`, 'info');
+        
+        if (allSurat.length > 0) {
+          log(`\nSurat details:`, 'info');
+          allSurat.forEach((surat, idx) => {
+            log(`  ${idx + 1}. ID: ${surat.id || surat._id}`, 'info');
+            log(`     Status: ${surat.status}`, 'info');
+            log(`     Type: ${surat.type || surat.tipe}`, 'info');
+            log(`     Has final_file: ${!!surat.final_file}`, 'info');
+            log(`     Has final_file_data: ${!!surat.final_file_data}`, 'info');
+          });
+
+          // Filter like surat-masuk.js does
+          const finishedSurat = allSurat.filter(s => {
+            const status = (s.status || '').toLowerCase();
+            return status === 'validated_by_pendeta' || 
+                   status === 'validated' || 
+                   status === 'archived' ||
+                   status === 'ditolak' ||
+                   status === 'rejected';
+          });
+
+          log(`\n✅ Surat that will appear in "Surat Masuk": ${finishedSurat.length}`, 'success');
+
+          document.getElementById('step3-result').innerHTML = `
+            <div class="alert alert-info">
+              <strong>Total Surat:</strong> ${allSurat.length}<br>
+              <strong>Finished/Rejected (will show in Surat Masuk):</strong> ${finishedSurat.length}<br>
+              <hr>
+              ${finishedSurat.map((s, i) => `
+                <div class="mb-2">
+                  <strong>${i + 1}. ${s.type || s.tipe}</strong><br>
+                  Status: <span class="badge bg-success">${s.status}</span><br>
+                  Can Download: ${s.final_file || s.final_file_data ? '✅ Yes' : '❌ No'}
+                </div>
+              `).join('')}
+            </div>
+          `;
+        } else {
+          log(`⚠️ No surat found for this user`, 'warning');
+          document.getElementById('step3-result').innerHTML = `
+            <div class="alert alert-warning">No surat found for user ${userId}</div>
+          `;
+        }
+      } catch (error) {
+        log(`❌ Error: ${error.message}`, 'error');
+        document.getElementById('step3-result').innerHTML = `
+          <div class="alert alert-danger">Error: ${error.message}</div>
+        `;
+      }
+    }
+
+    log('🧪 Test tool loaded. Ready to test!', 'success');
+  </script>
+</body>
+</html>

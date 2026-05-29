@@ -1,0 +1,49 @@
+<!-- Navbar component for Pendeta - Full Responsive -->
+<div class="nav-left" style="display:flex;align-items:center;gap:12px;">
+  <a class="navbar-brand d-flex align-items-center gap-3" href="dashboard-pendeta.html" aria-label="Ke Beranda - GMIT YEGAR">
+    <img class="logo-img" src="../../assets/img/logo-gmit.png" alt="GMIT YEGAR logo" style="height:40px; width:40px; object-fit:contain;" />
+    <div class="brand-wrap">
+      <div class="brand-text">GMIT YEGAR</div>
+      <small class="brand-subtext">SAHADUTA BELLO</small>
+    </div>
+  </a>
+</div>
+
+<!-- Hamburger Menu Button -->
+<button class="navbar-toggler" aria-label="Toggle navigation" aria-expanded="false">
+  <span></span>
+  <span></span>
+  <span></span>
+</button>
+
+<nav class="nav-center" aria-label="Menu utama" style="flex:1;display:flex;justify-content:center;">
+  <a class="nav-link" href="dashboard-pendeta.html"><span>Beranda</span></a>
+  <a class="nav-link" href="daftar-masuk.html"><span>Daftar Surat Masuk</span></a>
+  <a class="nav-link" href="daftar-disposisi.html"><span>Daftar Tervalidasi</span></a>
+  
+  <!-- Mobile Logout Button -->
+  <button id="logout-btn-mobile" style="display:none;">
+    <i class="bi bi-box-arrow-right"></i> Keluar
+  </button>
+</nav>
+
+<div class="nav-actions ms-auto" style="display:flex;align-items:center;gap:12px;position:relative;">
+  <div id="pen-role-trigger" class="role-trigger" style="color:#fff;font-weight:700;text-align:right;cursor:pointer;" role="button" tabindex="0" aria-haspopup="true" aria-expanded="false" title="Klik untuk opsi akun">
+    <div style="font-size:0.85rem;opacity:0.9">Peran: Pendeta</div>
+    <div id="pendeta-name" style="font-size:0.95rem">Pendeta</div>
+  </div>
+
+  <!-- Desktop Quick logout button -->
+  <button id="logout-btn-quick" class="btn btn-sm btn-outline-light" title="Keluar">
+    <i class="bi bi-box-arrow-right"></i> <span>Keluar</span>
+  </button>
+
+  <div class="role-menu" style="position:absolute;right:0;top:calc(100% + 8px);display:none;z-index:60;">
+    <div style="background:transparent;padding:6px;">
+      <a id="logout-btn" class="btn btn-sm btn-outline-light" href="#">Keluar</a>
+    </div>
+  </div>
+</div>
+
+<!-- Mobile Menu Overlay -->
+<div class="menu-overlay"></div>

@@ -1,0 +1,811 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Daftar Diverifikasi - Koordinator</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+  <link rel="stylesheet" href="../../assets/css/global.css">
+  <link rel="stylesheet" href="../../assets/css/navbar.css">
+  <link rel="stylesheet" href="../../assets/css/koordinator/daftar-surat-masuk.css">
+  <link rel="stylesheet" href="../../assets/css/table.css">
+  <link rel="stylesheet" href="../../assets/css/confirmation-modal.css">
+  <style>
+    /* Import same professional modal styles from daftar-surat-masuk */
+    .detail-modal-modern {
+      max-width: 95vw;
+      width: 900px;
+      max-height: 90vh;
+      border: none;
+      border-radius: 16px;
+      padding: 0;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      background: #f8f9fa;
+      overflow: hidden;
+    }
+    
+    .detail-modal-modern::backdrop {
+      background: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(4px);
+    }
+    
+    .detail-modal-container {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      max-height: 90vh;
+    }
+    
+    .detail-modal-header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 24px 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-shrink: 0;
+    }
+    
+    .detail-modal-title {
+      margin: 0;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: white;
+    }
+    
+    .detail-modal-subtitle {
+      margin: 4px 0 0 0;
+      font-size: 0.875rem;
+      opacity: 0.9;
+      color: white;
+    }
+    
+    .detail-modal-close {
+      background: rgba(255, 255, 255, 0.2);
+      border: none;
+      color: white;
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-size: 1.2rem;
+    }
+    
+    .detail-modal-close:hover {
+      background: rgba(255, 255, 255, 0.3);
+      transform: rotate(90deg);
+    }
+    
+    .detail-modal-body {
+      padding: 24px 28px;
+      overflow-y: auto;
+      flex: 1;
+      background: #f8f9fa;
+    }
+    
+    .detail-modal-footer {
+      padding: 16px 28px;
+      background: white;
+      border-top: 1px solid #e9ecef;
+      display: flex;
+      justify-content: flex-end;
+      gap: 12px;
+      flex-shrink: 0;
+    }
+    
+    .detail-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+    
+    .detail-section {
+      grid-column: 1 / -1;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #495057;
+      margin-top: 12px;
+      padding-bottom: 8px;
+      border-bottom: 2px solid #667eea;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .detail-section:first-child {
+      margin-top: 0;
+    }
+    
+    .detail-section i {
+      color: #667eea;
+    }
+    
+    .detail-card {
+      background: white;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+      border: 1px solid #e9ecef;
+      transition: all 0.3s ease;
+    }
+    
+    .detail-card:hover {
+      box-shadow: 0 4px 16px rgba(102, 126, 234, 0.15);
+      border-color: #667eea;
+    }
+    
+    .detail-row {
+      display: grid;
+      grid-template-columns: 180px 1fr;
+      gap: 16px;
+      padding: 12px 0;
+      border-bottom: 1px solid #f1f3f5;
+    }
+    
+    .detail-row:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+    
+    .detail-row:first-child {
+      padding-top: 0;
+    }
+    
+    .detail-row .label {
+      font-weight: 600;
+      color: #6c757d;
+      font-size: 0.9rem;
+      display: flex;
+      align-items: flex-start;
+      padding-top: 2px;
+    }
+    
+    .detail-row .value {
+      color: #212529;
+      font-size: 0.95rem;
+      line-height: 1.6;
+      word-wrap: break-word;
+    }
+    
+    .detail-row .value strong {
+      color: #495057;
+      font-weight: 600;
+    }
+    
+    .detail-badge {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+    
+    .detail-badge.status-pending {
+      background: #fff3cd;
+      color: #856404;
+    }
+    
+    .detail-badge.status-verified {
+      background: #d4edda;
+      color: #155724;
+    }
+    
+    .detail-badge.status-approved {
+      background: #d1ecf1;
+      color: #0c5460;
+    }
+    
+    @media (max-width: 768px) {
+      .detail-modal-modern {
+        width: 100vw;
+        max-width: 100vw;
+        max-height: 100vh;
+        border-radius: 0;
+      }
+      
+      .detail-modal-header {
+        padding: 20px;
+      }
+      
+      .detail-modal-title {
+        font-size: 1.25rem;
+      }
+      
+      .detail-modal-subtitle {
+        font-size: 0.8rem;
+      }
+      
+      .detail-modal-body {
+        padding: 16px;
+      }
+      
+      .detail-modal-footer {
+        padding: 12px 16px;
+      }
+      
+      .detail-card {
+        padding: 16px;
+      }
+      
+      .detail-row {
+        grid-template-columns: 1fr;
+        gap: 6px;
+        padding: 12px 0;
+      }
+      
+      .detail-row .label {
+        font-size: 0.8rem;
+        color: #667eea;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+      
+      .detail-row .value {
+        font-size: 0.9rem;
+        padding-left: 0;
+      }
+      
+      .detail-section {
+        font-size: 1rem;
+      }
+    }
+    
+    @media (max-width: 480px) {
+      .detail-modal-header {
+        padding: 16px;
+      }
+      
+      .detail-modal-title {
+        font-size: 1.1rem;
+      }
+      
+      .detail-modal-close {
+        width: 32px;
+        height: 32px;
+        font-size: 1rem;
+      }
+      
+      .detail-modal-body {
+        padding: 12px;
+      }
+      
+      .detail-card {
+        padding: 12px;
+        border-radius: 8px;
+      }
+      
+      .detail-row {
+        padding: 10px 0;
+      }
+      
+      .detail-section {
+        font-size: 0.95rem;
+        margin-top: 8px;
+      }
+    }
+  </style>
+  <style>
+    /* Fix table header alignment for 7 columns */
+    .table-responsive {
+      overflow-x: auto;
+    }
+    .table {
+      width: 100%;
+      table-layout: auto;
+      border-collapse: collapse;
+    }
+    .table th,
+    .table td {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      vertical-align: middle;
+      padding: 12px;
+    }
+    .table th:nth-child(1),
+    .table td:nth-child(1) {
+      width: 60px;
+      min-width: 60px;
+      text-align: center;
+    }
+    .table th:nth-child(2),
+    .table td:nth-child(2) {
+      width: 180px;
+      min-width: 180px;
+      white-space: normal;
+    }
+    .table th:nth-child(3),
+    .table td:nth-child(3) {
+      width: 140px;
+      min-width: 140px;
+    }
+    .table th:nth-child(4),
+    .table td:nth-child(4) {
+      min-width: 200px;
+      white-space: normal;
+    }
+    .table th:nth-child(5),
+    .table td:nth-child(5) {
+      width: 180px;
+      min-width: 180px;
+    }
+    .table th:nth-child(6),
+    .table td:nth-child(6) {
+      width: 130px;
+      min-width: 130px;
+      text-align: center;
+    }
+    .table th:nth-child(7),
+    .table td:nth-child(7) {
+      width: 150px;
+      min-width: 150px;
+      text-align: center;
+    }
+    .table td:nth-child(4) .text-truncate {
+      max-width: 100% !important;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  </style>
+  <style>
+    body {
+      padding-top: 80px;
+    }
+    .navbar-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+    }
+    body.modal-open .navbar-container {
+      z-index: 1;
+    }
+
+    /* Mobile Menu Styles */
+    .mobile-menu-toggle {
+      display: none;
+      background: none;
+      border: none;
+      color: white;
+      font-size: 1.8rem;
+      cursor: pointer;
+      padding: 8px;
+      margin-left: 12px;
+    }
+
+    .mobile-menu {
+      display: none;
+      position: fixed;
+      top: 70px;
+      left: 0;
+      right: 0;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease;
+      z-index: 99;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    .mobile-menu.active {
+      max-height: calc(100vh - 70px);
+      overflow-y: auto;
+    }
+
+    .mobile-user-info {
+      padding: 20px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+      background: rgba(0, 0, 0, 0.1);
+    }
+
+    .mobile-user-name {
+      color: white;
+      font-weight: 700;
+      font-size: 1.1rem;
+      margin-bottom: 4px;
+    }
+
+    .mobile-user-role {
+      color: rgba(255, 255, 255, 0.85);
+      font-size: 0.9rem;
+    }
+
+    .mobile-nav {
+      padding: 12px 0;
+    }
+
+    .mobile-nav-link {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 20px;
+      color: white;
+      text-decoration: none;
+      border: none;
+      background: none;
+      width: 100%;
+      text-align: left;
+      font-size: 1rem;
+      transition: background 0.2s ease;
+      cursor: pointer;
+    }
+
+    .mobile-nav-link:hover,
+    .mobile-nav-link.active {
+      background: rgba(255, 255, 255, 0.15);
+    }
+
+    .mobile-nav-link i {
+      font-size: 1.2rem;
+      width: 24px;
+    }
+
+    .mobile-nav-group {
+      margin: 8px 0;
+    }
+
+    .mobile-nav-group-title {
+      padding: 12px 20px 8px 20px;
+      color: rgba(255, 255, 255, 0.7);
+      font-size: 0.85rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .mobile-logout-btn {
+      margin-top: 12px;
+      border-top: 1px solid rgba(255, 255, 255, 0.2);
+      padding-top: 16px;
+      color: #ffebee;
+      font-weight: 600;
+    }
+
+    @media (max-width: 768px) {
+      .nav-center,
+      .header-actions {
+        display: none !important;
+      }
+
+      .mobile-menu-toggle {
+        display: block;
+      }
+
+      .mobile-menu {
+        display: block;
+      }
+
+      body {
+        padding-top: 70px;
+      }
+
+      main.container {
+        margin-top: 1.5rem !important;
+      }
+    }
+
+    /* Fix table header alignment */
+    .table-responsive {
+      overflow-x: auto;
+    }
+    .table {
+      width: 100%;
+      table-layout: fixed;
+    }
+    .table th:nth-child(1),
+    .table td:nth-child(1) {
+      width: 60px;
+    }
+    .table th:nth-child(2),
+    .table td:nth-child(2) {
+      width: 20%;
+    }
+    .table th:nth-child(3),
+    .table td:nth-child(3) {
+      width: 30%;
+    }
+    .table th:nth-child(4),
+    .table td:nth-child(4) {
+      width: 180px;
+    }
+    .table th:nth-child(5),
+    .table td:nth-child(5) {
+      width: 140px;
+    }
+    .table th:nth-child(6),
+    .table td:nth-child(6) {
+      width: 160px;
+    }
+    
+    /* Responsive design for mobile */
+    @media (max-width: 768px) {
+      body {
+        padding-top: 70px;
+      }
+      
+      .table {
+        table-layout: auto;
+        font-size: 0.85rem;
+      }
+      
+      .table thead {
+        display: none;
+      }
+      
+      .table tbody tr {
+        display: block;
+        margin-bottom: 1rem;
+        border: 1px solid #e7f1ff;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(13,110,253,0.08);
+        padding: 0.75rem;
+        background: white;
+      }
+      
+      .table tbody td {
+        display: block;
+        text-align: left;
+        border: none;
+        padding: 0.5rem 0;
+        width: 100% !important;
+      }
+      
+      .table tbody td:before {
+        content: attr(data-label);
+        font-weight: 700;
+        color: #0b5ed7;
+        display: block;
+        margin-bottom: 0.25rem;
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+      
+      .table tbody td:first-child {
+        background: linear-gradient(135deg, #e7f1ff 0%, #cfe2ff 100%);
+        margin: -0.75rem -0.75rem 0.5rem -0.75rem;
+        padding: 0.75rem;
+        border-radius: 8px 8px 0 0;
+        font-weight: 700;
+        color: #0b5ed7;
+      }
+      
+      .table tbody td:first-child:before {
+        display: inline;
+        margin-right: 0.5rem;
+      }
+      
+      .actions {
+        display: flex;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+      }
+      
+      .actions .btn {
+        flex: 1;
+        min-width: 100px;
+      }
+      
+      .badge {
+        display: inline-block;
+        margin-top: 0.25rem;
+      }
+    }
+    
+    @media (max-width: 480px) {
+      .table {
+        font-size: 0.8rem;
+      }
+      
+      .actions .btn {
+        font-size: 0.75rem;
+        padding: 0.4rem 0.7rem;
+      }
+    }
+    .back-to-dashboard {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      margin-bottom: 1rem;
+    }
+    .back-to-dashboard:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+      color: white;
+    }
+  </style>
+</head>
+<body>
+  <header class="navbar-container navbar">
+    <div class="nav-left" style="display:flex;align-items:center;gap:12px;">
+      <a class="navbar-brand" href="dashboard.html" aria-label="Ke Beranda - GMIT YEGAR">
+        <img class="logo-img" src="../../assets/img/logo-gmit.png" alt="GMIT YEGAR logo" />
+        <div>
+          <div class="brand-text">GMIT YEGAR</div>
+          <small class="brand-subtext">SAHADUTA BELLO</small>
+        </div>
+      </a>
+    </div>
+
+    <nav class="nav-center" aria-label="Menu utama" style="flex:1;display:flex;justify-content:center;">
+      <ul class="nav-menu" style="display:flex;align-items:center;gap:8px;">
+        <li>
+          <a class="nav-link" href="dashboard.html" title="Beranda" style="display:flex;align-items:center;gap:8px;padding:8px 12px;border-radius:8px;">
+            <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M3 11.5L12 4l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1V11.5z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            Beranda
+          </a>
+        </li>
+
+        <li class="dropdown">
+          <button class="nav-link dropdown-btn" aria-haspopup="true" aria-expanded="false" title="Daftar Surat Masuk" style="display:flex;align-items:center;gap:8px;padding:8px 12px;border-radius:8px;">
+            <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M22 12v6a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2v-6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M16 6H8l-2 4h12l-2-4z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M12 11v6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            Daftar Surat Masuk
+            <span style="opacity:0.8;margin-left:6px;font-size:13px;">▾</span>
+          </button>
+          <ul class="dropdown-menu" role="menu" aria-label="Daftar Surat Masuk">
+            <li><a class="dropdown-item" href="daftar-surat-masuk.html">Belum Diverifikasi</a></li>
+            <li><a class="dropdown-item" href="daftar-diverifikasi.html">Telah Diverifikasi</a></li>
+          </ul>
+        </li>
+      </ul>
+    </nav>
+
+    <div class="header-actions" style="display:flex;align-items:center;gap:12px;">
+      <div style="color:white;font-weight:700;text-align:right;">
+        <div style="font-size:0.85rem;opacity:0.9">Peran: Koordinator</div>
+        <div id="coordinator-rayon" style="font-size:0.95rem">Koordinator Rayon 1</div>
+      </div>
+      <!-- visible logout button -->
+      <div>
+        <button id="logout-btn" class="btn btn-sm btn-outline-light" style="margin-left:10px;">Keluar</button>
+      </div>
+    </div>
+
+    <!-- Mobile Hamburger Menu -->
+    <button class="mobile-menu-toggle" id="mobile-menu-toggle" aria-label="Toggle menu">
+      <i class="bi bi-list"></i>
+    </button>
+  </header>
+
+  <!-- Mobile Menu Dropdown -->
+  <div class="mobile-menu" id="mobile-menu">
+    <div class="mobile-user-info">
+      <div class="mobile-user-name" id="mobile-coordinator-name">Koordinator</div>
+      <div class="mobile-user-role" id="mobile-coordinator-rayon-mobile">Koordinator Rayon</div>
+    </div>
+    <nav class="mobile-nav">
+      <a class="mobile-nav-link" href="dashboard.html">
+        <i class="bi bi-grid-fill"></i> Beranda
+      </a>
+      <div class="mobile-nav-group">
+        <div class="mobile-nav-group-title">Daftar Surat Masuk</div>
+        <a class="mobile-nav-link" href="daftar-surat-masuk.html">
+          <i class="bi bi-envelope"></i> Belum Diverifikasi
+        </a>
+        <a class="mobile-nav-link active" href="daftar-diverifikasi.html">
+          <i class="bi bi-envelope-check"></i> Telah Diverifikasi
+        </a>
+      </div>
+      <button class="mobile-nav-link mobile-logout-btn" id="mobile-logout-btn">
+        <i class="bi bi-box-arrow-right"></i> Keluar
+      </button>
+    </nav>
+  </div>
+
+  <main class="container" style="padding:28px 16px; margin-top: 2rem;">
+    <a href="dashboard.html" class="back-to-dashboard">
+      <i class="bi bi-arrow-left-circle-fill"></i>
+      Kembali ke Dashboard
+    </a>
+    <h1>Daftar Surat Telah Diverifikasi</h1>
+    <p class="muted">Riwayat pengajuan yang sudah diverifikasi atau ditolak.</p>
+
+    <section class="list-section">
+      <div class="card">
+        <div class="table-responsive">
+          <table id="verified-table" class="table table-hover">
+            <thead>
+              <tr>
+                <th style="width:60px; min-width:60px;">No</th>
+                <th style="width:180px; min-width:180px;">Pengirim</th>
+                <th style="width:140px; min-width:140px;">Jenis Surat</th>
+                <th style="min-width:200px;">Perihal</th>
+                <th style="width:180px; min-width:180px;">Tanggal</th>
+                <th style="width:130px; min-width:130px;">Status</th>
+                <th style="width:150px; min-width:150px;">Aksi</th>
+              </tr>
+            </thead>
+            <tbody id="verified-tbody">
+              <tr><td colspan="7" class="no-data">Memuat...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- reuse detail modal -->
+  <dialog id="detail-modal" class="detail-modal-modern">
+    <div class="detail-modal-container">
+      <header class="detail-modal-header">
+        <div>
+          <h4 id="detail-judul" class="detail-modal-title">Detail Pengajuan</h4>
+          <p class="detail-modal-subtitle">Informasi lengkap pengajuan surat</p>
+        </div>
+        <button id="detail-close-top" class="detail-modal-close" aria-label="Tutup">
+          <i class="bi bi-x-lg"></i>
+        </button>
+      </header>
+
+      <div id="detail-body" class="detail-modal-body"></div>
+
+      <footer class="detail-modal-footer">
+        <button id="detail-close" class="btn btn-outline">
+          <i class="bi bi-x-circle"></i> Tutup
+        </button>
+      </footer>
+    </div>
+  </dialog>
+
+  <!-- add this timeline dialog near the end of the body -->
+  <dialog id="timeline-modal">
+    <div style="max-width:720px;padding:18px;">
+      <h4 id="timeline-title">Riwayat / Timeline</h4>
+      <div id="timeline-body" style="margin-top:10px; max-height:380px; overflow:auto;"></div>
+      <div style="text-align:right;margin-top:12px;">
+        <button id="timeline-close" class="btn btn-outline">Tutup</button>
+      </div>
+    </div>
+  </dialog>
+
+  <script src="../../assets/js/api.js"></script>
+  <script src="../../assets/js/confirmation-modal.js"></script>
+  <script src="../../assets/js/koordinator/navbar-init.js"></script>
+  <script src="../../assets/js/koordinator/daftar-diverifikasi.js"></script>
+  <script>
+    (function(){
+      const btnBottom = document.getElementById('detail-close');
+      const btnTop = document.getElementById('detail-close-top');
+      const dlg = document.getElementById('detail-modal');
+      if (!dlg) return;
+      
+      const closeModal = () => {
+        try {
+          if (typeof dlg.close === 'function') dlg.close();
+          else dlg.style.display = 'none';
+        } catch (e) { console.warn('Gagal menutup modal detail', e); }
+      };
+      
+      if(btnBottom) btnBottom.addEventListener('click', closeModal);
+      if(btnTop) btnTop.addEventListener('click', closeModal);
+      
+      document.addEventListener('keydown', (ev) => {
+        if (ev.key === 'Escape' && dlg.open) {
+          closeModal();
+        }
+      });
+    })();
+  </script>
+</body>
+</html>

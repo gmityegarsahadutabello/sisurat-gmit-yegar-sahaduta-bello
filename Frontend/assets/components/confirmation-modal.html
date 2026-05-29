@@ -1,0 +1,52 @@
+<!-- Global Confirmation Modal Component -->
+<!-- This modal can be customized with different types: success, danger, warning, info -->
+<div class="confirm-modal" id="confirmModal">
+  <div class="confirm-modal-overlay"></div>
+  <div class="confirm-modal-content">
+    <div class="confirm-modal-header">
+      <div class="confirm-modal-icon" id="confirmIcon">
+        <i class="bi bi-question-circle-fill"></i>
+      </div>
+      <h3 class="confirm-modal-title" id="confirmTitle">Konfirmasi Aksi</h3>
+      <button class="confirm-modal-close" id="confirmClose">
+        <i class="bi bi-x-lg"></i>
+      </button>
+    </div>
+    
+    <div class="confirm-modal-body">
+      <p class="confirm-message-primary" id="confirmMessage">
+        Apakah Anda yakin ingin melanjutkan aksi ini?
+      </p>
+      <p class="confirm-message-secondary" id="confirmSubMessage">
+        Pastikan semua data sudah benar sebelum melanjutkan.
+      </p>
+      
+      <!-- Optional: Detail section for additional info -->
+      <div class="confirm-detail" id="confirmDetail" style="display: none;"></div>
+      
+      <!-- Optional: Input section for notes/reasons -->
+      <div class="confirm-input-section" id="confirmInputSection" style="display: none;">
+        <label class="confirm-input-label" id="confirmInputLabel">Catatan (Opsional)</label>
+        <textarea class="confirm-input-textarea" id="confirmInput" rows="3" placeholder="Masukkan catatan atau alasan..."></textarea>
+        <small class="confirm-input-hint" id="confirmInputHint">Minimal 10 karakter</small>
+      </div>
+      
+      <!-- Optional: Warning note -->
+      <div class="confirm-warning" id="confirmWarning" style="display: none;">
+        <i class="bi bi-exclamation-triangle-fill"></i>
+        <span id="confirmWarningText">Tindakan ini tidak dapat dibatalkan setelah dikonfirmasi.</span>
+      </div>
+    </div>
+    
+    <div class="confirm-modal-footer">
+      <button class="confirm-btn-cancel" id="confirmCancel">
+        <i class="bi bi-x-circle"></i>
+        <span>Batal</span>
+      </button>
+      <button class="confirm-btn-confirm" id="confirmConfirm">
+        <i class="bi bi-check-circle"></i>
+        <span id="confirmBtnText">Konfirmasi</span>
+      </button>
+    </div>
+  </div>
+</div>

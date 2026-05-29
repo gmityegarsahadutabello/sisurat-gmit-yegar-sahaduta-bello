@@ -1,0 +1,61 @@
+<!-- Modal: Delete Confirmation -->
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content modal-modern">
+      <div class="modal-header modal-header-danger">
+        <div>
+          <h5 class="modal-title text-white fw-bold mb-1">
+            <i class="bi bi-trash me-2"></i>Konfirmasi Hapus Akun
+          </h5>
+          <p class="modal-subtitle text-white mb-0">Tindakan ini tidak dapat dibatalkan</p>
+        </div>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="alert alert-danger d-flex align-items-center mb-3">
+          <i class="bi bi-exclamation-triangle-fill me-2 fs-5"></i>
+          <div>Anda akan menghapus akun berikut:</div>
+        </div>
+
+        <div class="card delete-user-info mb-3">
+          <div class="card-body">
+            <div class="d-flex align-items-center mb-2">
+              <i class="bi bi-person-circle fs-3 text-danger me-2"></i>
+              <div>
+                <h6 class="mb-0 fw-bold" id="delete-user-name">-</h6>
+                <small class="text-muted" id="delete-user-email">-</small>
+              </div>
+            </div>
+            <div class="mt-2">
+              <small class="text-muted">
+                <i class="bi bi-card-text me-1"></i>NIK: <span id="delete-user-nik">-</span>
+              </small><br>
+              <small>
+                <i class="bi bi-award me-1"></i>Role: <span id="delete-user-role-badge">-</span>
+              </small>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-divider"></div>
+
+        <div class="alert alert-warning">
+          <strong><i class="bi bi-info-circle me-1"></i>Konsekuensi:</strong>
+          <ul class="mb-0 mt-2">
+            <li>Data akun akan dihapus permanen dari sistem</li>
+            <li>Riwayat pengajuan surat terkait akan terhapus</li>
+            <li>Data yang sudah dihapus tidak dapat dikembalikan</li>
+          </ul>
+        </div>
+      </div>
+      <div class="modal-footer modal-footer-modern">
+        <button type="button" class="btn btn-secondary btn-modern" data-bs-dismiss="modal">
+          <i class="bi bi-x-lg me-1"></i>Batal
+        </button>
+        <button type="button" class="btn btn-danger btn-modern" id="btn-delete-confirm">
+          <i class="bi bi-trash me-1"></i>Ya, Hapus Akun
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

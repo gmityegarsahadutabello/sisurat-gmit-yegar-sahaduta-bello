@@ -1,0 +1,311 @@
+/* Global Table Styles - Consistent across all pages */
+
+/* Page headers with gradient */
+.container h1, .page-title {
+  background: linear-gradient(135deg, #0b5ed7 0%, #0d6efd 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+}
+
+/* Filter and search card styling */
+.card.mb-4, .filter-card {
+  border: 1px solid #e7f1ff;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(13,110,253,0.08);
+  overflow: hidden;
+  background: white;
+  transition: all 0.2s ease;
+}
+
+.card.mb-4:hover, .filter-card:hover {
+  box-shadow: 0 4px 16px rgba(13,110,253,0.15);
+  border-color: #cfe2ff;
+}
+
+/* Table responsive wrapper */
+.table-responsive {
+  border-radius: 8px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.table-responsive::-webkit-scrollbar {
+  height: 8px;
+}
+
+.table-responsive::-webkit-scrollbar-track {
+  background: #f8f9fa;
+  border-radius: 4px;
+}
+
+.table-responsive::-webkit-scrollbar-thumb {
+  background: #0d6efd;
+  border-radius: 4px;
+}
+
+.table-responsive::-webkit-scrollbar-thumb:hover {
+  background: #0b5ed7;
+}
+
+/* Form controls - inputs and selects */
+#search, .form-control, .form-select {
+  border: 1px solid #cfe2ff;
+  border-radius: 8px;
+  padding: 0.6rem 1rem;
+  transition: all 0.2s ease;
+}
+
+#search:focus, .form-control:focus, .form-select:focus {
+  border-color: #0d6efd;
+  box-shadow: 0 0 0 0.2rem rgba(13,110,253,0.15);
+  outline: none;
+}
+
+/* Buttons - refresh and action buttons */
+#btn-refresh, .btn-outline-secondary {
+  border-radius: 8px;
+  padding: 0.6rem 1.2rem;
+  transition: all 0.2s ease;
+}
+
+#btn-refresh:hover, .btn-outline-secondary:hover {
+  background: linear-gradient(135deg, #0b5ed7 0%, #0d6efd 100%);
+  color: white;
+  border-color: #0d6efd;
+  transform: translateY(-2px);
+}
+
+/* Table header styling */
+.table thead th {
+  background: linear-gradient(180deg, #e7f1ff 0%, #cfe2ff 100%);
+  border-bottom: 2px solid #0d6efd;
+  font-weight: 600;
+  color: #0b5ed7;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+  letter-spacing: 0.5px;
+  padding: 1rem 0.75rem;
+}
+
+/* Table body rows */
+.table tbody tr {
+  transition: all 0.2s ease;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.table tbody tr:hover {
+  background: linear-gradient(90deg, rgba(13,110,253,0.04) 0%, rgba(13,110,253,0.1) 100%);
+  transform: translateX(3px);
+  box-shadow: -3px 0 0 #0d6efd;
+}
+
+.table tbody td {
+  vertical-align: middle;
+  padding: 1rem 0.75rem;
+}
+
+/* Status badges */
+.badge {
+  padding: 0.4rem 0.8rem;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 0.8rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.badge-status-proses, .badge.bg-warning {
+  background: linear-gradient(135deg, #ffc107 0%, #ff9800 100%);
+  color: #212529;
+  box-shadow: 0 2px 6px rgba(255,193,7,0.3);
+}
+
+.badge-status-diterima, .badge.bg-success {
+  background: linear-gradient(135deg, #20c997 0%, #12b886 100%);
+  color: #fff;
+  box-shadow: 0 2px 6px rgba(32,201,151,0.3);
+}
+
+.badge-status-ditolak, .badge.bg-danger {
+  background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+  color: #fff;
+  box-shadow: 0 2px 6px rgba(220,53,69,0.3);
+}
+
+.badge.bg-secondary {
+  background: linear-gradient(135deg, #6c757d 0%, #5a6268 100%);
+  color: #fff;
+  box-shadow: 0 2px 6px rgba(108,117,125,0.3);
+}
+
+.badge.bg-info {
+  background: linear-gradient(135deg, #0dcaf0 0%, #0aa2c0 100%);
+  color: #000;
+  box-shadow: 0 2px 6px rgba(13,202,240,0.3);
+}
+
+.badge.bg-primary {
+  background: linear-gradient(135deg, #0b5ed7 0%, #0d6efd 100%);
+  color: #fff;
+  box-shadow: 0 2px 6px rgba(13,110,253,0.3);
+}
+
+/* Action buttons in tables */
+.table-actions .btn, .btn-sm {
+  padding: 0.4rem 0.9rem;
+  font-size: 0.85rem;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+  font-weight: 500;
+}
+
+.btn-outline-primary {
+  border: 1px solid #0d6efd;
+  color: #0d6efd;
+}
+
+.btn-outline-primary:hover {
+  background: linear-gradient(135deg, #0b5ed7 0%, #0d6efd 100%);
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(13,110,253,0.3);
+}
+
+.btn-primary, .btn.btn-primary {
+  background: linear-gradient(135deg, #0b5ed7 0%, #0d6efd 100%);
+  border: none;
+  color: white;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(13,110,253,0.3);
+}
+
+.btn-danger {
+  background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+  border: none;
+  color: white;
+}
+
+.btn-danger:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(220,53,69,0.3);
+}
+
+.btn-success {
+  background: linear-gradient(135deg, #20c997 0%, #12b886 100%);
+  border: none;
+  color: white;
+}
+
+.btn-success:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(32,201,151,0.3);
+}
+
+.btn-warning {
+  background: linear-gradient(135deg, #ffc107 0%, #ff9800 100%);
+  border: none;
+  color: #212529;
+}
+
+.btn-warning:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(255,193,7,0.3);
+}
+
+.btn-outline-danger {
+  border: 1px solid #dc3545;
+  color: #dc3545;
+}
+
+.btn-outline-danger:hover {
+  background: #dc3545;
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(220,53,69,0.3);
+}
+
+/* Empty state / no data */
+.no-data {
+  text-align: center;
+  padding: 4rem 2rem;
+  color: #0b5ed7;
+  background: linear-gradient(180deg, rgba(207,226,255,0.3) 0%, transparent 100%);
+  border-radius: 8px;
+}
+
+/* Card styling for all pages */
+.card {
+  border: 1px solid #e7f1ff;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(13,110,253,0.08);
+  transition: all 0.3s ease;
+}
+
+.card:hover {
+  box-shadow: 0 4px 16px rgba(13,110,253,0.12);
+}
+
+.card-body {
+  padding: 1.5rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .table {
+    font-size: 0.85rem;
+  }
+  
+  .table thead th {
+    padding: 0.75rem 0.5rem;
+    font-size: 0.75rem;
+  }
+  
+  .table tbody td {
+    padding: 0.75rem 0.5rem;
+  }
+  
+  .badge {
+    font-size: 0.7rem;
+    padding: 0.3rem 0.6rem;
+  }
+  
+  .btn-sm {
+    padding: 0.3rem 0.7rem;
+    font-size: 0.75rem;
+  }
+  
+  .card-body {
+    padding: 1rem;
+  }
+}
+  
+  .table thead th {
+    padding: 0.75rem 0.5rem;
+    font-size: 0.75rem;
+  }
+  
+  .table tbody td {
+    padding: 0.75rem 0.5rem;
+  }
+  
+  .btn-sm, .table-actions .btn {
+    padding: 0.3rem 0.7rem;
+    font-size: 0.8rem;
+  }
+  
+  .badge {
+    padding: 0.3rem 0.6rem;
+    font-size: 0.75rem;
+  }
+  
+  .container h1, .page-title {
+    font-size: 1.5rem;
+  }
+}

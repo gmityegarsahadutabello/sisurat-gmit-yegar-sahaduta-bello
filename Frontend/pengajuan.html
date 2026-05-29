@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Pengajuan Surat - GMIT YEGAR</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/global.css">
+  <link rel="stylesheet" href="assets/css/pengajuan.css">
+  <link rel="stylesheet" href="assets/css/navbar.css">
+  <link rel="stylesheet" href="assets/css/confirmation-modal.css">
+  <link rel="stylesheet" href="assets/css/jemaat/responsive.css">
+  <style>
+    .back-to-dashboard {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      margin-bottom: 1rem;
+    }
+    .back-to-dashboard:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+      color: white;
+    }
+  </style>
+</head>
+<body>
+
+    <!-- NAVBAR -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="nav-left">
+            <h2 class="logo">Gereja</h2>
+        </div>
+        <ul class="nav-menu">
+            <li><a href="dashboard.html">Beranda</a></li>
+            <li class="dropdown">
+                <a class="dropdown-btn">Surat ▾</a>
+                <ul class="dropdown-menu">
+                    <li><a href="pengajuan.html">Pengajuan</a></li>
+                    <li><a href="daftar-pengajuan.html">Daftar Pengajuan Surat</a></li>
+                    <li><a href="surat-masuk.html">Surat Masuk</a></li>
+                </ul>
+            </li>
+            <li class="dropdown">
+                <a class="dropdown-btn">Notifikasi ▾</a>
+                <ul class="dropdown-menu" id="notif-list">
+                    <li class="empty">Tidak ada notifikasi</li>
+                </ul>
+            </li>
+            <li class="dropdown">
+                <a class="dropdown-btn d-flex align-items-center">
+                    <img id="profile-img" src="assets/img/logo-gmit.png" alt="avatar" class="rounded-circle me-2" width="36" height="36">
+                    <div class="d-none d-lg-block text-start">
+                        <div id="profile-name" class="fw-bold">Nama Jemaat</div>
+                        <div id="profile-role" class="small text-muted">Jemaat</div>
+                    </div>
+                </a>
+                <ul class="dropdown-menu" aria-labelledby="profileDropdown">
+                    <li><a href="profile.html">Profil</a></li>
+                    <li><hr></li>
+                    <li><button id="logout-btn" class="dropdown-item text-danger" type="button">Keluar</button></li>
+                </ul>
+            </li>
+        </ul>
+    </nav>
+
+  <main class="container my-5">
+    <a href="dashboard.html" class="back-to-dashboard">
+      <i class="bi bi-arrow-left-circle-fill"></i>
+      Kembali ke Dashboard
+    </a>
+    <div class="row">
+      <div class="col-lg-4">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="mb-3">Pilih Tipe Surat</h5>
+            <div id="tipe-list" class="list-group">
+              <button class="list-group-item list-group-item-action" data-type="saksi-nikah">Surat Saksi Nikah</button>
+              <button class="list-group-item list-group-item-action" data-type="saksi-baptis">Surat Saksi Baptis</button>
+              <button class="list-group-item list-group-item-action" data-type="rekomendasi">Surat Rekomendasi Lainnya</button>
+              <button class="list-group-item list-group-item-action" data-type="keterangan">Surat Keterangan Lainnya</button>
+              <button class="list-group-item list-group-item-action" data-type="rekomendasi-menikah">Surat Rekomendasi Menikah (di tempat lain)</button>
+              <button class="list-group-item list-group-item-action" data-type="rekomendasi-kegiatan">Surat Rekomendasi Mengikuti Kegiatan</button>
+              <button class="list-group-item list-group-item-action" data-type="lainnya">Surat Lainnya</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-8">
+        <div class="card">
+          <div class="card-body">
+            <h4 id="form-title">Formulir Pengajuan</h4>
+
+            <form id="pengajuan-form" enctype="multipart/form-data" novalidate>
+              <input type="hidden" id="form-type" name="type" value="">
+
+              <div id="form-fields">
+                <!-- fields will be injected here dynamically -->
+              </div>
+
+              <div id="alert-area"></div>
+
+              <div class="d-flex gap-2 mt-3">
+                <button id="submit-btn" class="btn btn-primary">
+                  <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
+                  <span class="btn-label">Kirim Pengajuan</span>
+                </button>
+                <button id="reset-btn" type="button" class="btn btn-outline-secondary">Reset</button>
+              </div>
+            </form>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    // Load navbar component first
+    (async () => {
+      try {
+        const res = await fetch('assets/components/navbar.html');
+        const html = await res.text();
+        const el = document.querySelector('.navbar');
+        if (el) el.innerHTML = html;
+      } catch(e) { console.warn('Failed to load navbar:', e); }
+    })();
+  </script>
+  <script src="assets/js/confirmation-modal.js"></script>
+  <script src="assets/js/navbar.js"></script>
+  <script src="assets/js/api.js"></script>
+  <script src="assets/js/pengajuan.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

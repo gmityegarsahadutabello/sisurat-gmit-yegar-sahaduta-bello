@@ -1,0 +1,431 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Kelola Akun - Administrator</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+  <link rel="stylesheet" href="../../assets/css/global.css">
+  <link rel="stylesheet" href="../../assets/css/navbar.css">
+  <link rel="stylesheet" href="../../assets/css/table.css">
+  <link rel="stylesheet" href="../../assets/css/filter.css">
+  <link rel="stylesheet" href="../../assets/css/admin/accounts.css">
+  <link rel="stylesheet" href="../../assets/css/confirmation-modal.css">
+</head>
+<body>
+
+  <header class="navbar-container navbar">
+    <!-- Navbar component will be injected here -->
+  </header>
+
+  <main class="container my-5">
+    <!-- Header Section with Gradient Background -->
+    <div class="page-header-card mb-4">
+      <div class="d-flex justify-content-between align-items-center">
+        <div>
+          <h1 class="page-title mb-2">
+            <i class="bi bi-people-fill me-2"></i>Kelola Akun Pengguna
+          </h1>
+          <p class="page-subtitle mb-0">
+            <i class="bi bi-info-circle-fill me-1"></i>
+            Kelola akun pengguna sistem. <span class="text-primary fw-semibold">Akun Jemaat</span> didaftarkan mandiri oleh jemaat.
+          </p>
+        </div>
+        <button id="btn-add" class="btn btn-primary btn-add-modern">
+          <i class="bi bi-plus-circle-fill me-2"></i> Tambah Akun
+        </button>
+      </div>
+    </div>
+
+    <!-- Statistics Cards -->
+    <div class="stats-mini-grid mb-4">
+      <div class="mini-stat-card">
+        <div class="mini-stat-icon bg-gradient-blue">
+          <i class="bi bi-people-fill"></i>
+        </div>
+        <div class="mini-stat-content">
+          <div class="mini-stat-label">Total Akun</div>
+          <div class="mini-stat-value" id="total-accounts">0</div>
+        </div>
+      </div>
+      <div class="mini-stat-card">
+        <div class="mini-stat-icon bg-gradient-purple">
+          <i class="bi bi-person-badge-fill"></i>
+        </div>
+        <div class="mini-stat-content">
+          <div class="mini-stat-label">Koordinator</div>
+          <div class="mini-stat-value" id="total-koordinator">0</div>
+        </div>
+      </div>
+      <div class="mini-stat-card">
+        <div class="mini-stat-icon bg-gradient-orange">
+          <i class="bi bi-file-earmark-person-fill"></i>
+        </div>
+        <div class="mini-stat-content">
+          <div class="mini-stat-label">Tata Usaha</div>
+          <div class="mini-stat-value" id="total-tatausaha">0</div>
+        </div>
+      </div>
+      <div class="mini-stat-card">
+        <div class="mini-stat-icon bg-gradient-teal">
+          <i class="bi bi-person-check-fill"></i>
+        </div>
+        <div class="mini-stat-content">
+          <div class="mini-stat-label">Sekretaris</div>
+          <div class="mini-stat-value" id="total-sekretaris">0</div>
+        </div>
+      </div>
+      <div class="mini-stat-card">
+        <div class="mini-stat-icon bg-gradient-green">
+          <i class="bi bi-award-fill"></i>
+        </div>
+        <div class="mini-stat-content">
+          <div class="mini-stat-label">Pendeta</div>
+          <div class="mini-stat-value" id="total-pendeta">0</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Filter Card -->
+    <div class="filter-card mb-4">
+      <div class="card-body">
+        <div class="row g-3 align-items-center">
+          <div class="col-md-5">
+            <div class="search-wrapper">
+              <i class="bi bi-search search-icon"></i>
+              <input id="search" class="form-control search-input" placeholder="Cari nama, email, atau NIK..." />
+            </div>
+          </div>
+          <div class="col-md-3">
+            <select id="filter-role" class="form-select filter-select">
+              <option value="">🔍 Semua Role</option>
+              <option value="jemaat">👥 Jemaat</option>
+              <option value="koordinator">👤 Koordinator</option>
+              <option value="tatausaha">📋 Tata Usaha</option>
+              <option value="sekretaris">✍️ Sekretaris</option>
+              <option value="pendeta">⛪ Pendeta</option>
+              <option value="admin">🔐 Administrator</option>
+            </select>
+          </div>
+          <div class="col-md-2">
+            <select id="filter-sort" class="form-select filter-select">
+              <option value="newest">⬇️ Terbaru</option>
+              <option value="oldest">⬆️ Terlama</option>
+              <option value="name-asc">🔤 A-Z</option>
+              <option value="name-desc">🔡 Z-A</option>
+            </select>
+          </div>
+          <div class="col-md-2">
+            <button id="btn-refresh" class="btn btn-outline-primary btn-refresh w-100">
+              <i class="bi bi-arrow-clockwise me-2"></i>Refresh
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Table Card -->
+    <div class="table-card">
+      <div class="card-body p-0">
+        <div class="table-responsive">
+          <table class="table table-modern mb-0">
+            <thead>
+              <tr>
+                <th style="width:60px">#</th>
+                <th>Pengguna</th>
+                <th style="width:140px">Role</th>
+                <th style="width:120px">Status</th>
+                <th style="width:140px">Terdaftar</th>
+                <th style="width:250px" class="text-center">Aksi</th>
+              </tr>
+            </thead>
+            <tbody id="accounts-tbody">
+              <tr>
+                <td colspan="6" class="text-center py-5">
+                  <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                  </div>
+                  <p class="text-muted mt-3 mb-0">Memuat data akun...</p>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Modals will be loaded dynamically -->
+  <div id="modal-container"></div>
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content modal-modern">
+        <div class="modal-header modal-header-gradient">
+          <div>
+            <h5 class="modal-title text-white mb-1" id="modalTitle">
+              <i class="bi bi-person-plus-fill me-2"></i>Tambah Akun Baru
+            </h5>
+            <p class="modal-subtitle text-white-50 mb-0">Lengkapi informasi akun pengguna</p>
+          </div>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body p-4">
+          <form id="account-form">
+            <input type="hidden" id="account-id" />
+            
+            <!-- Personal Information Section -->
+            <div class="form-section mb-4">
+              <h6 class="form-section-title">
+                <i class="bi bi-person-circle me-2"></i>Informasi Personal
+              </h6>
+              <div class="row g-3">
+                <div class="col-md-6">
+                  <label for="account-nama" class="form-label fw-semibold">
+                    <i class="bi bi-person-fill text-primary me-1"></i>Nama Lengkap <span class="text-danger">*</span>
+                  </label>
+                  <input type="text" class="form-control form-control-modern" id="account-nama" placeholder="Masukkan nama lengkap" required />
+                </div>
+                <div class="col-md-6">
+                  <label for="account-nik" class="form-label fw-semibold">
+                    <i class="bi bi-card-text text-primary me-1"></i>NIK <span class="text-danger">*</span>
+                  </label>
+                  <input type="text" class="form-control form-control-modern" id="account-nik" placeholder="16 digit NIK" maxlength="16" required />
+                  <small class="text-muted">Nomor Induk Kependudukan</small>
+                </div>
+              </div>
+            </div>
+
+            <!-- Account Information Section -->
+            <div class="form-section mb-4">
+              <h6 class="form-section-title">
+                <i class="bi bi-envelope-fill me-2"></i>Informasi Akun
+              </h6>
+              <div class="row g-3">
+                <div class="col-md-12">
+                  <label for="account-email" class="form-label fw-semibold">
+                    <i class="bi bi-at text-primary me-1"></i>Email <span class="text-danger">*</span>
+                  </label>
+                  <input type="email" class="form-control form-control-modern" id="account-email" placeholder="nama@gmail.com" required />
+                </div>
+                <div class="col-md-12">
+                  <label for="account-password" class="form-label fw-semibold">
+                    <i class="bi bi-key-fill text-primary me-1"></i>Password <span id="password-required">*</span>
+                  </label>
+                  <div class="input-group">
+                    <input type="password" class="form-control form-control-modern" id="account-password" placeholder="Minimal 6 karakter" />
+                    <button class="btn btn-outline-secondary" type="button" id="toggle-account-password">
+                      <i class="bi bi-eye" id="eye-account-password"></i>
+                    </button>
+                  </div>
+                  <small class="text-muted" id="password-hint">Kosongkan jika tidak ingin mengubah password</small>
+                </div>
+              </div>
+            </div>
+
+            <!-- Role & Permission Section -->
+            <div class="form-section mb-3">
+              <h6 class="form-section-title">
+                <i class="bi bi-shield-fill-check me-2"></i>Role & Akses
+              </h6>
+              <div class="row g-3">
+                <div class="col-md-6">
+                  <label for="account-role" class="form-label fw-semibold">
+                    <i class="bi bi-person-badge text-primary me-1"></i>Role <span class="text-danger">*</span>
+                  </label>
+                  <select class="form-select form-control-modern" id="account-role" required>
+                    <option value="">-- Pilih Role --</option>
+                    <option value="admin">🔐 Administrator</option>
+                    <option value="koordinator">👤 Koordinator</option>
+                    <option value="tatausaha">📋 Tata Usaha</option>
+                    <option value="sekretaris">✍️ Sekretaris</option>
+                    <option value="pendeta">⛪ Pendeta</option>
+                  </select>
+                  <small class="text-muted">Akun Jemaat registrasi mandiri</small>
+                </div>
+
+                <!-- Rayon field for Koordinator -->
+                <div class="col-md-6" id="koordinator-fields" style="display:none;">
+                  <label for="account-rayon" class="form-label fw-semibold">
+                    <i class="bi bi-geo-alt-fill text-primary me-1"></i>Rayon <span class="text-danger">*</span>
+                  </label>
+                  <select class="form-select form-control-modern" id="account-rayon">
+                    <option value="">-- Pilih Rayon --</option>
+                    <option value="1">📍 Rayon 1</option>
+                    <option value="2">📍 Rayon 2</option>
+                    <option value="3">📍 Rayon 3</option>
+                    <option value="4">📍 Rayon 4</option>
+                    <option value="5">📍 Rayon 5</option>
+                  </select>
+                  <small class="text-muted">Area verifikasi surat</small>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer modal-footer-modern">
+          <button type="button" class="btn btn-secondary btn-modern" data-bs-dismiss="modal">
+            <i class="bi bi-x-circle me-2"></i>Batal
+          </button>
+          <button type="button" id="btn-save" class="btn btn-primary btn-modern">
+            <i class="bi bi-check-circle-fill me-2"></i>Simpan Akun
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Delete Confirmation -->
+  <div class="modal fade" id="deleteModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content modal-modern">
+        <div class="modal-header modal-header-danger">
+          <div>
+            <h5 class="modal-title text-white mb-1">
+              <i class="bi bi-trash-fill me-2"></i>Konfirmasi Hapus Akun
+            </h5>
+            <p class="modal-subtitle text-white-50 mb-0">Tindakan ini tidak dapat dibatalkan</p>
+          </div>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body p-4">
+          <div class="alert alert-danger d-flex align-items-start mb-3">
+            <i class="bi bi-exclamation-triangle-fill me-3" style="font-size: 2rem;"></i>
+            <div>
+              <h6 class="alert-heading mb-2">Peringatan!</h6>
+              <p class="mb-0" id="delete-message">Apakah Anda yakin ingin menghapus akun ini?</p>
+            </div>
+          </div>
+          <div class="delete-user-info p-3 bg-light rounded">
+            <p class="mb-1 text-muted small">Email Akun:</p>
+            <p class="mb-0 fw-bold" id="delete-email">-</p>
+          </div>
+          <div class="alert alert-warning mt-3 mb-0">
+            <i class="bi bi-info-circle-fill me-2"></i>
+            <small>Data akun yang dihapus tidak dapat dikembalikan</small>
+          </div>
+        </div>
+        <div class="modal-footer modal-footer-modern">
+          <button type="button" class="btn btn-secondary btn-modern" data-bs-dismiss="modal">
+            <i class="bi bi-x-circle me-2"></i>Batal
+          </button>
+          <button type="button" id="btn-delete-confirm" class="btn btn-danger btn-modern">
+            <i class="bi bi-trash-fill me-2"></i>Ya, Hapus Akun
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Reset Password -->
+  <div class="modal fade" id="resetPasswordModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content modal-modern">
+        <div class="modal-header modal-header-warning">
+          <div>
+            <h5 class="modal-title text-dark mb-1">
+              <i class="bi bi-key-fill me-2"></i>Reset Password Jemaat
+            </h5>
+            <p class="modal-subtitle text-dark-50 mb-0">Generate password sementara</p>
+          </div>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body p-4">
+          <p class="mb-3 fw-semibold">Anda akan mereset password untuk:</p>
+          <div class="user-reset-info p-3 bg-light rounded mb-3">
+            <div class="d-flex align-items-center">
+              <div class="reset-user-avatar">
+                <i class="bi bi-person-circle"></i>
+              </div>
+              <div>
+                <p class="mb-0 fw-bold" id="reset-user-name">-</p>
+                <p class="mb-0 text-muted small" id="reset-user-email">-</p>
+              </div>
+            </div>
+          </div>
+          
+          <div class="mb-3">
+            <label for="reset-reason" class="form-label fw-semibold">
+              <i class="bi bi-chat-left-text-fill text-primary me-1"></i>Alasan Reset <span class="text-danger">*</span>
+            </label>
+            <textarea class="form-control form-control-modern" id="reset-reason" rows="3" placeholder="Contoh: Jemaat lupa password dan meminta bantuan admin" required></textarea>
+            <small class="text-muted">Alasan akan dicatat untuk audit sistem</small>
+          </div>
+          
+          <div class="alert alert-warning d-flex align-items-start mb-0">
+            <i class="bi bi-shield-exclamation me-3" style="font-size: 1.5rem;"></i>
+            <div>
+              <h6 class="alert-heading mb-2">Catatan Penting:</h6>
+              <ul class="mb-0 ps-3 small">
+                <li>Sistem akan membuat password sementara secara otomatis</li>
+                <li>Serahkan password ke jemaat dengan aman</li>
+                <li>Jemaat wajib mengganti password setelah login</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer modal-footer-modern">
+          <button type="button" class="btn btn-secondary btn-modern" data-bs-dismiss="modal">
+            <i class="bi bi-x-circle me-2"></i>Batal
+          </button>
+          <button type="button" id="btn-reset-confirm" class="btn btn-warning btn-modern">
+            <i class="bi bi-key-fill me-2"></i>Reset Password
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Result Reset Password -->
+  <div class="modal fade" id="resetResultModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content modal-modern">
+        <div class="modal-header modal-header-success">
+          <div>
+            <h5 class="modal-title text-white mb-1">
+              <i class="bi bi-check-circle-fill me-2"></i>Password Berhasil Direset
+            </h5>
+            <p class="modal-subtitle text-white-50 mb-0">Serahkan password ke jemaat</p>
+          </div>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body p-4">
+          <p class="mb-3">Password sementara untuk <strong id="result-user-name">-</strong>:</p>
+          
+          <div class="password-result-box">
+            <div class="password-display">
+              <i class="bi bi-key-fill text-success me-2"></i>
+              <code id="temp-password" class="password-code">********</code>
+            </div>
+            <button class="btn btn-outline-success btn-copy-modern" id="btn-copy-password" title="Salin Password">
+              <i class="bi bi-clipboard"></i>
+            </button>
+          </div>
+          
+          <div class="alert alert-danger d-flex align-items-start mt-3 mb-0">
+            <i class="bi bi-shield-exclamation me-3" style="font-size: 1.5rem;"></i>
+            <div>
+              <h6 class="alert-heading mb-2">Penting!</h6>
+              <ul class="mb-0 ps-3 small">
+                <li>Salin password dan serahkan kepada jemaat</li>
+                <li>Password ini hanya ditampilkan sekali</li>
+                <li>Jemaat wajib mengganti password saat login pertama</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer modal-footer-modern">
+          <button type="button" class="btn btn-primary btn-modern" data-bs-dismiss="modal">
+            <i class="bi bi-check-circle me-2"></i>Mengerti
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="../../assets/js/api.js"></script>
+  <script src="../../assets/js/confirmation-modal.js"></script>
+  <script src="../../assets/js/navbar.js"></script>
+  <script src="../../assets/js/admin/navbar-admin.js"></script>
+  <script src="../../assets/js/admin/accounts.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

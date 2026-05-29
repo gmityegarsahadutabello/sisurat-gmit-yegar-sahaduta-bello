@@ -1,0 +1,87 @@
+/* Styles for daftar-diverifikasi page */
+
+.list-section { margin-top: 12px; }
+.table-actions .btn { margin-right: 6px; }
+.no-data { text-align:center; padding:18px; color:var(--text-muted); }
+.table .fw-semibold { font-weight:700; }
+.table .muted { color:var(--text-muted); font-size:0.9rem; margin-top:4px; }
+.table-actions .btn { padding: .35rem .6rem; border-radius:8px; }
+.btn-outline { background:transparent; border:1px solid var(--border); color:var(--text-default); }
+.btn-primary { background:var(--color-primary); color:#fff; border:0; }
+.badge-status-proses { background:#ffc107; color:#212529; padding:.25rem .5rem; border-radius:6px; font-weight:700; }
+.badge-status-diterima { background:#198754; color:#fff; padding:.25rem .5rem; border-radius:6px; font-weight:700; }
+.badge-status-ditolak { background:#dc3545; color:#fff; padding:.25rem .5rem; border-radius:6px; font-weight:700; }
+
+/* Modal dialogs */
+#detail-modal { border-radius:8px; border:0; padding:0; }
+#detail-modal::backdrop { background: rgba(0,0,0,0.35); }
+#timeline-modal { border-radius:8px; border:0; padding:0; }
+#timeline-modal::backdrop { background: rgba(0,0,0,0.35); }
+
+/* Detail grid: dua kolom (label : value) */
+.detail-grid {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  gap: 10px 18px;
+  align-items: start;
+  font-size: 0.95rem;
+}
+.detail-grid .label {
+  text-align: left;
+  color: var(--text-muted);
+  font-weight: 700;
+  padding-right: 8px;
+  white-space: nowrap;
+  align-self: center;
+}
+.detail-grid .label::after {
+  content: ":";
+  color: var(--text-muted);
+  margin-left: 8px;
+}
+.detail-grid .value {
+  color: var(--text-default);
+  word-break:break-word;
+  text-align: left;
+}
+
+/* compact section header inside modal */
+.detail-section {
+  grid-column: 1/-1;
+  margin-top: 6px;
+  margin-bottom: 6px;
+  padding-top: 8px;
+  border-top: 1px dashed rgba(0,0,0,0.06);
+}
+
+/* CRITICAL: Z-index hierarchy for modal layering */
+/* Native dialog elements - detail modal MUST have lower z-index */
+dialog#detail-modal,
+dialog#timeline-modal {
+  z-index: 1000 !important; /* Detail modal baseline */
+}
+dialog#detail-modal::backdrop,
+dialog#timeline-modal::backdrop {
+  z-index: 999 !important; /* Detail backdrop */
+  background: rgba(0, 0, 0, 0.4) !important;
+}
+
+/* Div-based ConfirmModal (from confirmation-modal.js) - HIGHEST priority */
+/* This ensures the global ConfirmModal always appears above native dialogs */
+#confirmModal,
+.confirm-modal:not(dialog) {
+  z-index: 9999 !important; /* Way above all native dialogs and navbar */
+  position: fixed !important;
+}
+#confirmModal .confirm-modal-overlay,
+.confirm-modal:not(dialog) .confirm-modal-overlay {
+  z-index: 9998 !important;
+}
+#confirmModal .confirm-modal-content,
+.confirm-modal:not(dialog) .confirm-modal-content {
+  z-index: 9999 !important;
+}
+
+/* subtle show animation for dialogs */
+dialog[open] { animation: dialogIn .15s ease-out; }
+@keyframes dialogIn { from { transform: translateY(-6px) scale(.995); opacity:0 } to { transform:none; opacity:1 } }

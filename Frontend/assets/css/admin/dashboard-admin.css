@@ -1,0 +1,603 @@
+/* Dashboard Admin */
+.dashboard-welcome {
+  text-align: center;
+  font-size: 1.45rem;
+  font-weight: 600;
+  margin-top: 22px;
+  margin-bottom: 24px;
+  color: #16202b;
+}
+
+/* Stats Grid - 5 cards in one row on large screens */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 18px;
+  margin-bottom: 24px;
+}
+
+@media (min-width: 992px) {
+  .stats-grid {
+    grid-template-columns: repeat(5, 1fr);
+  }
+}
+
+@media (max-width: 991px) {
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 576px) {
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.stat-card {
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 6px 18px rgba(22,28,45,0.06);
+  border: 1px solid rgba(22,28,45,0.04);
+  background: #fff;
+  cursor: pointer;
+  transition: transform .18s ease, box-shadow .18s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.stat-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 30px rgba(22,28,45,0.08);
+}
+
+.stat-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 12px;
+  font-size: 24px;
+  color: #fff;
+}
+
+.stat-icon.bg-blue { background: linear-gradient(180deg, #0d6efd 0%, #0b5ed7 100%); }
+.stat-icon.bg-purple { background: linear-gradient(180deg, #6f42c1 0%, #5a32a3 100%); }
+.stat-icon.bg-orange { background: linear-gradient(180deg, #fd7e14 0%, #e8590c 100%); }
+.stat-icon.bg-teal { background: linear-gradient(180deg, #20c997 0%, #12b886 100%); }
+.stat-icon.bg-green { background: linear-gradient(180deg, #198754 0%, #157347 100%); }
+
+.stat-info {
+  width: 100%;
+}
+
+.stat-label {
+  color: #6b7280;
+  font-size: 0.85rem;
+  margin-bottom: 6px;
+  font-weight: 500;
+}
+
+.stat-count {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #0b5ed7;
+}
+
+/* Card styling */
+.card {
+  border: 1px solid #e7f1ff;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(13,110,253,0.08);
+  overflow: hidden;
+}
+
+.card-header {
+  background: linear-gradient(180deg, #f8f9fa 0%, #e9ecef 100%);
+  border-bottom: 2px solid #dee2e6;
+  padding: 16px 20px;
+}
+
+.card-header h5 {
+  color: #495057;
+  font-weight: 600;
+  font-size: 1.1rem;
+}
+
+/* Table styling */
+.table thead th {
+  background: linear-gradient(180deg, #f8f9fa 0%, #e9ecef 100%);
+  color: #495057;
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  letter-spacing: 0.5px;
+  border-bottom: 2px solid #dee2e6;
+  padding: 12px 16px;
+}
+
+.table tbody tr {
+  transition: all 0.2s ease;
+}
+
+.table tbody tr:hover {
+  background: #f8f9fa;
+}
+
+.table tbody td {
+  vertical-align: middle;
+  padding: 12px 16px;
+}
+
+/* Role badges */
+.badge {
+  padding: 0.35rem 0.75rem;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 0.75rem;
+}
+
+.badge.bg-primary { background: linear-gradient(135deg, #0b5ed7 0%, #0d6efd 100%) !important; }
+.badge.bg-purple { background: linear-gradient(135deg, #6f42c1 0%, #5a32a3 100%) !important; }
+.badge.bg-warning { background: linear-gradient(135deg, #ffc107 0%, #ffb300 100%) !important; color: #000; }
+.badge.bg-info { background: linear-gradient(135deg, #0dcaf0 0%, #0aa2c0 100%) !important; }
+.badge.bg-success { background: linear-gradient(135deg, #198754 0%, #157347 100%) !important; }
+
+/* Button styling */
+.btn-sm {
+  padding: 0.35rem 0.75rem;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #0b5ed7 0%, #0d6efd 100%);
+  border: none;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(13,110,253,0.3);
+}
+
+/* ===== RESPONSIVE DESIGN FOR ADMIN DASHBOARD ===== */
+
+/* Medium Desktop (992px - 1199px) */
+@media (max-width: 1199px) {
+  .stats-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  
+  .stat-icon {
+    width: 52px;
+    height: 52px;
+    font-size: 22px;
+  }
+  
+  .stat-count {
+    font-size: 1.6rem;
+  }
+}
+
+/* Tablet Landscape (768px - 991px) */
+@media (max-width: 991px) {
+  .welcome-section {
+    padding: 20px 24px !important;
+    margin-bottom: 24px !important;
+  }
+  
+  .welcome-section h2 {
+    font-size: 1.5rem !important;
+  }
+  
+  .welcome-section p {
+    font-size: 0.9rem !important;
+  }
+  
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+  }
+  
+  .stat-card {
+    padding: 16px;
+  }
+  
+  .stat-icon {
+    width: 48px;
+    height: 48px;
+    font-size: 20px;
+    margin-bottom: 10px;
+  }
+  
+  .stat-label {
+    font-size: 0.8rem;
+  }
+  
+  .stat-count {
+    font-size: 1.5rem;
+  }
+  
+  h3 {
+    font-size: 1.2rem !important;
+    margin-bottom: 16px !important;
+  }
+  
+  .card-header h5 {
+    font-size: 1rem;
+  }
+  
+  .table thead th,
+  .table tbody td {
+    padding: 10px 12px;
+    font-size: 0.875rem;
+  }
+  
+  /* Quick Actions Grid */
+  .quick-actions-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Tablet Portrait (576px - 767px) */
+@media (max-width: 767px) {
+  .container {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+  
+  .my-5 {
+    margin-top: 2rem !important;
+    margin-bottom: 2rem !important;
+  }
+  
+  .welcome-section {
+    padding: 18px 20px !important;
+    margin-bottom: 20px !important;
+    border-radius: 12px !important;
+  }
+  
+  .welcome-section div > div {
+    font-size: 1rem !important;
+  }
+  
+  .welcome-section h2 {
+    font-size: 1.35rem !important;
+  }
+  
+  .welcome-section p {
+    font-size: 0.85rem !important;
+  }
+  
+  h3 {
+    font-size: 1.1rem !important;
+    margin-bottom: 14px !important;
+  }
+  
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+  
+  .stat-card {
+    padding: 14px;
+  }
+  
+  .stat-icon {
+    width: 44px;
+    height: 44px;
+    font-size: 18px;
+    margin-bottom: 8px;
+  }
+  
+  .stat-label {
+    font-size: 0.75rem;
+  }
+  
+  .stat-count {
+    font-size: 1.4rem;
+  }
+  
+  /* Quick Actions */
+  .quick-actions-grid {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+  
+  .action-btn {
+    padding: 14px;
+    font-size: 0.9rem;
+  }
+  
+  /* Table Responsive */
+  .card {
+    border-radius: 10px;
+  }
+  
+  .card-header {
+    padding: 12px 16px;
+  }
+  
+  .card-header h5 {
+    font-size: 0.95rem;
+  }
+  
+  .table {
+    font-size: 0.85rem;
+  }
+  
+  .table thead th {
+    padding: 10px;
+    font-size: 0.7rem;
+  }
+  
+  .table tbody td {
+    padding: 10px;
+  }
+  
+  .badge {
+    padding: 0.3rem 0.6rem;
+    font-size: 0.7rem;
+  }
+  
+  .btn-sm {
+    padding: 0.3rem 0.6rem;
+    font-size: 0.75rem;
+  }
+}
+
+/* Mobile Landscape (480px - 575px) */
+@media (max-width: 575px) {
+  .my-5 {
+    margin-top: 1.5rem !important;
+    margin-bottom: 1.5rem !important;
+  }
+  
+  .welcome-section {
+    padding: 16px !important;
+    border-radius: 10px !important;
+  }
+  
+  .welcome-section div > div {
+    font-size: 0.95rem !important;
+  }
+  
+  .welcome-section h2 {
+    font-size: 1.25rem !important;
+  }
+  
+  .welcome-section p {
+    font-size: 0.8rem !important;
+    margin-top: 6px !important;
+  }
+  
+  h3 {
+    font-size: 1rem !important;
+    margin-bottom: 12px !important;
+  }
+  
+  /* Stats - Single Column on Mobile */
+  .stats-grid {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+  
+  .stat-card {
+    padding: 14px;
+    flex-direction: row;
+    justify-content: flex-start;
+    text-align: left;
+  }
+  
+  .stat-icon {
+    width: 50px;
+    height: 50px;
+    font-size: 20px;
+    margin-bottom: 0;
+    flex-shrink: 0;
+  }
+  
+  .stat-info {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding-left: 12px;
+  }
+  
+  .stat-label {
+    font-size: 0.75rem;
+    text-align: left;
+  }
+  
+  .stat-count {
+    font-size: 1.5rem;
+  }
+  
+  /* Quick Actions Grid */
+  .quick-actions-grid {
+    gap: 8px;
+  }
+  
+  .action-btn {
+    padding: 12px;
+    font-size: 0.85rem;
+  }
+  
+  .action-btn i {
+    font-size: 1.2rem;
+  }
+  
+  /* Table - Card View */
+  .mb-4 {
+    margin-bottom: 1rem !important;
+  }
+  
+  .card {
+    border-radius: 8px;
+    margin-bottom: 1rem;
+  }
+  
+  .card-header {
+    padding: 10px 12px;
+  }
+  
+  .card-header h5 {
+    font-size: 0.9rem;
+  }
+  
+  .table-responsive {
+    border-radius: 0 0 8px 8px;
+  }
+  
+  /* Hide table and show card-style for mobile */
+  .table thead {
+    display: none;
+  }
+  
+  .table tbody tr {
+    display: block;
+    margin-bottom: 10px;
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    padding: 10px;
+    background: #fff;
+  }
+  
+  .table tbody td {
+    display: flex;
+    justify-content: space-between;
+    padding: 6px 0;
+    border: none;
+    font-size: 0.85rem;
+  }
+  
+  .table tbody td::before {
+    content: attr(data-label);
+    font-weight: 700;
+    color: #6c757d;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+  }
+  
+  .badge {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.65rem;
+  }
+  
+  .btn-sm {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.7rem;
+  }
+}
+
+/* Extra Small Mobile (< 400px) */
+@media (max-width: 399px) {
+  .welcome-section {
+    padding: 12px !important;
+  }
+  
+  .welcome-section h2 {
+    font-size: 1.15rem !important;
+  }
+  
+  .welcome-section p {
+    font-size: 0.75rem !important;
+  }
+  
+  h3 {
+    font-size: 0.95rem !important;
+  }
+  
+  .stat-card {
+    padding: 12px;
+  }
+  
+  .stat-icon {
+    width: 44px;
+    height: 44px;
+    font-size: 18px;
+  }
+  
+  .stat-label {
+    font-size: 0.7rem;
+  }
+  
+  .stat-count {
+    font-size: 1.35rem;
+  }
+  
+  .action-btn {
+    padding: 10px;
+    font-size: 0.8rem;
+  }
+  
+  .card-header h5 {
+    font-size: 0.85rem;
+  }
+  
+  .table tbody td {
+    font-size: 0.8rem;
+  }
+}
+
+/* Landscape Orientation Adjustments */
+@media (max-height: 500px) and (orientation: landscape) {
+  .welcome-section {
+    padding: 12px 16px !important;
+    margin-bottom: 16px !important;
+  }
+  
+  .stats-grid {
+    grid-template-columns: repeat(5, 1fr);
+    gap: 8px;
+  }
+  
+  .stat-card {
+    padding: 10px;
+  }
+  
+  .stat-icon {
+    width: 36px;
+    height: 36px;
+    font-size: 16px;
+    margin-bottom: 6px;
+  }
+  
+  .stat-label {
+    font-size: 0.7rem;
+  }
+  
+  .stat-count {
+    font-size: 1.2rem;
+  }
+}
+
+/* Print Styles */
+@media print {
+  .welcome-section,
+  .quick-actions-grid,
+  .btn,
+  .action-btn {
+    display: none;
+  }
+  
+  .stats-grid {
+    grid-template-columns: repeat(5, 1fr);
+    page-break-inside: avoid;
+  }
+  
+  .stat-card {
+    border: 1px solid #dee2e6;
+  }
+  
+  .table {
+    font-size: 0.75rem;
+  }
+}

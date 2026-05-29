@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Test API Users</title>
+  <style>
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      padding: 20px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .test-result {
+      background: #f0f0f0;
+      padding: 15px;
+      margin: 10px 0;
+      border-radius: 5px;
+      border-left: 4px solid #007bff;
+    }
+    .success {
+      border-left-color: #28a745;
+      background: #d4edda;
+    }
+    .error {
+      border-left-color: #dc3545;
+      background: #f8d7da;
+    }
+    button {
+      padding: 10px 20px;
+      margin: 5px;
+      cursor: pointer;
+      border: none;
+      background: #007bff;
+      color: white;
+      border-radius: 4px;
+    }
+    button:hover {
+      background: #0056b3;
+    }
+    pre {
+      background: #fff;
+      padding: 10px;
+      border-radius: 4px;
+      overflow-x: auto;
+    }
+  </style>
+</head>
+<body>
+  <h1>🧪 Test API Users - Kelola Akun</h1>
+  
+  <div>
+    <button onclick="testGetAllUsers()">Test: Get All Users</button>
+    <button onclick="testAPIObject()">Test: API Object</button>
+    <button onclick="clearResults()">Clear Results</button>
+  </div>
+  
+  <div id="results"></div>
+
+  <script src="../../assets/js/api.js"></script>
+  <script>
+    const results = document.getElementById('results');
+    
+    function log(message, type = 'info') {
+      const div = document.createElement('div');
+      div.className = `test-result ${type}`;
+      div.innerHTML = message;
+      results.appendChild(div);
+      console.log(message);
+    }
+    
+    function clearResults() {
+      results.innerHTML = '';
+    }
+    
+    async function testAPIObject() {
+      log('<strong>Testing API Object...</strong>');
+      
+      if (typeof API === 'undefined') {
+        log('❌ API object not found!', 'error');
+        return;
+      }
+      
+      log('✅ API object exists');
+      
+      if (API.users) {
+        log('✅ API.users exists');
+        
+        if (typeof API.users.getAll === 'function') {
+          log('✅ API.users.getAll is a function', 'success');
+        } else {
+          log('❌ API.users.getAll is not a function', 'error');
+        }
+      } else {
+        log('❌ API.users does not exist', 'error');
+      }
+    }
+    
+    async function testGetAllUsers() {
+      log('<strong>Testing Get All Users...</strong>');
+      
+      try {
+        log('Calling API.users.getAll()...');
+        const users = await API.users.getAll();
+        
+        if (!users) {
+          log('❌ No data returned', 'error');
+          return;
+        }
+        
+        if (!Array.isArray(users)) {
+          log(`❌ Returned data is not an array. Type: ${typeof users}`, 'error');
+          log(`<pre>${JSON.stringify(users, null, 2)}</pre>`);
+          return;
+        }
+        
+        log(`✅ Successfully fetched ${users.length} users`, 'success');
+        
+        if (users.length > 0) {
+          log(`<strong>Sample User Data:</strong><pre>${JSON.stringify(users[0], null, 2)}</pre>`);
+          
+          // Count by role
+          const roleCounts = {};
+          users.forEach(u => {
+            const role = u.role || 'unknown';
+            roleCounts[role] = (roleCounts[role] || 0) + 1;
+          });
+          
+          log(`<strong>Users by Role:</strong><pre>${JSON.stringify(roleCounts, null, 2)}</pre>`, 'success');
+        } else {
+          log('⚠️ No users found in database', 'error');
+        }
+        
+      } catch (error) {
+        log(`❌ Error: ${error.message}`, 'error');
+        log(`<pre>${error.stack}</pre>`);
+      }
+    }
+    
+    // Auto-run tests on load
+    window.addEventListener('DOMContentLoaded', () => {
+      log('🚀 Page loaded. Click buttons to run tests.');
+    });
+  </script>
+</body>
+</html>
