@@ -8,8 +8,32 @@ dotenv.config();
 const app = express();
 
 // Middleware
+const allowedOrigins = [
+  process.env.CORS_ORIGIN,
+  'https://sisurat-gmit-yegar-sahaduta-bello.vercel.app',
+  'http://localhost:3000',
+  'http://localhost:5173',
+].filter(Boolean);
+
+const isAllowedOrigin = (origin) => {
+  if (!origin) {
+    return true; // allow non-browser clients (e.g., curl, server-to-server)
+  }
+
+  if (allowedOrigins.includes(origin)) {
+    return true;
+  }
+
+  return /^https:\/\/.*\.vercel\.app$/.test(origin);
+};
+
 app.use(cors({
-  origin: 'https://sisurat-gmit-yegar-sahaduta-bello.vercel.app/', // or specify your frontend URL: 'https://your-frontend.com'
+  origin: (origin, callback) => {
+    if (isAllowedOrigin(origin)) {
+      return callback(null, true);
+    }
+    return callback(null, false);
+  },
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
 }));
