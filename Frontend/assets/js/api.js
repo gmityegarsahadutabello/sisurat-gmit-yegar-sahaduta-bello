@@ -1,7 +1,16 @@
 // API Client for MongoDB Backend
 // Replaces the old LocalStorage implementation
 
-const API_BASE_URL = 'http://localhost:5000/api';
+const PRIMARY_API_BASE_URL = 'https://sisurat-gmit-yegar-sahaduta-bello-api.vercel.app/api';
+const FALLBACK_API_BASE_URL = 'http://localhost:5000/api';
+const API_BASE_URLS = [PRIMARY_API_BASE_URL, FALLBACK_API_BASE_URL];
+
+const isNetworkError = (error) => {
+  if (!error) return false;
+  if (error.name === 'TypeError') return true;
+  const message = String(error.message || '');
+  return /failed to fetch|networkerror|load failed|network request failed/i.test(message);
+};
 
 const API = {
   async request(endpoint, method = 'GET', body = null) {
@@ -18,9 +27,9 @@ const API = {
       config.body = JSON.stringify(body);
     }
 
-    try {
-      console.log(`🔗 API ${method} ${API_BASE_URL}${endpoint}`);
-      const response = await fetch(`${API_BASE_URL}${endpoint}`, config);
+    const requestOnce = async (baseUrl) => {
+      console.log(`🔗 API ${method} ${baseUrl}${endpoint}`);
+      const response = await fetch(`${baseUrl}${endpoint}`, config);
       const data = await response.json();
       
       if (!response.ok) {
@@ -30,9 +39,20 @@ const API = {
       
       console.log('✅ API Response:', data);
       return data;
-    } catch (error) {
-      console.error('💥 API Request Error:', error);
-      throw error;
+    };
+
+    for (let i = 0; i < API_BASE_URLS.length; i += 1) {
+      const baseUrl = API_BASE_URLS[i];
+      try {
+        return await requestOnce(baseUrl);
+      } catch (error) {
+        if (isNetworkError(error) && i < API_BASE_URLS.length - 1) {
+          console.warn(`⚠️ API unreachable at ${baseUrl}. Falling back to localhost.`);
+          continue;
+        }
+        console.error('💥 API Request Error:', error);
+        throw error;
+      }
     }
   },
 
