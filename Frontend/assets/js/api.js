@@ -1,9 +1,8 @@
 // API Client for MongoDB Backend
 // Replaces the old LocalStorage implementation
 
-const PRIMARY_API_BASE_URL = "http://localhost:5000/api";
-const FALLBACK_API_BASE_URL =
-  "https://sisurat-gmit-yegar-sahaduta-bello-api.vercel.app/api";
+const PRIMARY_API_BASE_URL = "https://sisurat-gmit-yegar-sahaduta-bello-api.vercel.app/api";
+const FALLBACK_API_BASE_URL = "http://localhost:5000/api";
 const API_BASE_URLS = [PRIMARY_API_BASE_URL, FALLBACK_API_BASE_URL];
 
 const isNetworkError = (error) => {
