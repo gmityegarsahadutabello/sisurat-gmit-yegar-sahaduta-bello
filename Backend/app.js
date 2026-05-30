@@ -5,29 +5,24 @@ const cors = require("cors");
 const app = express();
 
 // Middleware
-const allowedOrigins = [
-  process.env.CORS_ORIGIN,
-  "https://sisurat-gmit-yegar-sahaduta-bello.vercel.app",
-  "http://localhost:3000",
-  "http://localhost:5173",
-].filter(Boolean);
-
-const isAllowedOrigin = (origin) => {
-  if (!origin) {
-    return true; // allow non-browser clients (e.g., curl, server-to-server)
-  }
-
-  if (allowedOrigins.includes(origin)) {
-    return true;
-  }
-
-  return /^https:\/\/.*\.vercel\.app$/.test(origin);
-};
+const allowedOrigins = new Set(
+  [
+    process.env.CORS_ORIGIN,
+    "https://sisurat-gmit-yegar-sahaduta-bello.vercel.app",
+    "http://localhost:3000",
+    "http://localhost:5173",
+    "http://localhost:8080",
+  ].filter(Boolean),
+);
 
 app.use(
   cors({
     origin: (origin, callback) => {
-      if (isAllowedOrigin(origin)) {
+      if (
+        !origin ||
+        allowedOrigins.has(origin) ||
+        /^https:\/\/[\w-]+\.vercel\.app$/.test(origin)
+      ) {
         return callback(null, true);
       }
       return callback(null, false);

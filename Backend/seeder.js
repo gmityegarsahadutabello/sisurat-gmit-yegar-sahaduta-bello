@@ -6,6 +6,7 @@
 
 const mongoose = require("mongoose");
 const dotenv = require("dotenv").config();
+const bcrypt = require("bcryptjs");
 const User = require("./models/User");
 const Pengajuan = require("./models/Pengajuan");
 const Notification = require("./models/Notification");
@@ -96,7 +97,15 @@ const importData = async () => {
     await Notification.deleteMany();
 
     console.log("📥 Importing users...");
-    const createdUsers = await User.insertMany(users);
+    const usersWithHashedPasswords = await Promise.all(
+      users.map(async (user) => ({
+        ...user,
+        password: user.password?.startsWith("$2")
+          ? user.password
+          : await bcrypt.hash(user.password, 10),
+      })),
+    );
+    const createdUsers = await User.insertMany(usersWithHashedPasswords);
     console.log(`✅ ${createdUsers.length} users imported`);
 
     // Create sample pengajuan
