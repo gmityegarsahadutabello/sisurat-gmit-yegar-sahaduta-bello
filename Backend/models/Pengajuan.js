@@ -27,7 +27,7 @@ const pengajuanSchema = new mongoose.Schema({
   rayon: { type: String, required: true },
 
   // --- Tipe/Jenis Surat (merged) ---
-  type: { type: String, required: true, index: true }, // merged: type/tipe/jenis
+  type: { type: String, required: true }, // merged: type/tipe/jenis
   // keep legacy alias for backward compatibility handling via virtuals
   tipe: { type: String },
 
@@ -45,8 +45,7 @@ const pengajuanSchema = new mongoose.Schema({
       'validated_by_pendeta',
       'arsip',
     ],
-    default: 'proses',
-    index: true
+    default: 'proses'
   },
 
   // --- Form Data (flexible Mixed type for all surat types) ---

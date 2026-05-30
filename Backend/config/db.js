@@ -1,30 +1,28 @@
-const mongoose = require('mongoose');
-
-const mongoUri =
-  process.env.MONGO_URI ||
-  process.env.MONGODB_URI ||
-  'mongodb://localhost:27017/gmit_yegar_db';
-
-let cached = global.mongoose;
-
-if (!cached) {
-  cached = global.mongoose = { conn: null, promise: null };
-}
+const mongoose = require("mongoose");
+let cached = { conn: null, promise: null };
 
 const connectDB = async () => {
-  if (cached.conn) {
-    return cached.conn;
+  if (!process.env.MONGODB_URI) {
+    throw new Error("MONGODB_URI is not defined in environment variables");
   }
 
+  if (cached.conn) return cached.conn;
+
   if (!cached.promise) {
-    cached.promise = mongoose.connect(mongoUri).then((conn) => {
-      console.log(`MongoDB Connected: ${conn.connection.host}`);
-      return conn;
-    });
+    cached.promise = mongoose
+      .connect(process.env.MONGODB_URI, {
+        bufferCommands: false,
+        serverSelectionTimeoutMS: 5000,
+      })
+      .then((conn) => {
+        console.log(`MongoDB Connected: ${conn.connection.host}`);
+        return conn;
+      });
   }
 
   try {
     cached.conn = await cached.promise;
+    cached.promise = null;
   } catch (error) {
     cached.promise = null;
     throw error;
