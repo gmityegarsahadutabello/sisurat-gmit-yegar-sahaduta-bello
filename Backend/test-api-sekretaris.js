@@ -1,11 +1,16 @@
 // Test API endpoint untuk sekretaris
+require('dotenv').config();
 const fetch = require('node-fetch');
+
+const API_BASE_URL =
+  process.env.API_BASE_URL || `http://localhost:${process.env.PORT || 5000}/api`;
 
 async function testAPI() {
   try {
-    console.log('🧪 Testing API endpoint: GET /api/pengajuan?role=sekretaris&status=disposisi_to_sekretaris');
+    const endpoint = `${API_BASE_URL}/pengajuan?role=sekretaris&status=disposisi_to_sekretaris`;
+    console.log(`🧪 Testing API endpoint: GET ${endpoint}`);
     
-    const response = await fetch('http://localhost:5000/api/pengajuan?role=sekretaris&status=disposisi_to_sekretaris');
+    const response = await fetch(endpoint);
     
     console.log('Status:', response.status, response.statusText);
     

@@ -103,34 +103,24 @@
           ]
         };
 
-        const response = await fetch('http://localhost:5000/api/pengajuan', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(testData)
-        });
-
-        const result = await response.json();
+        const result = await window.API.pengajuan.create(testData);
         
-        if (response.ok) {
-          log(`✅ Surat created successfully!`, 'success');
-          log(`   ID: ${result._id || result.id}`, 'success');
-          log(`   Status: ${result.status}`, 'success');
-          
-          document.getElementById('step1-result').innerHTML = `
-            <div class="alert alert-success">
-              <strong>Created!</strong><br>
-              <strong>Surat ID:</strong> ${result._id || result.id}<br>
-              <strong>Status:</strong> ${result.status}<br>
-              <strong>User ID:</strong> ${result.user_id}
-            </div>
-          `;
-          
-          // Auto-fill the ID fields
-          document.getElementById('surat-id').value = result._id || result.id;
-          document.getElementById('user-id').value = result.user_id;
-        } else {
-          throw new Error(result.message || 'Failed to create surat');
-        }
+        log(`✅ Surat created successfully!`, 'success');
+        log(`   ID: ${result._id || result.id}`, 'success');
+        log(`   Status: ${result.status}`, 'success');
+        
+        document.getElementById('step1-result').innerHTML = `
+          <div class="alert alert-success">
+            <strong>Created!</strong><br>
+            <strong>Surat ID:</strong> ${result._id || result.id}<br>
+            <strong>Status:</strong> ${result.status}<br>
+            <strong>User ID:</strong> ${result.user_id}
+          </div>
+        `;
+        
+        // Auto-fill the ID fields
+        document.getElementById('surat-id').value = result._id || result.id;
+        document.getElementById('user-id').value = result.user_id;
       } catch (error) {
         log(`❌ Error: ${error.message}`, 'error');
         document.getElementById('step1-result').innerHTML = `
@@ -149,33 +139,23 @@
 
         log(`Validating surat ${suratId}...`, 'info');
 
-        const response = await fetch(`http://localhost:5000/api/pengajuan/${suratId}/status`, {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            status: 'validated_by_pendeta',
-            by: 'Pendeta',
-            note: 'Test validation by Pendeta',
-            to_role: 'jemaat'
-          })
+        const result = await window.API.pengajuan.updateStatus(suratId, {
+          status: 'validated_by_pendeta',
+          by: 'Pendeta',
+          note: 'Test validation by Pendeta',
+          to_role: 'jemaat'
         });
 
-        const result = await response.json();
-
-        if (response.ok) {
-          log(`✅ Surat validated successfully!`, 'success');
-          log(`   New Status: ${result.status}`, 'success');
-          
-          document.getElementById('step2-result').innerHTML = `
-            <div class="alert alert-success">
-              <strong>Validated!</strong><br>
-              <strong>Status:</strong> ${result.status}<br>
-              <strong>Timeline entries:</strong> ${result.timeline ? result.timeline.length : 0}
-            </div>
-          `;
-        } else {
-          throw new Error(result.message || 'Failed to validate');
-        }
+        log(`✅ Surat validated successfully!`, 'success');
+        log(`   New Status: ${result.status}`, 'success');
+        
+        document.getElementById('step2-result').innerHTML = `
+          <div class="alert alert-success">
+            <strong>Validated!</strong><br>
+            <strong>Status:</strong> ${result.status}<br>
+            <strong>Timeline entries:</strong> ${result.timeline ? result.timeline.length : 0}
+          </div>
+        `;
       } catch (error) {
         log(`❌ Error: ${error.message}`, 'error');
         document.getElementById('step2-result').innerHTML = `
@@ -195,8 +175,7 @@
         log(`Checking jemaat view for user ${userId}...`, 'info');
 
         // Use the same API call that surat-masuk.js uses
-        const response = await fetch(`http://localhost:5000/api/pengajuan?user_id=${encodeURIComponent(userId)}`);
-        const allSurat = await response.json();
+        const allSurat = await window.API.pengajuan.getAll({ user_id: userId });
 
         log(`📊 Total surat for user: ${allSurat.length}`, 'info');
         

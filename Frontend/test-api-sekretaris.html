@@ -12,6 +12,7 @@
     .info { border-left: 4px solid #569cd6; }
     pre { margin: 5px 0; white-space: pre-wrap; word-wrap: break-word; }
   </style>
+  <script src="assets/js/api.js"></script>
 </head>
 <body>
   <h1>🧪 Test API Endpoint untuk Sekretaris</h1>
@@ -30,13 +31,12 @@
     async function testAPI() {
       try {
         log('🚀 Starting API test...', 'info');
-        log('Endpoint: http://localhost:5000/api/pengajuan?role=sekretaris&status=disposisi_to_sekretaris', 'info');
+        const endpoint = '/pengajuan?role=sekretaris&status=disposisi_to_sekretaris';
+        log(`Endpoint: ${endpoint} (via API client)`, 'info');
         
-        const response = await fetch('http://localhost:5000/api/pengajuan?role=sekretaris&status=disposisi_to_sekretaris');
+        const data = await window.API.request(endpoint);
         
-        log(`Status: ${response.status} ${response.statusText}`, response.ok ? 'success' : 'error');
-        
-        const data = await response.json();
+        log('Status: OK', 'success');
         
         log(`\n📊 Results:\nCount: ${Array.isArray(data) ? data.length : 'Not an array'}`, 'info');
         

@@ -115,24 +115,10 @@
       }
 
       // Try to login with the provided password to verify
-      const response = await fetch('http://localhost:5000/api/users/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password })
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        return false;
-      }
+      const user = await window.API.users.login(email, password);
 
       // Check if user is admin (API returns user data directly, not nested in 'user' property)
-      if (data.role === 'admin') {
-        return true;
-      }
-
-      return false;
+      return user.role === 'admin';
     } catch (error) {
       console.error('❌ Error verifying password:', error);
       return false;
@@ -230,13 +216,7 @@
   // Load storage statistics
   async function loadStorageStats() {
     try {
-      const response = await fetch('http://localhost:5000/api/pengajuan/stats/storage');
-      const data = await response.json();
-      
-      if (!response.ok) {
-        throw new Error(data.message || 'Failed to load storage stats');
-      }
-
+      const data = await window.API.request('/pengajuan/stats/storage');
       storageStats = data;
       renderStorageStats();
     } catch (error) {
@@ -307,12 +287,7 @@
     try {
       // Fetch all pengajuan and filter for archived statuses on client side
       // This handles both 'arsip' status and legacy 'validated_by_pendeta' status
-      const response = await fetch('http://localhost:5000/api/pengajuan');
-      const data = await response.json();
-      
-      if (!response.ok) {
-        throw new Error(data.message || 'Failed to load archives');
-      }
+      const data = await window.API.request('/pengajuan');
 
       console.log('📦 Total pengajuan loaded:', data.length);
       
@@ -508,17 +483,9 @@
 
     const deleteFunc = async () => {
       try {
-        const response = await fetch('http://localhost:5000/api/pengajuan/archives', {
-          method: 'DELETE',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ ids: [id] })
+        const data = await window.API.request('/pengajuan/archives', 'DELETE', {
+          ids: [id]
         });
-
-        const data = await response.json();
-
-        if (!response.ok) {
-          throw new Error(data.message || 'Gagal menghapus arsip');
-        }
 
         showToast('success', data.message || 'Arsip berhasil dihapus');
         selectedIds.delete(id);
@@ -551,17 +518,9 @@
 
     const deleteFunc = async () => {
       try {
-        const response = await fetch('http://localhost:5000/api/pengajuan/archives', {
-          method: 'DELETE',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ ids: Array.from(selectedIds) })
+        const data = await window.API.request('/pengajuan/archives', 'DELETE', {
+          ids: Array.from(selectedIds)
         });
-
-        const data = await response.json();
-
-        if (!response.ok) {
-          throw new Error(data.message || 'Gagal menghapus arsip');
-        }
 
         showToast('success', data.message || 'Arsip berhasil dihapus');
         selectedIds.clear();
@@ -607,17 +566,9 @@
 
     const deleteFunc = async () => {
       try {
-        const response = await fetch('http://localhost:5000/api/pengajuan/archives', {
-          method: 'DELETE',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ deleteAll: true })
+        const data = await window.API.request('/pengajuan/archives', 'DELETE', {
+          deleteAll: true
         });
-
-        const data = await response.json();
-
-        if (!response.ok) {
-          throw new Error(data.message || 'Gagal menghapus arsip');
-        }
 
         showToast('success', data.message || 'Semua arsip berhasil dihapus');
         selectedIds.clear();

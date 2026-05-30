@@ -927,21 +927,11 @@
         return;
       }
 
-      const response = await fetch(`http://localhost:5000/api/users/${resetTargetId}/reset-password`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          admin_id: adminId,
-          admin_name: adminName,
-          reason: reason
-        })
+      const data = await window.API.request(`/users/${resetTargetId}/reset-password`, 'POST', {
+        admin_id: adminId,
+        admin_name: adminName,
+        reason: reason
       });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.message || 'Gagal reset password');
-      }
 
       console.log('✅ Password reset berhasil:', data);
 

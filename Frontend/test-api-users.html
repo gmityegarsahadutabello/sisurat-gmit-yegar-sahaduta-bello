@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Test API Users</title>
+    <script src="assets/js/api.js"></script>
 </head>
 <body>
     <h1>Test API Users</h1>
@@ -16,15 +17,8 @@
             resultEl.textContent = 'Loading...';
             
             try {
-                console.log('🔍 Fetching from http://localhost:5000/api/users');
-                const response = await fetch('http://localhost:5000/api/users');
-                console.log('📡 Response status:', response.status);
-                
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                
-                const data = await response.json();
+                console.log('🔍 Fetching users via API client');
+                const data = await window.API.users.getAll();
                 console.log('✅ Data received:', data);
                 resultEl.textContent = JSON.stringify(data, null, 2);
             } catch (error) {
