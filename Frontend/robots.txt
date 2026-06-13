@@ -1,0 +1,13 @@
+User-agent: *
+Allow: /index.html
+Allow: /register.html
+Allow: /assets/
+Disallow: /pages/
+Disallow: /Backend/
+Disallow: /api/
+Disallow: /*-api.html
+Disallow: /test-*.html
+Disallow: /clean-storage.html
+Disallow: /migration-tool.html
+
+Sitemap: https://gmityegar.com/sitemap.xml
