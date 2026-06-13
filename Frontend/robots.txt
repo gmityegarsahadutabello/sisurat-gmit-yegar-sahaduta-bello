@@ -1,7 +1,5 @@
 User-agent: *
-Allow: /index.html
-Allow: /register.html
-Allow: /assets/
+Allow: /
 Disallow: /pages/
 Disallow: /Backend/
 Disallow: /api/
