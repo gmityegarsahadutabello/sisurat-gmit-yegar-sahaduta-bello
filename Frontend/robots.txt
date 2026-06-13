@@ -10,4 +10,4 @@ Disallow: /test-*.html
 Disallow: /clean-storage.html
 Disallow: /migration-tool.html
 
-Sitemap: https://gmityegar.com/sitemap.xml
+Sitemap: https://sisurat-gmit-yegar-sahaduta-bello.vercel.app/sitemap.xml
