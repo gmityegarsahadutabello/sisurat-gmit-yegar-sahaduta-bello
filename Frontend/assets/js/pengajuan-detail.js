@@ -70,6 +70,7 @@ document.addEventListener("DOMContentLoaded", () => {
       let data = null;
       try {
         data = await API.pengajuan.getById(id);
+        console.log("Data surat masuk", data);
       } catch (e) {
         console.warn("API getById failed, trying fallback...", e);
         data = null;
