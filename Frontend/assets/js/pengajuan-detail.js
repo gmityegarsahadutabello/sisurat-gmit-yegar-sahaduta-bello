@@ -129,18 +129,18 @@ document.addEventListener("DOMContentLoaded", () => {
           /* ignore */
         }
       }
+
       // in some saved objects data for non-saksi forms may be inside rawForm
       if (!data.perihal && data.rawForm && data.rawForm.perihal)
         data.perihal = data.rawForm.perihal;
       if (!data.nama && data.rawForm && data.rawForm.nama)
         data.nama = data.rawForm.nama;
 
+      cachedDetail = data; // cache after all transforms, before render
       renderDetail(data);
     } catch (err) {
       detailArea.innerHTML = `<div class="col-12">Gagal memuat data.</div>`;
     }
-    cachedDetail = data; // cache it here, after flattening/mapping
-    renderDetail(data);
   }
 
   function renderField(label, value, icon = "") {
@@ -991,4 +991,3 @@ document.addEventListener("DOMContentLoaded", () => {
 
   loadData();
 });
-
