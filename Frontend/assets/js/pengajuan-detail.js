@@ -578,6 +578,7 @@ document.addEventListener("DOMContentLoaded", () => {
             );
             return;
           }
+          console.log(url, "_blank");
           window.open(url, "_blank");
         } catch (err) {
           console.error("Download error", err);
