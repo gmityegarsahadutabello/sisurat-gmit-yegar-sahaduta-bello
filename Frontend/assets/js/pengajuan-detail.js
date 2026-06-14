@@ -1,5 +1,6 @@
 // render detail pengajuan berdasarkan tipe; fallback ke dummy data untuk preview
 document.addEventListener("DOMContentLoaded", () => {
+  let cachedDetail = null;
   const id = new URLSearchParams(window.location.search).get("id") || "1";
   const detailArea = document.getElementById("detail-content");
   const crumbType = document.getElementById("crumb-type");
@@ -138,6 +139,8 @@ document.addEventListener("DOMContentLoaded", () => {
     } catch (err) {
       detailArea.innerHTML = `<div class="col-12">Gagal memuat data.</div>`;
     }
+    cachedDetail = data; // cache it here, after flattening/mapping
+    renderDetail(data);
   }
 
   function renderField(label, value, icon = "") {
@@ -554,11 +557,11 @@ document.addEventListener("DOMContentLoaded", () => {
         btnDownload.classList.add("disabled");
         btnDownload.setAttribute("aria-disabled", "true");
 
-        // Yield to browser — let it paint the disabled state before doing anything else
-        await new Promise((r) => setTimeout(r, 0));
+        await new Promise((r) => setTimeout(r, 0)); // yield for paint
 
         try {
-          const detail = await API.pengajuan.getById(id);
+          // Use cached data — no second API call
+          const detail = cachedDetail;
           const url =
             detail &&
             (detail.file_url ||
