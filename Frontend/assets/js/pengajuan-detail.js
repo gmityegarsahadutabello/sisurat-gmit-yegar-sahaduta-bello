@@ -563,14 +563,7 @@ document.addEventListener("DOMContentLoaded", () => {
         try {
           // Use cached data — no second API call
           const detail = cachedDetail;
-          const url =
-            detail &&
-            (detail.file_url ||
-              detail.final_file_url ||
-              detail.file_url_final ||
-              detail.downloadUrl ||
-              detail.final_file ||
-              detail.final_file_data);
+          const url = detail.file_url;
 
           if (!url) {
             alert(
