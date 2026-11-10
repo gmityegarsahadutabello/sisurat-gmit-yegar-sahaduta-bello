@@ -17,8 +17,15 @@
     const elName = document.getElementById("welcome-name");
     const elRole = document.getElementById("welcome-role");
     if (elName) elName.textContent = currentUser.nama || "Koordinator";
-    if (elRole)
-      elRole.textContent = rayon ? `Koordinator ${rayon}` : "Koordinator Rayon";
+    if (elRole) {
+      if (rayon) {
+        const rayonLabel = /^rayon\b/i.test(String(rayon).trim()) ? rayon : `Rayon ${rayon}`;
+        const displayText = /^koordinator\b/i.test(String(rayon).trim()) ? rayon : `Koordinator ${rayonLabel}`;
+        elRole.textContent = displayText;
+      } else {
+        elRole.textContent = "Koordinator Rayon";
+      }
+    }
 
     // 2. Get All Submissions
     let allSubmissions = [];
@@ -41,28 +48,28 @@
 
     const filteredSubmissions = targetRayon
       ? allSubmissions.filter((item) => {
-          // Check direct rayon property
-          const itemRayon = String(item.rayon || item.user_rayon || "").trim();
-          if (itemRayon && itemRayon === targetRayon) {
-            return true;
-          }
+        // Check direct rayon property
+        const itemRayon = String(item.rayon || item.user_rayon || "").trim();
+        if (itemRayon && itemRayon === targetRayon) {
+          return true;
+        }
 
-          // Resolve via user list if rayon missing on item
-          const applicant = users.find(
-            (u) =>
-              (u.nik &&
-                item.user_nik &&
-                String(u.nik) === String(item.user_nik)) ||
-              (u.email && u.email === item.user_email) ||
-              (u.id && item.user_id && String(u.id) === String(item.user_id)),
-          );
+        // Resolve via user list if rayon missing on item
+        const applicant = users.find(
+          (u) =>
+            (u.nik &&
+              item.user_nik &&
+              String(u.nik) === String(item.user_nik)) ||
+            (u.email && u.email === item.user_email) ||
+            (u.id && item.user_id && String(u.id) === String(item.user_id)),
+        );
 
-          if (applicant && applicant.rayon) {
-            return String(applicant.rayon).trim() === targetRayon;
-          }
+        if (applicant && applicant.rayon) {
+          return String(applicant.rayon).trim() === targetRayon;
+        }
 
-          return false;
-        })
+        return false;
+      })
       : allSubmissions;
 
     // 5. Calculate Stats

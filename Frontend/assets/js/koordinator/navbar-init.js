@@ -73,7 +73,8 @@ document.addEventListener('DOMContentLoaded', () => {
       const elRayon = document.getElementById('coordinator-rayon');
       // Format display as 'Koordinator Rayon X' for better clarity
       if (elRayon) {
-        const displayText = rayon.toLowerCase().includes('koordinator') ? rayon : `Koordinator ${rayon}`;
+        const rayonLabel = /^rayon\b/i.test(String(rayon).trim()) ? rayon : `Rayon ${rayon}`;
+        const displayText = /^koordinator\b/i.test(String(rayon).trim()) ? rayon : `Koordinator ${rayonLabel}`;
         elRayon.textContent = displayText;
       }
       
@@ -85,7 +86,8 @@ document.addEventListener('DOMContentLoaded', () => {
       const mobileRayon = document.getElementById('mobile-coordinator-rayon-mobile');
       if (mobileNama) mobileNama.textContent = nama;
       if (mobileRayon) {
-        const displayText = rayon.toLowerCase().includes('koordinator') ? rayon : `Koordinator ${rayon}`;
+        const rayonLabel = /^rayon\b/i.test(String(rayon).trim()) ? rayon : `Rayon ${rayon}`;
+        const displayText = /^koordinator\b/i.test(String(rayon).trim()) ? rayon : `Koordinator ${rayonLabel}`;
         mobileRayon.textContent = displayText;
       }
     } catch(e) {
