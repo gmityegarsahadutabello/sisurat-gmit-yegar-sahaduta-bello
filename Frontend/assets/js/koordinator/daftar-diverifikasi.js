@@ -35,8 +35,8 @@
     
     // Filter for this koordinator's rayon
     const rayonItems = all.filter(i => {
-      if (rayon && i.rayon && String(i.rayon) !== String(rayon) && !String(i.rayon).includes(String(rayon))) return false;
-      return true;
+      if (!rayon) return true;
+      return String(i.rayon ?? '') === String(rayon);
     });
 
     // Filter verified items - EXCLUDE rejected/ditolak items

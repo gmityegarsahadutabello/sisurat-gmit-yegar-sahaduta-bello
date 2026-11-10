@@ -62,7 +62,10 @@
     const rayonField = document.getElementById('rayon-field');
     if (rayonField && user.rayon) {
       rayonField.style.display = 'block';
-      qs('detail-rayon').textContent = 'Rayon ' + user.rayon;
+      const rayonText = String(user.rayon).trim();
+      qs('detail-rayon').textContent = /^rayon\b/i.test(rayonText)
+        ? rayonText
+        : 'Rayon ' + rayonText;
     } else if (rayonField) {
       rayonField.style.display = 'none';
     }

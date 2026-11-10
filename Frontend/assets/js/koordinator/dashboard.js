@@ -36,21 +36,14 @@
       users = [];
     }
 
-    // 4. Filter by Rayon
-    const targetRayon = rayon ? String(rayon).toLowerCase() : null;
+    // 4. Filter by Rayon (exact match; nilai rayon sudah dinormalisasi)
+    const targetRayon = rayon ? String(rayon).trim() : null;
 
     const filteredSubmissions = targetRayon
       ? allSubmissions.filter((item) => {
           // Check direct rayon property
-          const itemRayon = String(
-            item.rayon || item.user_rayon || "",
-          ).toLowerCase();
-          if (
-            itemRayon &&
-            (itemRayon === targetRayon ||
-              itemRayon.includes(targetRayon) ||
-              targetRayon.includes(itemRayon))
-          ) {
+          const itemRayon = String(item.rayon || item.user_rayon || "").trim();
+          if (itemRayon && itemRayon === targetRayon) {
             return true;
           }
 
@@ -65,12 +58,7 @@
           );
 
           if (applicant && applicant.rayon) {
-            const userRayon = String(applicant.rayon).toLowerCase();
-            return (
-              userRayon === targetRayon ||
-              userRayon.includes(targetRayon) ||
-              targetRayon.includes(userRayon)
-            );
+            return String(applicant.rayon).trim() === targetRayon;
           }
 
           return false;

@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
+const { normalizeRayon } = require('../utils/helpers');
 
 const userSchema = new mongoose.Schema({
   nik: {
@@ -40,7 +41,8 @@ const userSchema = new mongoose.Schema({
   rayon: {
     type: String,
     default: null,
-    index: true
+    index: true,
+    set: normalizeRayon
   },
   address: {
     type: String,

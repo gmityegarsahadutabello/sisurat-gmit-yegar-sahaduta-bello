@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const { normalizeRayon } = require('../utils/helpers');
 
 // Reusable timeline subdocument (frontend-compatible)
 const timelineSchema = new mongoose.Schema({
@@ -21,10 +22,10 @@ const pengajuanSchema = new mongoose.Schema({
   user_nik: { type: String, required: true },
   user_nama: { type: String, required: true },
   user_email: { type: String },
-  user_rayon: { type: String }, // Same as 'rayon' field
+  user_rayon: { type: String, set: normalizeRayon }, // Same as 'rayon' field
 
   // --- Rayon (critical for filtering) ---
-  rayon: { type: String, required: true },
+  rayon: { type: String, required: true, set: normalizeRayon },
 
   // --- Tipe/Jenis Surat (merged) ---
   type: { type: String, required: true }, // merged: type/tipe/jenis

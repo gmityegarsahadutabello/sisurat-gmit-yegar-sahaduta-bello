@@ -47,7 +47,7 @@ document.addEventListener('DOMContentLoaded', () => {
       let valid = true;
 
       // Validations
-      if (!rayon.value.trim()) { 
+      if (!/^[1-9][0-9]*$/.test(rayon.value.trim())) { 
         rayon.classList.add('is-invalid'); 
         valid = false; 
       } else { 

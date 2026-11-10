@@ -168,6 +168,24 @@ function getStatusDisplay(status) {
 }
 
 /**
+ * Normalize a rayon value to a single canonical format.
+ * Stored values are plain numbers as strings (e.g. '1'), so a legacy
+ * 'Rayon 1' becomes '1'. Keeps role filtering working with strict equality.
+ * @param {String|Number|null} value - Raw rayon value
+ * @returns {String|null}
+ */
+function normalizeRayon(value) {
+  if (value === null || value === undefined) return value;
+  const cleaned = String(value)
+    .trim()
+    .replace(/^rayon\s+/i, '')
+    .trim();
+  if (cleaned === '') return null;
+  // '07' dan '7' harus dianggap rayon yang sama
+  return /^\d+$/.test(cleaned) ? String(Number(cleaned)) : cleaned;
+}
+
+/**
  * Check if user can access pengajuan based on role
  */
 function canAccessPengajuan(user, pengajuan) {
@@ -198,5 +216,6 @@ module.exports = {
   validateNIK,
   validateEmail,
   getStatusDisplay,
+  normalizeRayon,
   canAccessPengajuan
 };

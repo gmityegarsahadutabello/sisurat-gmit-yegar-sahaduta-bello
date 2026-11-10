@@ -56,19 +56,19 @@ const users = [
   },
   {
     nik: "1234567890123460",
-    name: "Koordinator Rayon A",
+    name: "Koordinator Rayon 1",
     email: "koor.a@gmityegar.com",
     password: "koor123",
     role: "koordinator",
-    rayon: "Rayon A",
+    rayon: "1",
   },
   {
     nik: "1234567890123461",
-    name: "Koordinator Rayon B",
+    name: "Koordinator Rayon 2",
     email: "koor.b@gmityegar.com",
     password: "koor123",
     role: "koordinator",
-    rayon: "Rayon B",
+    rayon: "2",
   },
   {
     nik: "1234567890123462",
@@ -76,7 +76,7 @@ const users = [
     email: "jemaat.a@gmityegar.com",
     password: "jemaat123",
     role: "jemaat",
-    rayon: "Rayon A",
+    rayon: "1",
   },
   {
     nik: "1234567890123463",
@@ -84,7 +84,7 @@ const users = [
     email: "jemaat.b@gmityegar.com",
     password: "jemaat123",
     role: "jemaat",
-    rayon: "Rayon B",
+    rayon: "2",
   },
 ];
 

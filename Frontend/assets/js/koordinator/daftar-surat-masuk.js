@@ -142,7 +142,7 @@
       all = [];
     }
 
-    const rayon = getRayon().split(" ")[1]; // koor rayon
+    const rayon = getRayon(); // koordinator hanya melihat rayon-nya sendiri
 
     // time range filter
     const start = startEl?.value ? new Date(startEl.value + "T00:00:00") : null;

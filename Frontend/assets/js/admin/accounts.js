@@ -812,7 +812,7 @@
     const nik = nikField.value.trim();
     const password = passwordField ? passwordField.value : "";
     const role = roleField.value;
-    const rayon = rayonField ? rayonField.value : "";
+    const rayon = rayonField ? rayonField.value.trim() : "";
 
     if (!nama || !email || !role || !nik) {
       alert("Nama, Email, NIK, dan Role wajib diisi");
@@ -825,6 +825,12 @@
         "Rayon wajib diisi untuk " +
           (role === "koordinator" ? "Koordinator" : "Jemaat"),
       );
+      return;
+    }
+
+    // Rayon disimpan sebagai angka (string numerik), tanpa batas jumlah
+    if (rayon && !/^[1-9][0-9]*$/.test(rayon)) {
+      alert("Rayon harus berupa angka lebih dari 0.");
       return;
     }
 
