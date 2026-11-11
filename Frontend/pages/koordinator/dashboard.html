@@ -185,6 +185,17 @@
 
     <!-- right / coordinator info -->
     <div class="header-actions" style="display:flex;align-items:center;gap:12px;">
+      <!-- Notifications -->
+      <div class="notif-wrap dropdown notif-standalone">
+        <button class="btn btn-notif position-relative" id="notifButton" aria-expanded="false" title="Notifikasi">
+          <i class="bi bi-bell-fill"></i>
+          <span id="notif-count" class="badge badge-notif" style="display:none;">0</span>
+        </button>
+        <ul id="notif-list" class="dropdown-menu dropdown-menu-end" role="menu" aria-labelledby="notifButton">
+          <li><span class="dropdown-item" style="color:#6c757d;text-align:center;">Memuat notifikasi...</span></li>
+        </ul>
+      </div>
+
       <div style="color:white;font-weight:600;text-align:right;">
         <div id="coordinator-name" style="font-size:0.9rem;opacity:0.95;margin-bottom:2px;">Koordinator</div>
         <div id="coordinator-rayon" style="font-size:0.85rem;opacity:0.85;">Koordinator Rayon</div>
@@ -267,5 +278,6 @@
   <script src="../../assets/js/confirmation-modal.js"></script>
   <script src="../../assets/js/koordinator/dashboard.js"></script>
   <script src="../../assets/js/koordinator/navbar-init.js"></script>
+  <script src="../../assets/js/koordinator/navbar-notif.js"></script>
 </body>
 </html>

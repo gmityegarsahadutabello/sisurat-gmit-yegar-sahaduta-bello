@@ -660,6 +660,17 @@
 
     <!-- right / coordinator info -->
     <div class="header-actions" style="display:flex;align-items:center;gap:12px;">
+      <!-- Notifications -->
+      <div class="notif-wrap dropdown notif-standalone">
+        <button class="btn btn-notif position-relative" id="notifButton" aria-expanded="false" title="Notifikasi">
+          <i class="bi bi-bell-fill"></i>
+          <span id="notif-count" class="badge badge-notif" style="display:none;">0</span>
+        </button>
+        <ul id="notif-list" class="dropdown-menu dropdown-menu-end" role="menu" aria-labelledby="notifButton">
+          <li><span class="dropdown-item" style="color:#6c757d;text-align:center;">Memuat notifikasi...</span></li>
+        </ul>
+      </div>
+
       <div style="color:white;font-weight:700;text-align:right;">
         <div style="font-size:0.85rem;opacity:0.9">Peran: Koordinator</div>
         <div id="coordinator-rayon" style="font-size:0.95rem">Koordinator Rayon 1</div>
@@ -817,6 +828,7 @@
   <script src="../../assets/js/api.js"></script>
   <script src="../../assets/js/confirmation-modal.js"></script>
   <script src="../../assets/js/koordinator/navbar-init.js"></script>
+  <script src="../../assets/js/koordinator/navbar-notif.js"></script>
   <script src="../../assets/js/koordinator/daftar-surat-masuk.js"></script>
   <script>
     // detail modal close button and Escape key

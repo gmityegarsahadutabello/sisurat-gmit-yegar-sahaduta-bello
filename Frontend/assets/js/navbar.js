@@ -27,6 +27,12 @@ document.addEventListener("DOMContentLoaded", () => {
         }
         loadNotifikasi();
         loadProfile();
+
+        // Refresh notifications whenever the bell dropdown opens (never show stale state)
+        try {
+            const notifBtnEl = document.getElementById('notifButton');
+            if (notifBtnEl) notifBtnEl.addEventListener('show.bs.dropdown', () => { loadNotifikasi(); });
+        } catch (e) {}
     }, 100);
     
     // wire logout button if present (in case logout added after injection)
@@ -54,10 +60,24 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 
+// Wait (up to timeout) for an element that may be injected asynchronously (e.g. navbar components via fetch)
+function waitForElement(selector, timeout = 4000) {
+    return new Promise((resolve) => {
+        const el = document.querySelector(selector);
+        if (el) return resolve(el);
+        const obs = new MutationObserver(() => {
+            const found = document.querySelector(selector);
+            if (found) { obs.disconnect(); resolve(found); }
+        });
+        obs.observe(document.body, { childList: true, subtree: true });
+        setTimeout(() => { try { obs.disconnect(); } catch (e) {} resolve(document.querySelector(selector)); }, timeout);
+    });
+}
+
 // --- Load Notifikasi dari API ---
 async function loadNotifikasi() {
     try {
-        const notifUl = document.getElementById("notif-list");
+        const notifUl = await waitForElement('#notif-list', 4000);
         if (!notifUl) { return; }
 
         let data = null;
@@ -131,14 +151,15 @@ async function loadNotifikasi() {
             return;
         }
 
-        // show count badge with small pop animation
+        // show count badge with small pop animation (badge = UNREAD count, not total)
+        const unreadCount = data.filter(n => !n.read).length;
         const countEl = document.getElementById('notif-count');
         if (countEl) {
             const prev = parseInt(countEl.getAttribute('data-real') || '0', 10) || 0;
-            const realCount = data.length || 0;
+            const realCount = unreadCount || 0;
             const displayText = realCount > 5 ? '5+' : String(realCount);
             countEl.textContent = displayText;
-            countEl.style.display = 'inline-flex';
+            countEl.style.display = realCount > 0 ? 'inline-flex' : 'none';
             countEl.setAttribute('data-real', String(realCount));
             // animation when changed
             if (realCount !== prev) {
@@ -155,7 +176,6 @@ async function loadNotifikasi() {
         notifUl.innerHTML = "";
         
         // Add header with count and "Mark all as read" option
-        const unreadCount = data.filter(n => !n.read).length;
         if (data.length > 0) {
             const headerLi = document.createElement("li");
             headerLi.innerHTML = `
@@ -183,7 +203,11 @@ async function loadNotifikasi() {
                         data.forEach(n => { n.read = true; });
                         document.querySelectorAll('#notif-list .notif-unread').forEach(el => el.classList.remove('notif-unread'));
                         document.querySelectorAll('#notif-list .notif-unread-dot').forEach(el => el.remove());
-                        adjustNotifBadge(-unreadCount);
+                        // Badge gone completely + header count removed
+                        const countElAll = document.getElementById('notif-count');
+                        if (countElAll) { countElAll.style.display = 'none'; countElAll.setAttribute('data-real', '0'); }
+                        const headerBadge = notifUl.querySelector('.notif-header .badge');
+                        if (headerBadge) headerBadge.remove();
                     } catch (err) {
                         console.error('Gagal menandai semua notifikasi dibaca:', err);
                     }
@@ -212,20 +236,31 @@ async function loadNotifikasi() {
                 a.classList.add('notif-unread');
             }
 
-            // Mark individual notification as read when clicked
+            // Mark individual notification as read when clicked, then navigate
+            // (await the read request briefly so navigation doesn't abort it)
             if (!n.read && n.id) {
-                a.addEventListener('click', function () {
-                    try {
-                        API.notifications.markAsRead(n.id).catch(function (e) {
-                            console.warn('Gagal menandai notifikasi dibaca:', e);
-                        });
-                    } catch (e) {}
+                a.addEventListener('click', function (e) {
+                    // Let Ctrl/Cmd/Shift+click (open in new tab) behave normally
+                    if (e.ctrlKey || e.metaKey || e.shiftKey) return;
+                    e.preventDefault();
                     // Update UI immediately
                     a.classList.remove('notif-unread');
                     const dot = a.querySelector('.notif-unread-dot');
                     if (dot) dot.remove();
                     n.read = true;
                     adjustNotifBadge(-1);
+                    const go = () => {
+                        const hrefNow = a.getAttribute('href');
+                        if (hrefNow && hrefNow !== '#') window.location.href = hrefNow;
+                    };
+                    try {
+                        Promise.race([
+                            API.notifications.markAsRead(n.id),
+                            new Promise(res => setTimeout(res, 1000))
+                        ]).then(go, go);
+                    } catch (err) {
+                        go();
+                    }
                 });
             }
             
