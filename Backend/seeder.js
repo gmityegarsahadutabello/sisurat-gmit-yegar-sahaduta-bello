@@ -21,12 +21,15 @@ mongoose
   });
 
 // Sample users
+// NOTE: Passwords here are for local seeding/dev only.
+// For production, change all passwords immediately after first login.
+// Never run seeder.js against the production database.
 const users = [
   {
     nik: "1234567890123456",
     name: "Administrator",
     email: "admin@gmityegar.com",
-    password: "admin123",
+    password: process.env.SEED_ADMIN_PASSWORD || "CHANGE_ME_before_seeding!",
     role: "admin",
     rayon: null,
   },
@@ -34,7 +37,7 @@ const users = [
     nik: "1234567890123457",
     name: "Staff Tata Usaha",
     email: "tu@gmityegar.com",
-    password: "tu123456",
+    password: process.env.SEED_TU_PASSWORD || "CHANGE_ME_before_seeding!",
     role: "tatausaha",
     rayon: null,
   },
@@ -42,7 +45,7 @@ const users = [
     nik: "1234567890123458",
     name: "Sekretaris GMIT",
     email: "sekretaris@gmityegar.com",
-    password: "sekretaris123",
+    password: process.env.SEED_SEKRETARIS_PASSWORD || "CHANGE_ME_before_seeding!",
     role: "sekretaris",
     rayon: null,
   },
@@ -50,7 +53,7 @@ const users = [
     nik: "1234567890123459",
     name: "Pendeta GMIT",
     email: "pendeta@gmityegar.com",
-    password: "pendeta123",
+    password: process.env.SEED_PENDETA_PASSWORD || "CHANGE_ME_before_seeding!",
     role: "pendeta",
     rayon: null,
   },
@@ -58,7 +61,7 @@ const users = [
     nik: "1234567890123460",
     name: "Koordinator Rayon 1",
     email: "koor.a@gmityegar.com",
-    password: "koor123",
+    password: process.env.SEED_KOOR_PASSWORD || "CHANGE_ME_before_seeding!",
     role: "koordinator",
     rayon: "1",
   },
@@ -66,7 +69,7 @@ const users = [
     nik: "1234567890123461",
     name: "Koordinator Rayon 2",
     email: "koor.b@gmityegar.com",
-    password: "koor123",
+    password: process.env.SEED_KOOR_PASSWORD || "CHANGE_ME_before_seeding!",
     role: "koordinator",
     rayon: "2",
   },
@@ -74,7 +77,7 @@ const users = [
     nik: "1234567890123462",
     name: "Jemaat Test A",
     email: "jemaat.a@gmityegar.com",
-    password: "jemaat123",
+    password: process.env.SEED_JEMAAT_PASSWORD || "CHANGE_ME_before_seeding!",
     role: "jemaat",
     rayon: "1",
   },
@@ -82,7 +85,7 @@ const users = [
     nik: "1234567890123463",
     name: "Jemaat Test B",
     email: "jemaat.b@gmityegar.com",
-    password: "jemaat123",
+    password: process.env.SEED_JEMAAT_PASSWORD || "CHANGE_ME_before_seeding!",
     role: "jemaat",
     rayon: "2",
   },
