@@ -1,9 +1,45 @@
 const Pengajuan = require('../models/Pengajuan');
 const Notification = require('../models/Notification');
 const { s3Client } = require('../config/s3');
-const { PutObjectCommand, GetObjectCommand } = require('@aws-sdk/client-s3');
+const { PutObjectCommand, GetObjectCommand, DeleteObjectCommand } = require('@aws-sdk/client-s3');
 const { getSignedUrl } = require('@aws-sdk/s3-request-presigner');
 const crypto = require('crypto');
+
+// --- S3 helpers ---
+
+// Collect every S3 object key referenced by a pengajuan
+// (draft, final, and supporting docs file_sup1-4 stored in form)
+const collectS3Keys = (pengajuan) => {
+  const keys = [];
+  const draftKey = pengajuan.files?.draft?.key;
+  const finalKey = pengajuan.files?.final?.key;
+  if (draftKey) keys.push(draftKey);
+  if (finalKey) keys.push(finalKey);
+  for (let i = 1; i <= 4; i++) {
+    const k = pengajuan.form?.[`file_sup${i}`]?.key;
+    if (k) keys.push(k);
+  }
+  return [...new Set(keys.filter(Boolean))];
+};
+
+// Best-effort delete of S3 objects; never throws (logs failures instead)
+const deleteS3Objects = async (keys) => {
+  if (!keys || keys.length === 0) return 0;
+  let deleted = 0;
+  await Promise.all(keys.map(async (Key) => {
+    try {
+      await s3Client.send(new DeleteObjectCommand({
+        Bucket: process.env.S3_BUCKET_NAME,
+        Key
+      }));
+      deleted++;
+    } catch (err) {
+      console.error(`⚠️ Failed to delete S3 object ${Key}:`, err.message);
+    }
+  }));
+  console.log(`🗑️ Deleted ${deleted}/${keys.length} S3 object(s)`);
+  return deleted;
+};
 
 // @desc    Create new pengajuan
 // @route   POST /api/pengajuan
@@ -461,6 +497,12 @@ const updatePengajuan = async (req, res) => {
           data_length: final_file_data.length
         });
 
+        // Delete the previous final file from S3, if any (avoid orphaned objects)
+        const previousKey = pengajuan.files?.final?.key;
+        if (previousKey) {
+          await deleteS3Objects([previousKey]);
+        }
+
         // 1. Decode Base64 to buffer
         const fileBuffer = Buffer.from(final_file_data.split(',')[1], 'base64');
 
@@ -501,7 +543,11 @@ const updatePengajuan = async (req, res) => {
       } else if (final_file_data === null || final_file_name === null) {
         // Handle file removal if requested
         console.log('🗑️ Received request to remove final file.');
-        // Note: Add logic here to delete from S3 if needed.
+        // Delete the old object from S3 (best-effort)
+        const oldKey = pengajuan.files?.final?.key;
+        if (oldKey) {
+          await deleteS3Objects([oldKey]);
+        }
         pengajuan.files.final = {};
       }
       
@@ -677,6 +723,9 @@ const deletePengajuan = async (req, res) => {
   try {
     const pengajuan = await Pengajuan.findById(req.params.id);
     if (pengajuan) {
+      // Best-effort cleanup of S3 objects referenced by this pengajuan
+      const s3Keys = collectS3Keys(pengajuan);
+      await deleteS3Objects(s3Keys);
       await pengajuan.deleteOne();
       res.json({ message: 'Pengajuan removed' });
     } else {
@@ -806,7 +855,7 @@ const deleteArchives = async (req, res) => {
     let deletedIds = []; // Track IDs for notification deletion
     
     if (deleteAll === true) {
-      // Get all archived pengajuan IDs first before deleting
+      // Get all archived pengajuan IDs + S3 keys first before deleting
       const archivedPengajuan = await Pengajuan.find({ 
         $or: [
           { status: 'arsip' },
@@ -814,9 +863,13 @@ const deleteArchives = async (req, res) => {
           { status: 'validated' },
           { archived_at: { $exists: true, $ne: null } }
         ]
-      }).select('_id');
+      }).select('_id files form.file_sup1.key form.file_sup2.key form.file_sup3.key form.file_sup4.key');
       
       deletedIds = archivedPengajuan.map(p => p._id.toString());
+      
+      // Best-effort cleanup of S3 objects referenced by the archived pengajuan
+      const s3Keys = archivedPengajuan.flatMap(p => collectS3Keys(p));
+      await deleteS3Objects(s3Keys);
       
       // Delete all archived pengajuan (includes all archived statuses)
       result = await Pengajuan.deleteMany({ 
@@ -844,6 +897,15 @@ const deleteArchives = async (req, res) => {
       });
     } else if (ids && Array.isArray(ids) && ids.length > 0) {
       // Delete specific archived pengajuan by IDs
+      // Fetch docs first to collect their S3 keys
+      const targetDocs = await Pengajuan.find({ 
+        _id: { $in: ids }
+      }).select('_id files form.file_sup1.key form.file_sup2.key form.file_sup3.key form.file_sup4.key');
+      
+      // Best-effort cleanup of S3 objects referenced by these pengajuan
+      const s3Keys = targetDocs.flatMap(p => collectS3Keys(p));
+      await deleteS3Objects(s3Keys);
+      
       // Safety: only delete items that are actually archived
       result = await Pengajuan.deleteMany({ 
         _id: { $in: ids },
