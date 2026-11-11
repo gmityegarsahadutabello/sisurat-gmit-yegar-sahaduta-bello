@@ -96,21 +96,16 @@ async function loadNotifikasi() {
                 data = [];
             }
         } else {
-            // Role lain: coba dari API
+            // Role lain: load dari API berdasarkan role (to_role)
             notifUl.innerHTML = `<li><span class="dropdown-item text-muted">Memuat...</span></li>`;
-            if (typeof apiGet === 'function') {
-                try { data = await apiGet('/notifikasi'); } catch (e) { 
-                    console.log('API call failed:', e);
-                    data = null; 
-                }
-            } else {
-                try {
-                    const res = await fetch('/notifikasi', { credentials: 'include' });
-                    if (res.ok) data = await res.json();
-                } catch (e) { 
-                    console.log('Fetch failed:', e);
-                    data = null; 
-                }
+            try {
+                const response = await API.notifications.getAll({ role: role });
+                data = response || [];
+                console.log('🔔 Total notifikasi dari API (role ' + role + '):', data.length);
+                data = data.slice(0, 10);
+            } catch (err) {
+                console.error('Error loading notifications:', err);
+                data = [];
             }
         }
         
@@ -172,6 +167,34 @@ async function loadNotifikasi() {
                 </div>
             `;
             notifUl.appendChild(headerLi);
+
+            // "Tandai semua dibaca" action
+            if (unreadCount > 0) {
+                const markAllLi = document.createElement("li");
+                const markAllBtn = document.createElement("button");
+                markAllBtn.type = "button";
+                markAllBtn.className = "dropdown-item text-center mark-all-read-btn";
+                markAllBtn.innerHTML = `<i class="bi bi-check2-all me-1"></i>Tandai semua dibaca`;
+                markAllBtn.addEventListener('click', async function (e) {
+                    e.preventDefault();
+                    try {
+                        const filters = (role === 'jemaat' && userNik) ? { nik: userNik } : { role: role };
+                        await API.notifications.markAllAsRead(filters);
+                        data.forEach(n => { n.read = true; });
+                        document.querySelectorAll('#notif-list .notif-unread').forEach(el => el.classList.remove('notif-unread'));
+                        document.querySelectorAll('#notif-list .notif-unread-dot').forEach(el => el.remove());
+                        adjustNotifBadge(-unreadCount);
+                    } catch (err) {
+                        console.error('Gagal menandai semua notifikasi dibaca:', err);
+                    }
+                });
+                markAllLi.appendChild(markAllBtn);
+                notifUl.appendChild(markAllLi);
+
+                const markAllDivider = document.createElement("li");
+                markAllDivider.innerHTML = '<hr class="dropdown-divider my-0">';
+                notifUl.appendChild(markAllDivider);
+            }
             
             // Add divider
             const dividerLi = document.createElement("li");
@@ -187,6 +210,23 @@ async function loadNotifikasi() {
             // Add unread class if notification is unread
             if (!n.read) {
                 a.classList.add('notif-unread');
+            }
+
+            // Mark individual notification as read when clicked
+            if (!n.read && n.id) {
+                a.addEventListener('click', function () {
+                    try {
+                        API.notifications.markAsRead(n.id).catch(function (e) {
+                            console.warn('Gagal menandai notifikasi dibaca:', e);
+                        });
+                    } catch (e) {}
+                    // Update UI immediately
+                    a.classList.remove('notif-unread');
+                    const dot = a.querySelector('.notif-unread-dot');
+                    if (dot) dot.remove();
+                    n.read = true;
+                    adjustNotifBadge(-1);
+                });
             }
             
             // use provided id/url if available, otherwise link to detail page with id param
@@ -264,6 +304,22 @@ function formatTanggal(dateString) {
         month: "short",
         year: "numeric",
     });
+}
+
+// --- Util: adjust unread badge count by delta (e.g. -1 when a notification is read) ---
+function adjustNotifBadge(delta) {
+    const countEl = document.getElementById('notif-count');
+    if (!countEl) return;
+    const current = parseInt(countEl.getAttribute('data-real') || '0', 10) || 0;
+    const next = Math.max(0, current + delta);
+    countEl.setAttribute('data-real', String(next));
+    if (next === 0) {
+        countEl.textContent = '';
+        countEl.style.display = 'none';
+    } else {
+        countEl.textContent = next > 5 ? '5+' : String(next);
+        countEl.style.display = 'inline-flex';
+    }
 }
 
 // Minimal HTML escaper for notification text

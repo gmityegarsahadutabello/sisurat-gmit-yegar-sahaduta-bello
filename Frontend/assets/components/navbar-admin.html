@@ -39,6 +39,19 @@
 
       <!-- Right Side: User Info & Actions -->
       <div class="d-flex flex-column flex-lg-row align-items-start align-items-lg-center gap-2">
+        <!-- Notifications -->
+        <div class="notif-wrap dropdown">
+          <button class="btn btn-notif position-relative" id="notifButton" data-bs-toggle="dropdown" aria-expanded="false" title="Notifikasi">
+            <i class="bi bi-bell-fill"></i>
+            <span id="notif-count" class="badge badge-notif" style="display:none;">0</span>
+          </button>
+          <ul id="notif-list" class="dropdown-menu dropdown-menu-end" aria-labelledby="notifButton">
+            <li><span class="dropdown-item text-muted">
+              <i class="bi bi-hourglass-split me-2"></i>Memuat notifikasi...
+            </span></li>
+          </ul>
+        </div>
+
         <!-- User Info -->
         <div class="text-white">
           <div style="font-size: 0.75rem; opacity: 0.85;">Administrator</div>

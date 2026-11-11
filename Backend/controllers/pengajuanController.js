@@ -252,16 +252,24 @@ const createPengajuan = async (req, res) => {
       await Promise.all(urlPromises);
     }
     
-    // Create notification for Koordinator - DISABLED for efficiency (only jemaat gets notifications)
-    // if (finalRayon) {
-    //   await Notification.create({
-    //     to_role: 'koordinator',
-    //     type: 'surat_masuk',
-    //     title: 'Pengajuan Baru',
-    //     message: `Ada pengajuan surat baru dari rayon ${finalRayon}`,
-    //     related_id: createdPengajuan._id
-    //   });
-    // }
+    // Create notification for Koordinator of the rayon
+    if (finalRayon) {
+      try {
+        await Notification.create({
+          to_role: 'koordinator',
+          type: 'surat_masuk',
+          title: 'Pengajuan Baru',
+          judul: 'Pengajuan Baru',
+          message: `Pengajuan surat ${finalType} baru dari ${finalUserNama || 'jemaat'} (Rayon ${finalRayon}) menunggu verifikasi.`,
+          pesan: `Pengajuan surat ${finalType} baru dari ${finalUserNama || 'jemaat'} (Rayon ${finalRayon}) menunggu verifikasi.`,
+          related_id: pengajuan._id,
+          url: '/pages/koordinator/daftar-surat-masuk.html'
+        });
+        console.log('📧 Notification created for koordinator rayon', finalRayon);
+      } catch (notifError) {
+        console.error('⚠️ Failed to create koordinator notification:', notifError.message);
+      }
+    }
 
     res.status(201).json(responseObj);
   } catch (error) {
@@ -691,6 +699,22 @@ const updateStatus = async (req, res) => {
         url: `surat-masuk.html`
       });
       console.log('📧 Notification created for jemaat (validated):', pengajuan.user_nik);
+    } else if (status === 'disposisi_to_sekretaris') {
+      try {
+        await Notification.create({
+          to_role: 'sekretaris',
+          type: 'surat_masuk',
+          title: 'Surat Masuk untuk Sekretaris',
+          judul: 'Surat Masuk untuk Sekretaris',
+          message: `Surat ${pengajuan.type || ''} dari ${pengajuan.user_nama || 'jemaat'} telah didisposisikan untuk Anda.`,
+          pesan: `Surat ${pengajuan.type || ''} dari ${pengajuan.user_nama || 'jemaat'} telah didisposisikan untuk Anda.`,
+          related_id: pengajuan._id,
+          url: '/pages/sekretaris/daftar-masuk.html'
+        });
+        console.log('📧 Notification created for sekretaris (disposisi)');
+      } catch (notifError) {
+        console.error('⚠️ Failed to create sekretaris notification:', notifError.message);
+      }
     }
 
     // PATCH: Always return pre-signed file_url if file exists

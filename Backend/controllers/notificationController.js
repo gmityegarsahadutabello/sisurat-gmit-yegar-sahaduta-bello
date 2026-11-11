@@ -115,6 +115,30 @@ const markAsRead = async (req, res) => {
   }
 };
 
+// @desc    Mark all notifications as read for a role or NIK
+// @route   PUT /api/notifications/read-all
+// @access  Private
+const markAllAsRead = async (req, res) => {
+  try {
+    const { role, nik } = req.query;
+    const conditions = [];
+    if (role) conditions.push({ to_role: role });
+    if (nik) conditions.push({ to_nik: String(nik) });
+
+    if (conditions.length === 0) {
+      return res.status(400).json({ message: 'Provide role or nik query parameter' });
+    }
+
+    const result = await Notification.updateMany(
+      { $or: conditions, is_read: { $ne: true } },
+      { $set: { is_read: true } }
+    );
+    res.json({ modifiedCount: result.modifiedCount });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 // @desc    Delete notification
 // @route   DELETE /api/notifications/:id
 // @access  Private
@@ -136,5 +160,6 @@ module.exports = {
   getNotifications,
   createNotification,
   markAsRead,
+  markAllAsRead,
   deleteNotification
 };

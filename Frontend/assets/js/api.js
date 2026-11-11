@@ -93,6 +93,10 @@ const API = {
     },
     create: (data) => API.request("/notifications", "POST", data),
     markAsRead: (id) => API.request(`/notifications/${id}/read`, "PUT"),
+    markAllAsRead: (filters = {}) => {
+      const queryString = new URLSearchParams(filters).toString();
+      return API.request(`/notifications/read-all?${queryString}`, "PUT");
+    },
     delete: (id) => API.request(`/notifications/${id}`, "DELETE"),
   },
 };
